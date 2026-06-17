@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout>
+  <Nav />
+
+  <!-- Hero -->
+  <section
+    class="relative min-h-[88vh] flex items-center justify-center text-center px-6"
+    style="background-color: var(--midnight-navy);"
+  >
+    <div
+      class="absolute inset-0 bg-cover bg-center opacity-20"
+      style="background-image: url('/images/hero.jpg');"
+    ></div>
+    <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-6">
+      <p class="text-xs tracking-[0.25em] uppercase" style="color: var(--heritage-gold);">
+        Refuge &amp; Sword Publishing
+      </p>
+      <h1 class="text-4xl md:text-6xl font-bold leading-tight" style="color: var(--stone-white);">
+        Strength and Shelter.<br />Truth and Craft.
+      </h1>
+      <div class="gold-divider"></div>
+      <p class="font-editorial italic text-xl md:text-2xl leading-relaxed max-w-xl" style="color: var(--warm-sand);">
+        A Christ-centered publishing house built on the balance of strength and shelter
+        &mdash; producing apps, books, and podcasts rooted in truth, wisdom, and conviction.
+      </p>
+      <a
+        href="/contact"
+        class="mt-4 px-8 py-3 text-sm tracking-widest uppercase rounded-lg transition-colors duration-300"
+        style="background-color: var(--heritage-gold); color: var(--midnight-navy);"
+      >
+        Get in Touch
+      </a>
+    </div>
+  </section>
+
+  <!-- What We Publish -->
+  <section class="py-24 px-6" style="background-color: var(--stone-white);">
+    <div class="max-w-5xl mx-auto">
+      <div class="flex flex-col items-center text-center mb-16 gap-4">
+        <p class="text-xs tracking-[0.25em] uppercase" style="color: var(--heritage-gold);">What We Publish</p>
+        <h2 class="text-3xl md:text-4xl" style="color: var(--deep-forest);">Three Disciplines. One Mission.</h2>
+        <div class="gold-divider"></div>
+        <p class="max-w-xl text-base leading-relaxed" style="color: var(--slate-gray);">
+          Faith without cliche. Strength without aggression. Excellence without excess.
+          Every title, tool, and conversation we produce carries those commitments.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-px" style="background-color: var(--warm-sand);">
+        <div class="p-10 flex flex-col gap-4" style="background-color: var(--stone-white);">
+          <p class="text-xs tracking-[0.25em] uppercase font-semibold" style="color: var(--heritage-gold);">Apps</p>
+          <h3 class="text-xl" style="color: var(--deep-forest);">Digital Tools for Discipleship</h3>
+          <p class="text-sm leading-relaxed" style="color: var(--slate-gray);">
+            Purpose-built digital experiences rooted in Scripture and designed for
+            spiritual formation, community, and daily practice.
+          </p>
+        </div>
+
+        <div class="p-10 flex flex-col gap-4" style="background-color: var(--stone-white);">
+          <p class="text-xs tracking-[0.25em] uppercase font-semibold" style="color: var(--heritage-gold);">Books</p>
+          <h3 class="text-xl" style="color: var(--deep-forest);">Theologically Grounded Titles</h3>
+          <p class="text-sm leading-relaxed" style="color: var(--slate-gray);">
+            Beautifully crafted print and digital titles &mdash; from devotionals and Bible
+            studies to theological works and narrative non-fiction.
+          </p>
+        </div>
+
+        <div class="p-10 flex flex-col gap-4" style="background-color: var(--stone-white);">
+          <p class="text-xs tracking-[0.25em] uppercase font-semibold" style="color: var(--heritage-gold);">Podcasts</p>
+          <h3 class="text-xl" style="color: var(--deep-forest);">Audio for the Rhythm of Daily Life</h3>
+          <p class="text-sm leading-relaxed" style="color: var(--slate-gray);">
+            Storytelling, teaching, and conversation that brings the Refuge &amp; Sword
+            voice into the moments that matter.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Identity Pull Quote -->
+  <section class="py-24 px-6" style="background-color: var(--deep-forest);">
+    <div class="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
+      <div class="gold-divider"></div>
+      <blockquote class="font-editorial italic text-2xl md:text-3xl leading-relaxed" style="color: var(--stone-white);">
+        The sword is truth, not violence.<br />Conviction carries grace.
+      </blockquote>
+      <p class="text-xs tracking-[0.25em] uppercase" style="color: var(--heritage-gold);">
+        Refuge &amp; Sword Publishing
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 px-6" style="background-color: var(--stone-white);">
+    <div class="max-w-2xl mx-auto flex flex-col items-center text-center gap-6">
+      <h2 class="text-3xl md:text-4xl" style="color: var(--deep-forest);">Work With Us</h2>
+      <div class="gold-divider"></div>
+      <p class="text-base leading-relaxed" style="color: var(--slate-gray);">
+        Whether you have a manuscript, a ministry, or a question &mdash; we want to hear from you.
+        Reach out and let's build something worth keeping.
+      </p>
+      <a
+        href="/contact"
+        class="px-8 py-3 text-sm tracking-widest uppercase rounded-lg transition-colors duration-300"
+        style="background-color: var(--midnight-navy); color: var(--stone-white);"
+      >
+        Get in Touch
+      </a>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

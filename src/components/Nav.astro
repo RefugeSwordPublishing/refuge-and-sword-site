@@ -1,0 +1,18 @@
+---
+const { page = '' } = Astro.props;
+---
+
+<header style="background-color: var(--midnight-navy);">
+  <nav class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a href="/" aria-label="Refuge & Sword Publishing home">
+      <img src="/images/logo.png" alt="Refuge & Sword Publishing" class="h-12 w-auto rounded-lg" />
+    </a>
+    <a
+      href="/contact"
+      style="border-color: var(--heritage-gold); color: var(--heritage-gold);"
+      class="border rounded-lg text-sm tracking-widest uppercase px-5 py-2 transition-colors duration-300 hover:bg-[#B79B62] hover:text-[#0E1B2D]"
+    >
+      Contact
+    </a>
+  </nav>
+</header>

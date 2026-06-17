@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --deep-forest: #1D2A24;
+  --heritage-gold: #B79B62;
+  --midnight-navy: #0E1B2D;
+  --stone-white: #F4F1EA;
+  --warm-sand: #D8CCB8;
+  --slate-gray: #5E676D;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--stone-white);
+  color: var(--midnight-navy);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Cinzel', serif;
+}
+
+.font-editorial {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.gold-divider {
+  width: 64px;
+  height: 1px;
+  background-color: var(--heritage-gold);
+}
