@@ -1,0 +1,58 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+
+// Duplicate this file for each app. Update the three values below and fill in the sections.
+const appName = "App Name";
+const lastUpdated = "June 17, 2026";
+const contactEmail = "dustin@refugeandsword.com";
+---
+
+<LegalLayout title="Privacy Policy" appName={appName} lastUpdated={lastUpdated}>
+
+  <h2>Overview</h2>
+  <p>
+    This Privacy Policy describes how Refuge &amp; Sword Publishing LLC ("we," "us," or "our")
+    handles information in connection with {appName}. We are committed to being straightforward
+    about what we collect and why.
+  </p>
+
+  <h2>Information We Collect</h2>
+  <p>Describe what data the app collects — e.g., account info, usage data, device identifiers.</p>
+
+  <h2>How We Use Your Information</h2>
+  <p>Describe how collected data is used — e.g., to provide the service, improve the app, send notifications.</p>
+
+  <h2>Data Sharing</h2>
+  <p>
+    We do not sell your personal information. Describe any third-party services used
+    (e.g., analytics, cloud providers) and what data they receive.
+  </p>
+
+  <h2>Data Retention</h2>
+  <p>Describe how long data is kept and how users can request deletion.</p>
+
+  <h2>Your Rights</h2>
+  <p>
+    Depending on your location, you may have rights to access, correct, or delete your data.
+    Contact us at <a href={`mailto:${contactEmail}`} style="color: var(--heritage-gold);">{contactEmail}</a> to make a request.
+  </p>
+
+  <h2>Children's Privacy</h2>
+  <p>
+    {appName} is not directed at children under 13. We do not knowingly collect personal
+    information from children under 13.
+  </p>
+
+  <h2>Changes to This Policy</h2>
+  <p>
+    We may update this policy from time to time. The "last updated" date at the top of this
+    page reflects the most recent revision.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions about this policy? Reach us at{' '}
+    <a href={`mailto:${contactEmail}`} style="color: var(--heritage-gold);">{contactEmail}</a>.
+  </p>
+
+</LegalLayout>

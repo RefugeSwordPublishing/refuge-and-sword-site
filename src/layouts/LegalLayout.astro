@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  appName: string;
+  lastUpdated: string;
+}
+
+const { title, appName, lastUpdated } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>{title} | {appName} | Refuge & Sword Publishing</title>
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+  </head>
+  <body style="background-color: var(--stone-white); color: var(--midnight-navy);">
+
+    <header class="py-5 px-8 border-b" style="border-color: var(--warm-sand);">
+      <div class="max-w-3xl mx-auto flex items-center gap-3">
+        <a href="/">
+          <img src="/images/logo.png" alt="Refuge & Sword Publishing" style="height: 36px; width: 36px; border-radius: 50%; object-fit: cover;" />
+        </a>
+        <div style="border-left: 1px solid var(--warm-sand); padding-left: 12px;">
+          <p style="font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--heritage-gold); margin: 0;">Refuge &amp; Sword Publishing</p>
+          <p style="font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--slate-gray); margin: 0;">{appName}</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-8 py-16">
+      <h1 class="text-3xl mb-2" style="color: var(--deep-forest);">{title}</h1>
+      <p class="text-sm mb-10" style="color: var(--slate-gray);">Last updated: {lastUpdated}</p>
+      <div class="gold-divider mb-10"></div>
+
+      <div class="prose" style="color: var(--midnight-navy); line-height: 1.8; font-size: 0.95rem;">
+        <slot />
+      </div>
+    </main>
+
+    <footer class="py-8 px-8 text-center text-xs" style="color: var(--slate-gray); border-top: 1px solid var(--warm-sand);">
+      &copy; {new Date().getFullYear()} Refuge &amp; Sword Publishing LLC &middot; refugeandsword.com
+    </footer>
+
+  </body>
+</html>
