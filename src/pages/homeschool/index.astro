@@ -60,11 +60,15 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
   }
 </script>
 
+<!-- Curriculum data: tests, resources, updated colors. Loaded before React. -->
+<script src="/curriculum-data.js"></script>
+
 <script type="text/babel">
 const { useState, useMemo } = React;
 
 // ─── CURRICULUM DATA ─────────────────────────────────────────────────────────
-const SUBJECTS = {
+// RAW_SUBJECTS holds node structure. window.CURRICULUM merges in tests + resources.
+const RAW_SUBJECTS = {
   math: {
     id: "math", label: "Mathematics", icon: "✦", color: "#4A6FA5", accent: "#7BA3D4",
     nodes: [
@@ -198,6 +202,40 @@ const SUBJECTS = {
     ],
   },
 };
+
+// Merge curriculum-data.js (tests, resources, updated colors) into RAW_SUBJECTS
+function buildSubjects(raw) {
+  if (!window.CURRICULUM) return raw;
+  const result = {};
+  for (const [sid, subject] of Object.entries(raw)) {
+    const ext = window.CURRICULUM[sid];
+    if (!ext || !ext.nodes?.length) {
+      result[sid] = subject;
+      continue;
+    }
+    const extMap = {};
+    for (const n of ext.nodes) extMap[n.id] = n;
+    result[sid] = {
+      ...subject,
+      color: ext.color || subject.color,
+      accent: ext.accent || subject.accent,
+      nodes: subject.nodes.map(n => ({
+        ...n,
+        tests: extMap[n.id]?.tests || [],
+        resources: extMap[n.id]?.resources || [],
+      })),
+    };
+  }
+  return result;
+}
+const SUBJECTS = buildSubjects(RAW_SUBJECTS);
+
+// Helper: built-in tests + custom questions from localStorage merged
+function getNodeAllTests(node, customQuestions) {
+  const builtin = (node.tests || []).map((text, i) => ({ id: `builtin_${i}`, text, builtin: true }));
+  const custom = (customQuestions[node.id] || []);
+  return [...builtin, ...custom];
+}
 
 const STATUS = { LOCKED:"locked", UNLOCKED:"unlocked", IN_PROGRESS:"in_progress", MASTERED:"mastered" };
 const STATUS_LABELS = { locked:"Locked", unlocked:"Ready to Learn", in_progress:"In Progress", mastered:"Mastered" };
@@ -557,7 +595,7 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
           const isSelected = selectedNode?.id===node.id;
           const locked = status===STATUS.LOCKED && !editMode;
           const col = statusColor(status, subject);
-          const hasTest = ((data.questions||{})[node.id]||[]).length > 0;
+          const hasTest = getNodeAllTests(node, data.questions||{}).length > 0;
 
           return React.createElement("g", { key:node.id, onClick:()=>handleClick(node), style:{ cursor: locked?"default":"pointer" } },
             status===STATUS.MASTERED && React.createElement("rect", { x:x-4, y:y-4, width:NODE_W+8, height:NODE_H+8, rx:14, ry:14, fill:"none", stroke:subject.accent, strokeWidth:1.5, opacity:0.22 }),
@@ -601,7 +639,7 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
       onSetProgress: setProgress,
       onClose: ()=>setSelectedNode(null),
       childProgress,
-      questions: (data.questions||{})[selectedNode.id] || [],
+      questions: getNodeAllTests(selectedNode, data.questions||{}),
       passingThreshold,
     })
   );
@@ -690,7 +728,19 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
 
       // INFO TAB
       tab==="info" && React.createElement("div", null,
-        React.createElement("p", { style:{ color:"rgba(255,255,255,0.58)", fontSize:13, lineHeight:1.65, marginBottom:18 } }, node.desc),
+        React.createElement("p", { style:{ color:"rgba(255,255,255,0.58)", fontSize:13, lineHeight:1.65, marginBottom:14 } }, node.desc),
+        (node.resources||[]).length > 0 && React.createElement("div", { style:{ marginBottom:16 } },
+          React.createElement("div", { style:{ fontSize:10, color:"rgba(255,255,255,0.25)", marginBottom:8, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Learn This"),
+          ...(node.resources||[]).map((r, i) =>
+            React.createElement("a", {
+              key:i, href:r.url, target:"_blank", rel:"noopener noreferrer",
+              style:{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px", marginBottom:6, borderRadius:9, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)", color:subject.accent, fontSize:12, textDecoration:"none", fontWeight:500 }
+            },
+              React.createElement("span", null, "↗"),
+              r.title
+            )
+          )
+        ),
         React.createElement("div", { style:{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:16 } },
           status!==STATUS.IN_PROGRESS && status!==STATUS.MASTERED &&
             React.createElement(ActionBtn, { color:"#E5C07B", onClick:()=>markStatus(STATUS.IN_PROGRESS) }, "▶ Start"),
@@ -840,23 +890,33 @@ function NodeEditSheet({ node, subject, data, isCustom, allNodes, onSaveFields, 
 
     // QUESTIONS TAB
     tab==="questions" && React.createElement("div", null,
-      React.createElement("div", { style:{ fontSize:12, color:"rgba(255,255,255,0.4)", marginBottom:16, lineHeight:1.6 } },
-        "Add questions for the mastery test. Print from the Test tab on any node."
+      (node.tests||[]).length > 0 && React.createElement("div", { style:{ marginBottom:16 } },
+        React.createElement("div", { style:{ fontSize:11, color:"rgba(255,255,255,0.25)", marginBottom:8, textTransform:"uppercase", letterSpacing:"0.08em" } },
+          `${(node.tests||[]).length} built-in questions (locked)`
+        ),
+        ...(node.tests||[]).map((text, i) =>
+          React.createElement("div", { key:i, style:{ display:"flex", alignItems:"flex-start", gap:10, padding:"8px 0", borderBottom:"1px solid rgba(255,255,255,0.04)", opacity:0.5 } },
+            React.createElement("span", { style:{ fontSize:12, color:"rgba(255,255,255,0.3)", minWidth:20, paddingTop:2 } }, `${i+1}.`),
+            React.createElement("span", { style:{ flex:1, fontSize:12, color:"rgba(255,255,255,0.55)", lineHeight:1.5 } }, text),
+            React.createElement("span", { style:{ fontSize:12, color:"rgba(255,255,255,0.2)" } }, "🔒"),
+          )
+        )
       ),
       qs.length > 0 && React.createElement("div", { style:{ marginBottom:16 } },
+        React.createElement("div", { style:{ fontSize:11, color:"rgba(255,200,80,0.5)", marginBottom:8, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Your custom questions"),
         ...qs.map((q, i) =>
           React.createElement("div", { key:q.id, style:{ display:"flex", alignItems:"flex-start", gap:10, padding:"10px 0", borderBottom:"1px solid rgba(255,255,255,0.06)" } },
-            React.createElement("span", { style:{ fontSize:12, color:"rgba(255,255,255,0.3)", minWidth:20, paddingTop:2 } }, `${i+1}.`),
+            React.createElement("span", { style:{ fontSize:12, color:"rgba(255,255,255,0.3)", minWidth:20, paddingTop:2 } }, `${(node.tests||[]).length + i + 1}.`),
             React.createElement("span", { style:{ flex:1, fontSize:13, color:"rgba(255,255,255,0.75)", lineHeight:1.5 } }, q.text),
             React.createElement("button", { onClick:()=>removeQ(q.id), style:{ background:"none", border:"none", color:"rgba(255,80,80,0.6)", cursor:"pointer", fontSize:16, padding:"0 4px" } }, "×")
           )
         )
       ),
-      React.createElement("div", { style:{ display:"flex", gap:8, marginBottom:16 } },
-        React.createElement("input", { value:newQ, onChange:e=>setNewQ(e.target.value), onKeyDown:e=>e.key==="Enter"&&addQ(), placeholder:"Type a question...", style:{ flex:1, padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:13 } }),
+      React.createElement("div", { style:{ display:"flex", gap:8, marginBottom:12 } },
+        React.createElement("input", { value:newQ, onChange:e=>setNewQ(e.target.value), onKeyDown:e=>e.key==="Enter"&&addQ(), placeholder:"Add a custom question...", style:{ flex:1, padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:13 } }),
         React.createElement("button", { onClick:addQ, style:{ padding:"9px 16px", borderRadius:10, border:"none", background:"rgba(255,200,80,0.2)", color:"rgba(255,200,80,0.9)", fontWeight:700, fontSize:13, cursor:"pointer" } }, "+ Add"),
       ),
-      React.createElement("button", { onClick:saveQs, style:{ padding:"9px 24px", borderRadius:10, border:"none", background:"rgba(255,200,80,0.2)", color:"rgba(255,200,80,0.9)", fontWeight:700, fontSize:13, cursor:"pointer" } }, "Save Questions"),
+      qs.length > 0 && React.createElement("button", { onClick:saveQs, style:{ padding:"9px 24px", borderRadius:10, border:"none", background:"rgba(255,200,80,0.2)", color:"rgba(255,200,80,0.9)", fontWeight:700, fontSize:13, cursor:"pointer" } }, "Save Custom Questions"),
     ),
 
     // SETTINGS TAB
