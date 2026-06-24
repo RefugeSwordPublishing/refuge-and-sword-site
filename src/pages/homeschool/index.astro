@@ -26,9 +26,16 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
   #gate .error { color:rgba(255,100,100,0.8); font-size:13px; }
   ::-webkit-scrollbar { width:6px; height:6px; }
   ::-webkit-scrollbar-track { background:rgba(255,255,255,0.03); }
-  ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.12); border-radius:3px; }
+  ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.18); border-radius:3px; }
   input:focus, textarea:focus { outline:none; }
   button:focus-visible { outline:2px solid rgba(255,255,255,0.4); outline-offset:2px; }
+  @keyframes hs-pulse { 0%,100%{opacity:.75;} 50%{opacity:1;} }
+  @keyframes hs-spin { to{transform:rotate(360deg);} }
+  .hs-inprog-rect { animation: hs-pulse 2.2s ease-in-out infinite; }
+  .hs-tree-bg {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
 </style>
 </head>
 <body>
@@ -209,16 +216,14 @@ function buildSubjects(raw) {
   const result = {};
   for (const [sid, subject] of Object.entries(raw)) {
     const ext = window.CURRICULUM[sid];
-    if (!ext || !ext.nodes?.length) {
-      result[sid] = subject;
-      continue;
-    }
+    if (!ext) { result[sid] = subject; continue; }
+    // Always apply colors from curriculum-data.js
+    const base = { ...subject, color: ext.color || subject.color, accent: ext.accent || subject.accent };
+    if (!ext.nodes?.length) { result[sid] = base; continue; }
     const extMap = {};
     for (const n of ext.nodes) extMap[n.id] = n;
     result[sid] = {
-      ...subject,
-      color: ext.color || subject.color,
-      accent: ext.accent || subject.accent,
+      ...base,
       nodes: subject.nodes.map(n => ({
         ...n,
         tests: extMap[n.id]?.tests || [],
@@ -241,7 +246,7 @@ const STATUS = { LOCKED:"locked", UNLOCKED:"unlocked", IN_PROGRESS:"in_progress"
 const STATUS_LABELS = { locked:"Locked", unlocked:"Ready to Learn", in_progress:"In Progress", mastered:"Mastered" };
 
 // ─── LAYOUT ──────────────────────────────────────────────────────────────────
-const NODE_W = 152, NODE_H = 64, COL_GAP = 48, ROW_GAP = 44, PAD_X = 32, PAD_Y = 24;
+const NODE_W = 162, NODE_H = 70, COL_GAP = 52, ROW_GAP = 50, PAD_X = 32, PAD_Y = 28;
 
 function getSubjectNodes(subjectId, data) {
   const base = SUBJECTS[subjectId];
@@ -282,17 +287,30 @@ function computeStatuses(nodes, progress) {
   return result;
 }
 
+function statusStroke(status, subject) {
+  if (status===STATUS.MASTERED) return subject.accent;
+  if (status===STATUS.IN_PROGRESS) return subject.accent;
+  if (status===STATUS.UNLOCKED) return subject.color + "99";
+  return "rgba(255,255,255,0.08)";
+}
+function statusFill(status, subject) {
+  if (status===STATUS.MASTERED) return subject.color;
+  if (status===STATUS.IN_PROGRESS) return subject.color + "55";
+  if (status===STATUS.UNLOCKED) return subject.color + "1A";
+  return "rgba(8,12,28,0.85)";
+}
+function statusTextColor(status) {
+  if (status===STATUS.MASTERED) return "#fff";
+  if (status===STATUS.IN_PROGRESS) return "#fff";
+  if (status===STATUS.UNLOCKED) return "#E8EAF0";
+  return "rgba(255,255,255,0.28)";
+}
+// kept for legend
 function statusColor(status, subject) {
   if (status===STATUS.MASTERED) return subject.color;
   if (status===STATUS.IN_PROGRESS) return subject.accent;
-  if (status===STATUS.UNLOCKED) return "#4A5568";
-  return "#2D3748";
-}
-function statusBg(status) {
-  if (status===STATUS.MASTERED) return "rgba(255,255,255,0.15)";
-  if (status===STATUS.IN_PROGRESS) return "rgba(255,255,255,0.09)";
-  if (status===STATUS.UNLOCKED) return "rgba(255,255,255,0.06)";
-  return "rgba(255,255,255,0.02)";
+  if (status===STATUS.UNLOCKED) return subject.color + "88";
+  return "#374151";
 }
 
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
@@ -435,18 +453,20 @@ function App() {
   const editingNode = editingNodeId ? nodes.find(n => n.id === editingNodeId) : null;
   const isCustomNode = (nodeId) => ((data.customNodes||{})[activeSubject]||[]).some(n => n.id === nodeId);
 
-  return React.createElement("div", { style:{ minHeight:"100vh", background:"linear-gradient(160deg,#0F1117 0%,#1A1E2E 50%,#0F1117 100%)", color:"#E8EAF0", fontFamily:"'Inter','Segoe UI',sans-serif", fontSize:14 } },
+  return React.createElement("div", { style:{ minHeight:"100vh", background:`radial-gradient(ellipse at 25% 15%, ${subject.color}22 0%, transparent 55%), radial-gradient(ellipse at 75% 85%, ${subject.accent}14 0%, transparent 50%), #080C18`, color:"#E8EAF0", fontFamily:"'Inter','Segoe UI',sans-serif", fontSize:14, backgroundAttachment:"fixed" } },
 
     // TOP BAR
-    React.createElement("div", { style:{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 20px", borderBottom:"1px solid rgba(255,255,255,0.07)", background:"rgba(255,255,255,0.03)", position:"sticky", top:0, zIndex:200 } },
+    React.createElement("div", { style:{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 20px", borderBottom:`1px solid ${subject.color}30`, background:`linear-gradient(90deg, ${subject.color}18 0%, rgba(8,12,28,0.95) 100%)`, position:"sticky", top:0, zIndex:200, backdropFilter:"blur(12px)" } },
       React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:10 } },
-        React.createElement("span", { style:{ fontSize:20, color:subject.accent } }, "❧"),
-        React.createElement("span", { style:{ fontWeight:700, fontSize:16, color:"#fff", letterSpacing:"0.03em" } }, "Homeschool Path"),
-        React.createElement("span", { style:{ fontSize:11, color:"rgba(255,255,255,0.25)", marginLeft:4 } }, "Refuge & Sword"),
+        React.createElement("div", { style:{ width:32, height:32, borderRadius:10, background:`linear-gradient(135deg, ${subject.color}, ${subject.accent})`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:16, boxShadow:`0 0 12px ${subject.color}60` } }, subject.icon),
+        React.createElement("div", null,
+          React.createElement("div", { style:{ fontWeight:800, fontSize:15, color:"#fff", letterSpacing:"0.02em", lineHeight:1.1 } }, "Homeschool Path"),
+          React.createElement("div", { style:{ fontSize:10, color:`${subject.accent}CC`, fontWeight:600, letterSpacing:"0.06em" } }, subject.label.toUpperCase()),
+        ),
       ),
       React.createElement("div", { style:{ display:"flex", gap:6, alignItems:"center" } },
-        React.createElement(TabBtn, { active:view==="tree", onClick:()=>setView("tree") }, "Tree"),
-        React.createElement(TabBtn, { active:view==="progress", onClick:()=>setView("progress") }, "Progress"),
+        React.createElement(TabBtn, { active:view==="tree", onClick:()=>setView("tree"), color:subject.color }, "🌳 Tree"),
+        React.createElement(TabBtn, { active:view==="progress", onClick:()=>setView("progress"), color:subject.color }, "📊 Progress"),
         React.createElement("button", {
           onClick: () => setEditMode(e => !e),
           title: editMode ? "Exit Edit Mode" : "Edit Mode",
@@ -478,17 +498,27 @@ function App() {
     ),
 
     // SUBJECT TABS
-    React.createElement("div", { style:{ display:"flex", overflowX:"auto", padding:"0 20px", borderBottom:"1px solid rgba(255,255,255,0.06)", scrollbarWidth:"none" } },
+    React.createElement("div", { style:{ display:"flex", overflowX:"auto", gap:6, padding:"10px 20px", borderBottom:`1px solid rgba(255,255,255,0.06)`, scrollbarWidth:"none" } },
       ...Object.values(SUBJECTS).map(s => {
         const sp = data.progress[activeChild] || {};
         const sn = getSubjectNodes(s.id, data);
         const ss = computeStatuses(sn, sp);
         const mc = Object.values(ss).filter(x=>x===STATUS.MASTERED).length;
+        const pct = Math.round(mc / sn.length * 100);
         const isActive = activeSubject===s.id;
-        return React.createElement("button", { key:s.id, onClick:()=>{ setActiveSubject(s.id); setSelectedNode(null); }, style:{ padding:"12px 16px", border:"none", background:"transparent", borderBottom: isActive?`2px solid ${s.color}`:"2px solid transparent", color: isActive?"#fff":"rgba(255,255,255,0.45)", fontWeight: isActive?700:400, fontSize:13, cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:6, transition:"all 0.15s" } },
-          React.createElement("span", { style:{ color: isActive?s.accent:"rgba(255,255,255,0.25)", fontSize:11 } }, s.icon),
+        return React.createElement("button", {
+          key:s.id, onClick:()=>{ setActiveSubject(s.id); setSelectedNode(null); },
+          style:{
+            padding:"8px 14px", borderRadius:12, border: isActive?`1.5px solid ${s.color}88`:"1.5px solid rgba(255,255,255,0.07)",
+            background: isActive?`linear-gradient(135deg, ${s.color}33, ${s.accent}18)`:"rgba(255,255,255,0.04)",
+            color: isActive?"#fff":"rgba(255,255,255,0.45)", fontWeight: isActive?700:400,
+            fontSize:12, cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center",
+            gap:6, transition:"all 0.2s", boxShadow: isActive?`0 0 12px ${s.color}30`:"none",
+          }
+        },
+          React.createElement("span", { style:{ fontSize:13 } }, s.icon),
           s.label,
-          React.createElement("span", { style:{ fontSize:10, padding:"2px 6px", borderRadius:10, background: isActive?`${s.color}33`:"rgba(255,255,255,0.06)", color: isActive?s.accent:"rgba(255,255,255,0.3)" } }, `${mc}/${sn.length}`)
+          React.createElement("span", { style:{ fontSize:10, padding:"2px 7px", borderRadius:8, background: isActive?`${s.color}44`:"rgba(255,255,255,0.08)", color: isActive?s.accent:"rgba(255,255,255,0.3)", fontWeight:700 } }, `${pct}%`)
         );
       })
     ),
@@ -555,64 +585,96 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
     setNewNodeLabel(""); setNewNodeGrade(""); setAddingNode(false);
   };
 
+  const pct = Math.round(masteredCount / nodes.length * 100);
+
   return React.createElement("div", { style:{ display:"flex", flexDirection:"column", alignItems:"center", padding:"20px 0 80px" } },
-    // Progress bar
-    React.createElement("div", { style:{ width:"min(560px,90vw)", marginBottom:20, padding:"12px 16px", borderRadius:12, background:"rgba(255,255,255,0.04)" } },
-      React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:12, color:"rgba(255,255,255,0.45)" } },
-        React.createElement("span", null, `${child?.name} · ${subject.label}`),
-        React.createElement("span", { style:{ color:subject.accent, fontWeight:700 } }, `${masteredCount} / ${nodes.length} mastered`)
+    // Progress card
+    React.createElement("div", { style:{ width:"min(580px,92vw)", marginBottom:16, padding:"16px 20px", borderRadius:16, background:`linear-gradient(135deg, ${subject.color}22, ${subject.accent}10)`, border:`1px solid ${subject.color}35`, boxShadow:`0 4px 24px ${subject.color}18` } },
+      React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 } },
+        React.createElement("div", null,
+          React.createElement("div", { style:{ fontSize:13, fontWeight:700, color:"#fff" } }, `${child?.name} — ${subject.label}`),
+          React.createElement("div", { style:{ fontSize:11, color:subject.accent, marginTop:2 } }, `${masteredCount} of ${nodes.length} topics mastered`),
+        ),
+        React.createElement("div", { style:{ fontSize:28, fontWeight:800, color:subject.accent, lineHeight:1 } }, `${pct}%`),
       ),
-      React.createElement("div", { style:{ height:6, borderRadius:3, background:"rgba(255,255,255,0.08)", overflow:"hidden" } },
-        React.createElement("div", { style:{ height:"100%", borderRadius:3, transition:"width 0.5s", width:`${(masteredCount/nodes.length)*100}%`, background:`linear-gradient(90deg,${subject.color},${subject.accent})` } })
+      React.createElement("div", { style:{ height:10, borderRadius:5, background:"rgba(255,255,255,0.1)", overflow:"hidden" } },
+        React.createElement("div", { style:{ height:"100%", borderRadius:5, transition:"width 0.6s cubic-bezier(.4,0,.2,1)", width:`${pct}%`, background:`linear-gradient(90deg, ${subject.color}, ${subject.accent})`, boxShadow:`0 0 10px ${subject.color}80` } })
       )
     ),
 
-    editMode && React.createElement("div", { style:{ marginBottom:12, padding:"8px 16px", borderRadius:8, background:"rgba(255,200,80,0.08)", border:"1px solid rgba(255,200,80,0.2)", fontSize:12, color:"rgba(255,200,80,0.8)" } },
-      "Edit mode — tap any node to edit it"
+    editMode && React.createElement("div", { style:{ marginBottom:12, padding:"8px 16px", borderRadius:8, background:"rgba(255,200,80,0.08)", border:"1px solid rgba(255,200,80,0.25)", fontSize:12, color:"rgba(255,200,80,0.85)", fontWeight:600 } },
+      "✎ Edit mode — tap any node to edit it"
     ),
 
     // Legend
-    React.createElement("div", { style:{ display:"flex", gap:14, marginBottom:16, fontSize:11, flexWrap:"wrap", justifyContent:"center" } },
+    React.createElement("div", { style:{ display:"flex", gap:8, marginBottom:14, fontSize:11, flexWrap:"wrap", justifyContent:"center" } },
       [STATUS.LOCKED, STATUS.UNLOCKED, STATUS.IN_PROGRESS, STATUS.MASTERED].map(s =>
-        React.createElement("div", { key:s, style:{ display:"flex", alignItems:"center", gap:5, color:"rgba(255,255,255,0.4)" } },
-          React.createElement("div", { style:{ width:10, height:10, borderRadius:3, background:statusColor(s,subject) } }),
+        React.createElement("div", { key:s, style:{ display:"flex", alignItems:"center", gap:5, padding:"3px 10px", borderRadius:20, background:"rgba(255,255,255,0.04)", color:"rgba(255,255,255,0.45)" } },
+          React.createElement("div", { style:{ width:8, height:8, borderRadius:"50%", background:statusColor(s,subject) } }),
           STATUS_LABELS[s]
         )
       )
     ),
 
     // SVG Tree
-    React.createElement("div", { style:{ overflowX:"auto", overflowY:"auto", maxWidth:"100vw", maxHeight:"62vh", border:"1px solid rgba(255,255,255,0.06)", borderRadius:16, background:"rgba(255,255,255,0.015)" } },
+    React.createElement("div", { className:"hs-tree-bg", style:{ overflowX:"auto", overflowY:"auto", maxWidth:"100vw", maxHeight:"62vh", borderRadius:16, border:`1px solid ${subject.color}25`, background:`radial-gradient(ellipse at 50% 0%, ${subject.color}12 0%, transparent 60%), rgba(8,12,28,0.7)` } },
       React.createElement("svg", { width:svgW, height:svgH, style:{ display:"block" } },
         React.createElement("defs", null,
-          React.createElement("marker", { id:"arr", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" }, React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:"rgba(255,255,255,0.15)" })),
-          React.createElement("marker", { id:"arr-lit", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" }, React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:subject.accent })),
+          React.createElement("marker", { id:"arr", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" }, React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:"rgba(255,255,255,0.18)" })),
+          React.createElement("marker", { id:"arr-lit", markerWidth:8, markerHeight:8, refX:4, refY:4, orient:"auto" }, React.createElement("path", { d:"M0,0 L8,4 L0,8 Z", fill:subject.accent })),
+          React.createElement("filter", { id:"node-glow", x:"-30%", y:"-30%", width:"160%", height:"160%" },
+            React.createElement("feGaussianBlur", { stdDeviation:"5", result:"blur" }),
+            React.createElement("feMerge", null,
+              React.createElement("feMergeNode", { in:"blur" }),
+              React.createElement("feMergeNode", { in:"SourceGraphic" }),
+            )
+          ),
         ),
-        ...edges.map(e => React.createElement("path", { key:e.id, d:e.path, fill:"none", stroke:e.lit?subject.accent:"rgba(255,255,255,0.12)", strokeWidth:e.lit?2:1.5, strokeDasharray:e.lit?"none":"5 4", markerEnd:e.lit?"url(#arr-lit)":"url(#arr)", opacity:e.lit?0.85:0.55 })),
+        ...edges.map(e => React.createElement("path", { key:e.id, d:e.path, fill:"none", stroke:e.lit?subject.accent:"rgba(255,255,255,0.1)", strokeWidth:e.lit?2.5:1.5, strokeDasharray:e.lit?"none":"6 5", markerEnd:e.lit?"url(#arr-lit)":"url(#arr)", opacity:e.lit?0.9:0.4 })),
         ...nodes.map(node => {
           const { x, y } = getNodePos(node);
           const status = statuses[node.id];
           const isSelected = selectedNode?.id===node.id;
           const locked = status===STATUS.LOCKED && !editMode;
-          const col = statusColor(status, subject);
+          const fill = statusFill(status, subject);
+          const stroke = editMode ? "rgba(255,200,80,0.6)" : statusStroke(status, subject);
+          const txtColor = statusTextColor(status);
           const hasTest = getNodeAllTests(node, data.questions||{}).length > 0;
+          const isMastered = status===STATUS.MASTERED;
+          const isInProg = status===STATUS.IN_PROGRESS;
 
-          return React.createElement("g", { key:node.id, onClick:()=>handleClick(node), style:{ cursor: locked?"default":"pointer" } },
-            status===STATUS.MASTERED && React.createElement("rect", { x:x-4, y:y-4, width:NODE_W+8, height:NODE_H+8, rx:14, ry:14, fill:"none", stroke:subject.accent, strokeWidth:1.5, opacity:0.22 }),
-            isSelected && React.createElement("rect", { x:x-5, y:y-5, width:NODE_W+10, height:NODE_H+10, rx:15, ry:15, fill:"none", stroke:"#fff", strokeWidth:2, opacity:0.45 }),
-            editMode && React.createElement("rect", { x:x-3, y:y-3, width:NODE_W+6, height:NODE_H+6, rx:13, ry:13, fill:"none", stroke:"rgba(255,200,80,0.4)", strokeWidth:1.5 }),
-            React.createElement("rect", { x, y, width:NODE_W, height:NODE_H, rx:10, ry:10, fill:statusBg(status), stroke: editMode?"rgba(255,200,80,0.5)":col, strokeWidth:status===STATUS.MASTERED?1.5:1, opacity:locked?0.45:1 }),
-            React.createElement("text", { x:x+10, y:y+14, fontSize:9, fill:"rgba(255,255,255,0.3)", fontFamily:"monospace" }, `Gr. ${node.grade}`),
-            status===STATUS.MASTERED
-              ? React.createElement("text", { x:x+NODE_W-13, y:y+15, fontSize:10, fill:subject.accent, textAnchor:"middle" }, "★")
-              : locked
-                ? React.createElement("text", { x:x+NODE_W-13, y:y+15, fontSize:9, fill:"rgba(255,255,255,0.2)", textAnchor:"middle" }, "🔒")
-                : editMode
-                  ? React.createElement("text", { x:x+NODE_W-13, y:y+15, fontSize:11, fill:"rgba(255,200,80,0.7)", textAnchor:"middle" }, "✎")
-                  : React.createElement("circle", { cx:x+NODE_W-13, cy:y+11, r:4, fill:col }),
-            hasTest && !editMode && React.createElement("circle", { cx:x+NODE_W-28, cy:y+11, r:3, fill:"rgba(255,255,255,0.3)" }),
-            React.createElement("foreignObject", { x:x+8, y:y+18, width:NODE_W-18, height:NODE_H-22 },
-              React.createElement("div", { xmlns:"http://www.w3.org/1999/xhtml", style:{ color:locked?"rgba(255,255,255,0.28)":"#E8EAF0", fontSize:12, fontWeight:600, lineHeight:1.3, overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", fontFamily:"'Inter','Segoe UI',sans-serif" } }, node.label)
+          return React.createElement("g", { key:node.id, onClick:()=>handleClick(node), style:{ cursor:locked?"default":"pointer", opacity:locked?0.4:1 } },
+            // Glow ring for mastered
+            isMastered && React.createElement("rect", { x:x-6, y:y-6, width:NODE_W+12, height:NODE_H+12, rx:18, ry:18, fill:"none", stroke:subject.accent, strokeWidth:2, opacity:0.3, filter:"url(#node-glow)" }),
+            // Selection ring
+            isSelected && React.createElement("rect", { x:x-5, y:y-5, width:NODE_W+10, height:NODE_H+10, rx:17, ry:17, fill:"none", stroke:"#fff", strokeWidth:2, opacity:0.5 }),
+            // Edit mode ring
+            editMode && React.createElement("rect", { x:x-3, y:y-3, width:NODE_W+6, height:NODE_H+6, rx:15, ry:15, fill:"none", stroke:"rgba(255,200,80,0.5)", strokeWidth:1.5 }),
+            // Main node body
+            React.createElement("rect", {
+              x, y, width:NODE_W, height:NODE_H, rx:14, ry:14,
+              fill, stroke, strokeWidth:isMastered?2:isInProg?2:1,
+              className: isInProg ? "hs-inprog-rect" : undefined,
+              filter: isMastered ? "url(#node-glow)" : undefined,
+            }),
+            // Grade chip background
+            React.createElement("rect", { x:x+8, y:y+7, width:36, height:14, rx:5, fill: isMastered?"rgba(255,255,255,0.2)":subject.color+"33" }),
+            React.createElement("text", { x:x+26, y:y+17, fontSize:8, fill: isMastered?"#fff":subject.accent, textAnchor:"middle", fontWeight:700, fontFamily:"monospace" }, `Gr.${node.grade}`),
+            // Status icon
+            isMastered
+              ? React.createElement("text", { x:x+NODE_W-14, y:y+18, fontSize:13, textAnchor:"middle" }, "⭐")
+              : editMode
+                ? React.createElement("text", { x:x+NODE_W-14, y:y+18, fontSize:12, fill:"rgba(255,200,80,0.8)", textAnchor:"middle" }, "✎")
+                : isInProg
+                  ? React.createElement("circle", { cx:x+NODE_W-14, cy:y+13, r:5, fill:subject.accent, opacity:0.9 })
+                  : locked
+                    ? React.createElement("text", { x:x+NODE_W-14, y:y+18, fontSize:11, textAnchor:"middle" }, "🔒")
+                    : React.createElement("circle", { cx:x+NODE_W-14, cy:y+13, r:4, fill:subject.color+"AA" }),
+            // Test indicator dot
+            hasTest && !editMode && React.createElement("circle", { cx:x+NODE_W-28, cy:y+13, r:3.5, fill:subject.accent, opacity:0.7 }),
+            // Label
+            React.createElement("foreignObject", { x:x+8, y:y+24, width:NODE_W-20, height:NODE_H-28 },
+              React.createElement("div", { xmlns:"http://www.w3.org/1999/xhtml", style:{ color:txtColor, fontSize:11, fontWeight:700, lineHeight:1.35, overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", fontFamily:"'Inter','Segoe UI',sans-serif" } }, node.label)
             )
           );
         })
@@ -934,9 +996,21 @@ function NodeEditSheet({ node, subject, data, isCustom, allNodes, onSaveFields, 
 
 // ─── PROGRESS VIEW ────────────────────────────────────────────────────────────
 function ProgressView({ data, activeChild, child }) {
+  const totalMastered = Object.values(SUBJECTS).reduce((acc, subject) => {
+    const sn = getSubjectNodes(subject.id, data);
+    const ss = computeStatuses(sn, data.progress[activeChild] || {});
+    return acc + Object.values(ss).filter(s=>s===STATUS.MASTERED).length;
+  }, 0);
+  const totalNodes = Object.values(SUBJECTS).reduce((acc, subject) => acc + getSubjectNodes(subject.id, data).length, 0);
+
   return React.createElement("div", { style:{ padding:"24px 20px", maxWidth:700, margin:"0 auto" } },
-    React.createElement("h2", { style:{ fontSize:18, fontWeight:700, marginBottom:4, color:"#fff" } }, `${child?.name}'s Progress`),
-    React.createElement("p", { style:{ color:"rgba(255,255,255,0.38)", fontSize:13, marginBottom:24 } }, "Overview across all subjects"),
+    React.createElement("div", { style:{ marginBottom:24, padding:"20px 24px", borderRadius:18, background:"linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03))", border:"1px solid rgba(255,255,255,0.1)" } },
+      React.createElement("div", { style:{ fontSize:22, fontWeight:800, color:"#fff", marginBottom:4 } }, `${child?.name}'s Progress`),
+      React.createElement("div", { style:{ fontSize:13, color:"rgba(255,255,255,0.45)", marginBottom:14 } }, `${totalMastered} of ${totalNodes} total topics mastered across all subjects`),
+      React.createElement("div", { style:{ height:10, borderRadius:5, background:"rgba(255,255,255,0.08)", overflow:"hidden" } },
+        React.createElement("div", { style:{ height:"100%", borderRadius:5, transition:"width 0.6s", width:`${Math.round(totalMastered/totalNodes*100)}%`, background:"linear-gradient(90deg,#3B82F6,#8B5CF6,#10B981)" } })
+      ),
+    ),
     ...Object.values(SUBJECTS).map(subject => {
       const sp = data.progress[activeChild] || {};
       const sn = getSubjectNodes(subject.id, data);
@@ -953,21 +1027,23 @@ function ProgressView({ data, activeChild, child }) {
         if (ss[node.id]===STATUS.MASTERED) gradeGroups[g].mastered++;
       }
       const gradeOrder = ["K","1","2","3","4","5","6","7","8","9","10","11","12"];
-      return React.createElement("div", { key:subject.id, style:{ marginBottom:18, padding:"16px 20px", borderRadius:14, background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.06)" } },
+      return React.createElement("div", { key:subject.id, style:{ marginBottom:14, padding:"16px 20px", borderRadius:16, background:`linear-gradient(135deg, ${subject.color}18, ${subject.accent}0A)`, border:`1px solid ${subject.color}30`, boxShadow:`0 2px 16px ${subject.color}10` } },
         React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 } },
-          React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:8 } },
-            React.createElement("span", { style:{ color:subject.accent, fontSize:14 } }, subject.icon),
-            React.createElement("span", { style:{ fontWeight:700, fontSize:15, color:"#fff" } }, subject.label),
-            inProgress>0 && React.createElement("span", { style:{ fontSize:11, background:`${subject.color}33`, color:subject.accent, padding:"2px 8px", borderRadius:10 } }, `${inProgress} in progress`)
+          React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:10 } },
+            React.createElement("div", { style:{ width:34, height:34, borderRadius:10, background:`linear-gradient(135deg, ${subject.color}, ${subject.accent})`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:16, flexShrink:0 } }, subject.icon),
+            React.createElement("div", null,
+              React.createElement("div", { style:{ fontWeight:700, fontSize:15, color:"#fff" } }, subject.label),
+              inProgress>0 && React.createElement("div", { style:{ fontSize:11, color:subject.accent, marginTop:1 } }, `${inProgress} in progress`),
+            ),
           ),
-          React.createElement("span", { style:{ fontSize:13, fontWeight:700, color:subject.accent } }, `${pct}%`)
+          React.createElement("div", { style:{ fontSize:26, fontWeight:800, color:subject.accent } }, `${pct}%`)
         ),
-        React.createElement("div", { style:{ height:8, borderRadius:4, background:"rgba(255,255,255,0.07)", overflow:"hidden", marginBottom:12 } },
-          React.createElement("div", { style:{ height:"100%", borderRadius:4, transition:"width 0.5s", width:`${pct}%`, background:`linear-gradient(90deg,${subject.color},${subject.accent})` } })
+        React.createElement("div", { style:{ height:8, borderRadius:4, background:"rgba(255,255,255,0.08)", overflow:"hidden", marginBottom:12 } },
+          React.createElement("div", { style:{ height:"100%", borderRadius:4, transition:"width 0.5s", width:`${pct}%`, background:`linear-gradient(90deg,${subject.color},${subject.accent})`, boxShadow:`0 0 8px ${subject.color}60` } })
         ),
-        React.createElement("div", { style:{ display:"flex", gap:6, flexWrap:"wrap" } },
+        React.createElement("div", { style:{ display:"flex", gap:5, flexWrap:"wrap" } },
           ...Object.entries(gradeGroups).sort((a,b)=>gradeOrder.indexOf(a[0])-gradeOrder.indexOf(b[0])).map(([grade,{total:t,mastered:m}]) =>
-            React.createElement("div", { key:grade, style:{ fontSize:11, padding:"3px 8px", borderRadius:8, background:m===t?`${subject.color}44`:"rgba(255,255,255,0.05)", color:m===t?subject.accent:"rgba(255,255,255,0.32)", border:`1px solid ${m===t?subject.color+"66":"rgba(255,255,255,0.08)"}` } }, `Gr.${grade} ${m}/${t}`)
+            React.createElement("div", { key:grade, style:{ fontSize:10, padding:"3px 9px", borderRadius:20, background:m===t?`${subject.color}44`:m>0?`${subject.color}18`:"rgba(255,255,255,0.04)", color:m===t?subject.accent:m>0?"rgba(255,255,255,0.55)":"rgba(255,255,255,0.25)", border:`1px solid ${m===t?subject.color+"66":m>0?subject.color+"33":"rgba(255,255,255,0.06)"}`, fontWeight:m===t?700:400 } }, `${grade === "K" ? "K" : `Gr.${grade}`} ${m}/${t}`)
           )
         )
       );
@@ -976,11 +1052,12 @@ function ProgressView({ data, activeChild, child }) {
 }
 
 // ─── UTILITY COMPONENTS ───────────────────────────────────────────────────────
-function TabBtn({ active, onClick, children }) {
-  return React.createElement("button", { onClick, style:{ padding:"6px 14px", borderRadius:8, border:"none", cursor:"pointer", background:active?"rgba(255,255,255,0.12)":"transparent", color:active?"#fff":"rgba(255,255,255,0.4)", fontWeight:active?700:400, fontSize:13 } }, children);
+function TabBtn({ active, onClick, children, color }) {
+  const c = color || "#3B82F6";
+  return React.createElement("button", { onClick, style:{ padding:"7px 16px", borderRadius:10, border: active?`1px solid ${c}55`:"1px solid transparent", cursor:"pointer", background: active?`${c}22`:"transparent", color:active?"#fff":"rgba(255,255,255,0.45)", fontWeight:active?700:400, fontSize:13, transition:"all 0.15s" } }, children);
 }
 function ActionBtn({ color, onClick, children, disabled }) {
-  return React.createElement("button", { onClick, disabled, style:{ padding:"8px 18px", borderRadius:10, border:`1px solid ${color}`, background:`${color}18`, color, fontWeight:600, fontSize:13, cursor:"pointer", opacity:disabled?0.5:1 } }, children);
+  return React.createElement("button", { onClick, disabled, style:{ padding:"9px 20px", borderRadius:11, border:`1px solid ${color}66`, background:`${color}22`, color, fontWeight:700, fontSize:13, cursor:"pointer", opacity:disabled?0.4:1, transition:"all 0.15s", boxShadow:`0 0 8px ${color}25` } }, children);
 }
 
 // ─── MOUNT ───────────────────────────────────────────────────────────────────
