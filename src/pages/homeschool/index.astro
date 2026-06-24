@@ -68,7 +68,7 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
 </script>
 
 <!-- Curriculum data: tests, resources, updated colors. Loaded before React. -->
-<script src="/curriculum-data.js"></script>
+<script is:inline src="/curriculum-data.js"></script>
 
 <script type="text/babel">
 const { useState, useMemo } = React;
