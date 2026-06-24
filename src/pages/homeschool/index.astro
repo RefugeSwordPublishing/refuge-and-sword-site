@@ -615,6 +615,10 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
   const lastScore = childProgress[scoreKey];
   const [tab, setTab] = useState("info");
   const [correct, setCorrect] = useState("");
+  const [photoState, setPhotoState] = useState("idle"); // idle | loading | results | error
+  const [photoResults, setPhotoResults] = useState(null);
+  const [photoError, setPhotoError] = useState("");
+  const fileInputRef = React.useRef(null);
 
   const markStatus = (s) => {
     onSetProgress({
@@ -636,6 +640,31 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     if (passed) updates[node.id] = STATUS.MASTERED;
     onSetProgress(updates);
     setCorrect("");
+    setPhotoResults(null);
+    setPhotoState("idle");
+  };
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoState("loading");
+    setPhotoError("");
+    setPhotoResults(null);
+    try {
+      const fd = new FormData();
+      fd.append("image", file);
+      fd.append("questions", JSON.stringify(questions));
+      const res = await fetch("/api/grade-test", { method:"POST", body:fd });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error || "Grading failed");
+      setPhotoResults(json);
+      setCorrect(String(json.totalCorrect));
+      setPhotoState("results");
+    } catch (err) {
+      setPhotoError(err.message || "Something went wrong. Enter score manually.");
+      setPhotoState("error");
+    }
+    e.target.value = "";
   };
 
   const panelTabs = ["info", ...(questions.length > 0 ? ["test"] : [])];
@@ -686,16 +715,60 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
 
       // TEST TAB
       tab==="test" && React.createElement("div", null,
-        lastScore && React.createElement("div", { style:{ marginBottom:16, padding:"10px 14px", borderRadius:10, background: lastScore.passed?"rgba(74,175,80,0.12)":"rgba(255,80,80,0.1)", border:`1px solid ${lastScore.passed?"rgba(74,175,80,0.3)":"rgba(255,80,80,0.2)"}`, fontSize:13 } },
-          React.createElement("div", { style:{ fontWeight:700, color: lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed?"Last attempt: Passed":"Last attempt: Failed"),
+
+        // Hidden file input — accepts camera on mobile
+        React.createElement("input", { ref:fileInputRef, type:"file", accept:"image/*", capture:"environment", style:{ display:"none" }, onChange:handlePhotoChange }),
+
+        // Last score badge
+        lastScore && React.createElement("div", { style:{ marginBottom:16, padding:"10px 14px", borderRadius:10, background:lastScore.passed?"rgba(74,175,80,0.12)":"rgba(255,80,80,0.1)", border:`1px solid ${lastScore.passed?"rgba(74,175,80,0.3)":"rgba(255,80,80,0.2)"}`, fontSize:13 } },
+          React.createElement("div", { style:{ fontWeight:700, color:lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed ? "Last attempt: Passed" : "Last attempt: Failed"),
           React.createElement("div", { style:{ color:"rgba(255,255,255,0.5)", fontSize:12 } }, `${lastScore.correct}/${lastScore.total} correct — ${lastScore.pct}% — ${lastScore.date}`)
         ),
+
         React.createElement("div", { style:{ marginBottom:16, fontSize:12, color:"rgba(255,255,255,0.45)" } },
           `${questions.length} questions · Passing score: ${passingThreshold}%`
         ),
-        React.createElement(ActionBtn, { color:subject.accent, onClick:()=>printWorksheet("", subject.label, node, questions) }, "🖨 Print Test"),
-        React.createElement("div", { style:{ marginTop:20, paddingTop:16, borderTop:"1px solid rgba(255,255,255,0.06)" } },
-          React.createElement("div", { style:{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.7)", marginBottom:10 } }, "Enter Score"),
+
+        // Action row
+        React.createElement("div", { style:{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:20 } },
+          React.createElement(ActionBtn, { color:subject.accent, onClick:()=>printWorksheet("", subject.label, node, questions) }, "🖨 Print Test"),
+          photoState !== "loading" && React.createElement(ActionBtn, { color:"#7BA3D4", onClick:()=>fileInputRef.current?.click() }, "📷 Grade with Photo"),
+        ),
+
+        // Loading spinner
+        photoState === "loading" && React.createElement("div", { style:{ padding:"20px", textAlign:"center", color:"rgba(255,255,255,0.5)", fontSize:13 } },
+          React.createElement("div", { style:{ fontSize:22, marginBottom:8 } }, "⏳"),
+          "Grading your test..."
+        ),
+
+        // Photo error
+        photoState === "error" && React.createElement("div", { style:{ marginBottom:16, padding:"10px 14px", borderRadius:10, background:"rgba(255,80,80,0.1)", border:"1px solid rgba(255,80,80,0.2)", fontSize:13, color:"rgba(255,150,150,0.9)" } },
+          photoError
+        ),
+
+        // Photo results breakdown
+        photoState === "results" && photoResults && React.createElement("div", { style:{ marginBottom:20 } },
+          React.createElement("div", { style:{ fontSize:13, fontWeight:700, color:"rgba(255,255,255,0.8)", marginBottom:10 } },
+            `Photo graded: ${photoResults.totalCorrect}/${photoResults.total} correct (${photoResults.pct}%)`
+          ),
+          ...photoResults.results.map((r, i) =>
+            React.createElement("div", { key:i, style:{ display:"flex", gap:10, alignItems:"flex-start", padding:"7px 0", borderBottom:"1px solid rgba(255,255,255,0.05)" } },
+              React.createElement("span", { style:{ fontSize:14, minWidth:20 } }, r.correct ? "✅" : "❌"),
+              React.createElement("div", { style:{ flex:1 } },
+                React.createElement("div", { style:{ fontSize:12, color:"rgba(255,255,255,0.7)" } }, questions[i]?.text || `Question ${r.question}`),
+                r.studentAnswer && React.createElement("div", { style:{ fontSize:11, color:"rgba(255,255,255,0.35)", marginTop:2 } }, `Answer: ${r.studentAnswer}`),
+                r.note && React.createElement("div", { style:{ fontSize:11, color:"rgba(255,150,100,0.7)", marginTop:2 } }, r.note),
+              )
+            )
+          ),
+          React.createElement("div", { style:{ marginTop:10, fontSize:11, color:"rgba(255,255,255,0.3)" } }, "Review above then adjust if needed before submitting.")
+        ),
+
+        // Score entry + submit
+        React.createElement("div", { style:{ paddingTop:16, borderTop:"1px solid rgba(255,255,255,0.06)" } },
+          React.createElement("div", { style:{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.7)", marginBottom:10 } },
+            photoState === "results" ? "Confirm Score" : "Enter Score Manually"
+          ),
           React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" } },
             React.createElement("input", {
               type:"number", min:0, max:questions.length, value:correct,
@@ -705,11 +778,13 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
               style:{ padding:"8px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:14, width:100 }
             }),
             React.createElement("span", { style:{ color:"rgba(255,255,255,0.4)", fontSize:13 } }, `out of ${questions.length}`),
-            correct !== "" && !isNaN(parseInt(correct)) && React.createElement("span", { style:{ fontSize:13, color: Math.round(parseInt(correct)/questions.length*100)>=passingThreshold?"#4CAF80":"rgba(255,120,120,0.8)", fontWeight:700 } },
-              `= ${Math.round(parseInt(correct)/questions.length*100)}%`
-            ),
+            correct !== "" && !isNaN(parseInt(correct)) && React.createElement("span", {
+              style:{ fontSize:13, fontWeight:700, color: Math.round(parseInt(correct)/questions.length*100)>=passingThreshold?"#4CAF80":"rgba(255,120,120,0.8)" }
+            }, `= ${Math.round(parseInt(correct)/questions.length*100)}%`),
           ),
-          React.createElement("button", { onClick:submitScore, disabled:correct==="", style:{ marginTop:12, padding:"9px 24px", borderRadius:10, border:"none", background:subject.color, color:"#fff", fontWeight:700, fontSize:13, cursor:"pointer", opacity:correct===""?0.5:1 } }, "Submit Score"),
+          React.createElement("button", { onClick:submitScore, disabled:correct==="", style:{ marginTop:12, padding:"9px 24px", borderRadius:10, border:"none", background:subject.color, color:"#fff", fontWeight:700, fontSize:13, cursor:"pointer", opacity:correct===""?0.5:1 } },
+            photoState === "results" ? "Confirm & Save" : "Submit Score"
+          ),
           React.createElement("div", { style:{ marginTop:8, fontSize:11, color:"rgba(255,255,255,0.3)" } }, `${passingThreshold}% or higher = mastered automatically`)
         )
       )
