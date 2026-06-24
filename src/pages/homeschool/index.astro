@@ -5,46 +5,34 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Homeschool Path — Refuge &amp; Sword</title>
-  <meta name="robots" content="noindex, nofollow" />
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; background: #0F1117; color: #E8EAF0; font-family: 'Inter', 'Segoe UI', sans-serif; }
-    #root { height: 100%; }
-    #gate {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 100vh; gap: 20px;
-    }
-    #gate .logo { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
-    #gate h1 { font-size: 22px; font-weight: 700; color: #fff; }
-    #gate p { font-size: 13px; color: rgba(255,255,255,0.4); }
-    #gate input {
-      padding: 10px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.07); color: #fff; font-size: 15px; width: 240px;
-      text-align: center; letter-spacing: 0.05em;
-    }
-    #gate input:focus { outline: none; border-color: rgba(255,255,255,0.35); }
-    #gate button {
-      padding: 10px 28px; border-radius: 10px; border: none;
-      background: #4A6FA5; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
-    }
-    #gate button:hover { background: #5a7fb5; }
-    #gate .error { color: rgba(255,100,100,0.8); font-size: 13px; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
-    input:focus { outline: none; }
-    button:focus-visible { outline: 2px solid rgba(255,255,255,0.4); outline-offset: 2px; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Homeschool Path — Refuge &amp; Sword</title>
+<meta name="robots" content="noindex, nofollow" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #0F1117; color: #E8EAF0; font-family: 'Inter', 'Segoe UI', sans-serif; }
+  #root { height: 100%; }
+  #gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; gap:20px; }
+  #gate .logo { font-size:13px; color:rgba(255,255,255,0.3); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px; }
+  #gate h1 { font-size:22px; font-weight:700; color:#fff; }
+  #gate p { font-size:13px; color:rgba(255,255,255,0.4); }
+  #gate input { padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:#fff; font-size:15px; width:240px; text-align:center; }
+  #gate input:focus { outline:none; border-color:rgba(255,255,255,0.35); }
+  #gate button { padding:10px 28px; border-radius:10px; border:none; background:#4A6FA5; color:#fff; font-size:14px; font-weight:600; cursor:pointer; }
+  #gate .error { color:rgba(255,100,100,0.8); font-size:13px; }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:rgba(255,255,255,0.03); }
+  ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.12); border-radius:3px; }
+  input:focus, textarea:focus { outline:none; }
+  button:focus-visible { outline:2px solid rgba(255,255,255,0.4); outline-offset:2px; }
+</style>
 </head>
 <body>
 
-<!-- Password Gate -->
 <div id="gate">
   <div class="logo">Refuge &amp; Sword</div>
   <h1>Homeschool Path</h1>
@@ -54,42 +42,28 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
   <div class="error" id="pw-error" style="display:none">Incorrect password.</div>
 </div>
 
-<!-- App mounts here after auth -->
 <div id="root" style="display:none;height:100%"></div>
 
 <script define:vars={{ PASSWORD }}>
   const SESSION_KEY = "hs_auth_v1";
-
   function unlock() {
     document.getElementById("gate").style.display = "none";
     document.getElementById("root").style.display = "block";
   }
-
-  if (sessionStorage.getItem(SESSION_KEY) === "1") {
-    unlock();
-  }
-
+  if (sessionStorage.getItem(SESSION_KEY) === "1") unlock();
   document.getElementById("pw-submit").addEventListener("click", attempt);
   document.getElementById("pw-input").addEventListener("keydown", e => { if (e.key === "Enter") attempt(); });
-
   function attempt() {
     const val = document.getElementById("pw-input").value;
-    if (val === PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, "1");
-      unlock();
-    } else {
-      document.getElementById("pw-error").style.display = "block";
-      document.getElementById("pw-input").value = "";
-      document.getElementById("pw-input").focus();
-    }
+    if (val === PASSWORD) { sessionStorage.setItem(SESSION_KEY, "1"); unlock(); }
+    else { document.getElementById("pw-error").style.display = "block"; document.getElementById("pw-input").value = ""; document.getElementById("pw-input").focus(); }
   }
 </script>
 
 <script type="text/babel">
-const { useState, useRef, useEffect, useMemo } = React;
+const { useState, useMemo } = React;
 
 // ─── CURRICULUM DATA ─────────────────────────────────────────────────────────
-
 const SUBJECTS = {
   math: {
     id: "math", label: "Mathematics", icon: "✦", color: "#4A6FA5", accent: "#7BA3D4",
@@ -159,23 +133,23 @@ const SUBJECTS = {
       { id: "family_community", label: "Family & Community",        grade: "K–1",  prereqs: [],                              col: 0, row: 0,  desc: "God places us in families and communities. Understand roles, responsibilities, and how authority structures reflect His order (Rom. 13)." },
       { id: "us_symbols",       label: "American Symbols",          grade: "1–2",  prereqs: ["family_community"],            col: 0, row: 1,  desc: "Flag, Pledge, founding documents, and national holidays. Nations are raised up and brought low by God's providence (Dan. 2:21)." },
       { id: "world_cultures",   label: "World Cultures & Geography",grade: "1–2",  prereqs: ["family_community"],            col: 1, row: 1,  desc: "Explore how God scattered the nations (Gen. 11), shaped geography, and placed every people in their time and boundaries (Acts 17:26)." },
-      { id: "early_america",    label: "Early American History",    grade: "2–3",  prereqs: ["us_symbols"],                  col: 0, row: 2,  desc: "Native peoples, exploration, colonial settlement. Examine the Puritan vision, covenant theology in early colonies, and the mixed record of European settlers — including injustices toward native peoples." },
-      { id: "ancient_history",  label: "Ancient Civilizations",     grade: "3–4",  prereqs: ["world_cultures"],              col: 1, row: 2,  desc: "Egypt, Mesopotamia, Greece, Rome — each a sovereign work of God's providence. Examine their wisdom and their idolatry. All history moves toward Christ (Gal. 4:4)." },
-      { id: "revolution",       label: "American Revolution",       grade: "4–5",  prereqs: ["early_america"],               col: 0, row: 3,  desc: "Causes, key events, and the Constitution. The Founders were men of their age — some godly, some deist, all sinners. Examine the biblical roots of natural law while noting their moral failures and contradictions, including slavery." },
-      { id: "medieval",         label: "Middle Ages",               grade: "4–5",  prereqs: ["ancient_history"],             col: 1, row: 3,  desc: "Feudalism, the visible church's power and corruption, the Crusades, plague, and the early stirrings of reform. God preserved His church through dark centuries." },
-      { id: "westward",         label: "Westward Expansion",        grade: "5",    prereqs: ["revolution"],                  col: 0, row: 4,  desc: "Manifest Destiny, Louisiana Purchase, and the displacement of Native peoples. Examine the ideology critically — national ambition is not the same as God's blessing." },
-      { id: "reformation",      label: "Reformation & its Legacy",  grade: "5–6",  prereqs: ["medieval"],                    col: 1, row: 4,  desc: "Luther, Calvin, Zwingli, and the recovery of sola fide, sola scriptura. Study the Reformation as God's sovereign renewal of gospel preaching. Its direct influence on Western law, education, and liberty." },
-      { id: "civil_war",        label: "Civil War & Reconstruction", grade: "5–6", prereqs: ["westward"],                    col: 0, row: 5,  desc: "Slavery, secession, the war, emancipation, and Reconstruction's collapse. All men bear the image of God (Gen. 1:27). Slavery was a moral evil condemned by Scripture. Examine the failure of Reconstruction honestly." },
-      { id: "enlightenment",    label: "Enlightenment & Revolutions",grade: "6–7", prereqs: ["reformation"],                 col: 1, row: 5,  desc: "The Enlightenment's humanist turn away from Scripture, the French Revolution's bloodshed, and the contrast with the Reformation's fruit. Ideas have consequences." },
-      { id: "gilded_age",       label: "Gilded Age & Progressivism",grade: "6–7",  prereqs: ["civil_war"],                   col: 0, row: 6,  desc: "Industrialization, immigration, labor abuses, and Progressive-era reforms. Examine both legitimate grievances and the secular-utopian assumptions driving much reform thought." },
-      { id: "ww1",              label: "World War I",               grade: "7–8",  prereqs: ["enlightenment","gilded_age"],  col: 0, row: 7,  desc: "Causes rooted in nationalism, imperialism, and the collapse of Christendom. The war that ended Europe's moral confidence and opened the door to totalitarianism." },
-      { id: "interwar",         label: "Interwar Period",           grade: "8",    prereqs: ["ww1"],                         col: 0, row: 8,  desc: "The Roaring Twenties, Great Depression, and the rise of fascism and communism. What happens when a civilization abandons its Christian foundations." },
-      { id: "ww2",              label: "World War II",              grade: "8–9",  prereqs: ["interwar"],                    col: 0, row: 9,  desc: "The Holocaust, theater campaigns, and the atomic bomb. Study the Holocaust as the fruit of godless ideology. Every victim bore God's image. Examine American decision-making honestly." },
-      { id: "cold_war",         label: "Cold War",                  grade: "9–10", prereqs: ["ww2"],                         col: 0, row: 10, desc: "The ideological conflict between atheistic communism and the West. Korea, Vietnam, the Space Race, and the Soviet collapse. Marxism as a false gospel examined biblically." },
-      { id: "civil_rights",     label: "Civil Rights Movement",     grade: "9–10", prereqs: ["ww2"],                         col: 1, row: 10, desc: "The documented injustice of Jim Crow and the campaign to end it. Examine key events and legislation factually. Note that leading figures like MLK held theological liberalism at odds with orthodox Christianity and had documented moral failures — all men are sinners in need of grace. The cause of equal protection under law is consistent with biblical justice (Mic. 6:8)." },
-      { id: "modern_world",     label: "Modern World History",      grade: "10–11",prereqs: ["cold_war","civil_rights"],      col: 0, row: 11, desc: "Post-Cold War globalization, the Middle East, 9/11, and the rise of secularism and postmodernism. Understand today's world through a sovereign-God framework." },
-      { id: "govt_civics",      label: "Government & Civics",       grade: "11–12",prereqs: ["modern_world"],                col: 0, row: 12, desc: "U.S. Constitution, branches of government, elections, and civic responsibility. The state is a legitimate but limited institution ordained by God (Rom. 13). Christians are citizens of a higher kingdom first (Phil. 3:20)." },
-      { id: "economics",        label: "Economics",                 grade: "11–12",prereqs: ["modern_world"],                col: 1, row: 12, desc: "Micro/macroeconomics, supply and demand, fiscal and monetary policy, personal finance. Stewardship is a biblical category — examine economic systems through the lens of human nature, work, and creation mandate." },
+      { id: "early_america",    label: "Early American History",    grade: "2–3",  prereqs: ["us_symbols"],                  col: 0, row: 2,  desc: "Native peoples, exploration, colonial settlement. Examine the Puritan vision, covenant theology in early colonies, and the mixed record of European settlers." },
+      { id: "ancient_history",  label: "Ancient Civilizations",     grade: "3–4",  prereqs: ["world_cultures"],              col: 1, row: 2,  desc: "Egypt, Mesopotamia, Greece, Rome — each a sovereign work of God's providence. All history moves toward Christ (Gal. 4:4)." },
+      { id: "revolution",       label: "American Revolution",       grade: "4–5",  prereqs: ["early_america"],               col: 0, row: 3,  desc: "Causes, key events, and the Constitution. The Founders were men of their age — some godly, some deist, all sinners." },
+      { id: "medieval",         label: "Middle Ages",               grade: "4–5",  prereqs: ["ancient_history"],             col: 1, row: 3,  desc: "Feudalism, the visible church's power and corruption, the Crusades, plague, and the early stirrings of reform." },
+      { id: "westward",         label: "Westward Expansion",        grade: "5",    prereqs: ["revolution"],                  col: 0, row: 4,  desc: "Manifest Destiny, Louisiana Purchase, and the displacement of Native peoples. National ambition is not the same as God's blessing." },
+      { id: "reformation",      label: "Reformation & its Legacy",  grade: "5–6",  prereqs: ["medieval"],                    col: 1, row: 4,  desc: "Luther, Calvin, Zwingli, and the recovery of sola fide, sola scriptura. Its direct influence on Western law, education, and liberty." },
+      { id: "civil_war",        label: "Civil War & Reconstruction", grade: "5–6", prereqs: ["westward"],                    col: 0, row: 5,  desc: "Slavery, secession, the war, emancipation, and Reconstruction's collapse. All men bear the image of God (Gen. 1:27)." },
+      { id: "enlightenment",    label: "Enlightenment & Revolutions",grade: "6–7", prereqs: ["reformation"],                 col: 1, row: 5,  desc: "The Enlightenment's humanist turn away from Scripture, the French Revolution's bloodshed, and the contrast with the Reformation's fruit." },
+      { id: "gilded_age",       label: "Gilded Age & Progressivism",grade: "6–7",  prereqs: ["civil_war"],                   col: 0, row: 6,  desc: "Industrialization, immigration, labor abuses, and Progressive-era reforms." },
+      { id: "ww1",              label: "World War I",               grade: "7–8",  prereqs: ["enlightenment","gilded_age"],  col: 0, row: 7,  desc: "Causes rooted in nationalism, imperialism, and the collapse of Christendom." },
+      { id: "interwar",         label: "Interwar Period",           grade: "8",    prereqs: ["ww1"],                         col: 0, row: 8,  desc: "The Roaring Twenties, Great Depression, and the rise of fascism and communism." },
+      { id: "ww2",              label: "World War II",              grade: "8–9",  prereqs: ["interwar"],                    col: 0, row: 9,  desc: "The Holocaust, theater campaigns, and the atomic bomb. Every victim bore God's image." },
+      { id: "cold_war",         label: "Cold War",                  grade: "9–10", prereqs: ["ww2"],                         col: 0, row: 10, desc: "The ideological conflict between atheistic communism and the West. Marxism as a false gospel examined biblically." },
+      { id: "civil_rights",     label: "Civil Rights Movement",     grade: "9–10", prereqs: ["ww2"],                         col: 1, row: 10, desc: "The documented injustice of Jim Crow and the campaign to end it. The cause of equal protection under law is consistent with biblical justice (Mic. 6:8)." },
+      { id: "modern_world",     label: "Modern World History",      grade: "10–11",prereqs: ["cold_war","civil_rights"],      col: 0, row: 11, desc: "Post-Cold War globalization, the Middle East, 9/11, and the rise of secularism and postmodernism." },
+      { id: "govt_civics",      label: "Government & Civics",       grade: "11–12",prereqs: ["modern_world"],                col: 0, row: 12, desc: "U.S. Constitution, branches of government, elections, and civic responsibility. Christians are citizens of a higher kingdom first (Phil. 3:20)." },
+      { id: "economics",        label: "Economics",                 grade: "11–12",prereqs: ["modern_world"],                col: 1, row: 12, desc: "Micro/macroeconomics, supply and demand, fiscal and monetary policy, personal finance. Stewardship is a biblical category." },
     ],
   },
   science: {
@@ -195,119 +169,153 @@ const SUBJECTS = {
       { id: "life_science",      label: "Life Science",            grade: "4–5",  prereqs: ["ecosystems"],                 col: 0, row: 4,  desc: "Cell basics, classification of living things, heredity and adaptation. Examined with a Creator's design in view." },
       { id: "physical_science",  label: "Physical Science",        grade: "4–5",  prereqs: ["energy_basic"],               col: 1, row: 4,  desc: "Motion, force, work, sound and light waves, basic electricity." },
       { id: "space",             label: "Astronomy",               grade: "4–6",  prereqs: ["earth_science"],              col: 2, row: 4,  desc: "Planets, stars, galaxies, seasons, space exploration. The vastness of the cosmos magnifies the Creator." },
-      { id: "biology",           label: "Biology",                 grade: "7–8",  prereqs: ["life_science","physical_science"],col:0,row: 5, desc: "Cell structure, genetics, body systems. Evolution examined critically alongside design-based models; Scripture and science rightly understood do not conflict." },
+      { id: "biology",           label: "Biology",                 grade: "7–8",  prereqs: ["life_science","physical_science"],col:0,row: 5, desc: "Cell structure, genetics, body systems. Evolution examined critically alongside design-based models." },
       { id: "chemistry_basic",   label: "Chemistry",               grade: "8–9",  prereqs: ["physical_science","space"],   col: 1, row: 5,  desc: "Periodic table, atoms and molecules, chemical reactions, acids and bases." },
       { id: "physics",           label: "Physics",                 grade: "9–10", prereqs: ["biology","chemistry_basic"],  col: 0, row: 6,  desc: "Newton's laws, momentum, energy, waves, electricity and magnetism." },
       { id: "chemistry_adv",     label: "Chemistry II",            grade: "10–11",prereqs: ["chemistry_basic","biology"],  col: 1, row: 6,  desc: "Stoichiometry, thermodynamics, kinetics, organic chemistry intro." },
       { id: "anatomy",           label: "Anatomy & Physiology",    grade: "10–11",prereqs: ["biology"],                    col: 2, row: 6,  desc: "Body systems in detail, homeostasis, disease, medical applications." },
       { id: "ap_science",        label: "AP Science",              grade: "11–12",prereqs: ["physics","chemistry_adv"],    col: 0, row: 7,  desc: "College-level biology, chemistry, or physics (student's choice)." },
-      { id: "env_science",       label: "Environmental Science",   grade: "11–12",prereqs: ["anatomy","chemistry_adv"],    col: 1, row: 7,  desc: "Ecology, sustainability, climate. Stewardship of creation is a biblical mandate (Gen. 2:15); examine claims and data carefully." },
+      { id: "env_science",       label: "Environmental Science",   grade: "11–12",prereqs: ["anatomy","chemistry_adv"],    col: 1, row: 7,  desc: "Ecology, sustainability, climate. Stewardship of creation is a biblical mandate (Gen. 2:15)." },
     ],
   },
   bible: {
     id: "bible", label: "Bible", icon: "✝", color: "#7B4F2E", accent: "#C4956A",
     nodes: [
-      { id: "creation",           label: "Creation & Genesis",       grade: "K–1",  prereqs: [],                              col: 0, row: 0,  desc: "God creates ex nihilo, the goodness of creation, Adam and Eve, the fall and its consequences, Noah and the covenant. The entire biblical story begins here." },
-      { id: "old_test_stories",   label: "OT Narratives",            grade: "1–3",  prereqs: ["creation"],                    col: 0, row: 1,  desc: "Abraham's faith and testing, Moses and the Exodus, Joshua, the Judges cycle of sin and deliverance, David, Solomon. God's covenant faithfulness despite man's constant failure." },
+      { id: "creation",           label: "Creation & Genesis",       grade: "K–1",  prereqs: [],                              col: 0, row: 0,  desc: "God creates ex nihilo, the goodness of creation, Adam and Eve, the fall and its consequences, Noah and the covenant." },
+      { id: "old_test_stories",   label: "OT Narratives",            grade: "1–3",  prereqs: ["creation"],                    col: 0, row: 1,  desc: "Abraham's faith and testing, Moses and the Exodus, Joshua, the Judges cycle, David, Solomon. God's covenant faithfulness despite man's constant failure." },
       { id: "prayer",             label: "Prayer & Worship",         grade: "K–2",  prereqs: ["creation"],                    col: 1, row: 1,  desc: "What prayer is, approaching God through Christ, the Psalms as the church's hymnbook, corporate and private worship." },
-      { id: "new_test_stories",   label: "Life of Christ",           grade: "2–4",  prereqs: ["old_test_stories"],            col: 0, row: 2,  desc: "The Incarnation, Jesus' ministry, miracles as signs of His identity, parables, the Passion, and the bodily resurrection. The fulfillment of all OT promises." },
-      { id: "fruits_spirit",      label: "Fruits of the Spirit",     grade: "2–4",  prereqs: ["prayer"],                      col: 1, row: 2,  desc: "Gal. 5:22–23 — love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control. These flow from union with Christ, not self-effort." },
-      { id: "acts_church",        label: "Acts & the Early Church",  grade: "4–5",  prereqs: ["new_test_stories"],            col: 0, row: 3,  desc: "Pentecost and the Spirit's work, Peter and Paul, the spread of the gospel to the Gentiles, persecution, and church planting. The unstoppable advance of Christ's kingdom." },
+      { id: "new_test_stories",   label: "Life of Christ",           grade: "2–4",  prereqs: ["old_test_stories"],            col: 0, row: 2,  desc: "The Incarnation, Jesus' ministry, miracles, parables, the Passion, and the bodily resurrection. The fulfillment of all OT promises." },
+      { id: "fruits_spirit",      label: "Fruits of the Spirit",     grade: "2–4",  prereqs: ["prayer"],                      col: 1, row: 2,  desc: "Gal. 5:22–23 — love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control." },
+      { id: "acts_church",        label: "Acts & the Early Church",  grade: "4–5",  prereqs: ["new_test_stories"],            col: 0, row: 3,  desc: "Pentecost and the Spirit's work, Peter and Paul, the spread of the gospel to the Gentiles, persecution, and church planting." },
       { id: "character",          label: "Christian Character",      grade: "3–5",  prereqs: ["fruits_spirit"],               col: 1, row: 3,  desc: "Integrity, humility, servant-leadership, forgiveness, stewardship. Character flows from a regenerate heart, not moralism." },
-      { id: "epistles",           label: "The Epistles",             grade: "5–6",  prereqs: ["acts_church"],                 col: 0, row: 4,  desc: "Paul, Peter, James, John, Jude — doctrine applied to the life of the church. Justification, sanctification, the body of Christ, and Christian conduct." },
-      { id: "apologetics_basic",  label: "Basic Apologetics",        grade: "5–7",  prereqs: ["character","acts_church"],     col: 1, row: 4,  desc: "Why we believe: the reliability of Scripture, evidence for the resurrection, and the internal consistency of the Christian worldview. Every thought captive to Christ (2 Cor. 10:5)." },
+      { id: "epistles",           label: "The Epistles",             grade: "5–6",  prereqs: ["acts_church"],                 col: 0, row: 4,  desc: "Paul, Peter, James, John, Jude — doctrine applied to the life of the church." },
+      { id: "apologetics_basic",  label: "Basic Apologetics",        grade: "5–7",  prereqs: ["character","acts_church"],     col: 1, row: 4,  desc: "Why we believe: the reliability of Scripture, evidence for the resurrection, and the internal consistency of the Christian worldview." },
       { id: "ot_survey",          label: "OT Survey",                grade: "6–8",  prereqs: ["epistles"],                    col: 0, row: 5,  desc: "Survey every book of the OT — genres, themes, authorship, Messianic prophecy, and the unfolding of the covenant of grace." },
-      { id: "nt_survey",          label: "NT Survey",                grade: "6–8",  prereqs: ["epistles"],                    col: 1, row: 5,  desc: "Survey every NT book — the four Gospels, Acts, epistles, Revelation. Authorship, historical context, and theological themes." },
-      { id: "worldview",          label: "Biblical Worldview",       grade: "8–9",  prereqs: ["ot_survey","nt_survey"],       col: 0, row: 6,  desc: "Applying the whole counsel of God to every area of life — family, government, economics, media, science, and culture. We are not of the world, but we are in it." },
+      { id: "nt_survey",          label: "NT Survey",                grade: "6–8",  prereqs: ["epistles"],                    col: 1, row: 5,  desc: "Survey every NT book — the four Gospels, Acts, epistles, Revelation." },
+      { id: "worldview",          label: "Biblical Worldview",       grade: "8–9",  prereqs: ["ot_survey","nt_survey"],       col: 0, row: 6,  desc: "Applying the whole counsel of God to every area of life — family, government, economics, media, science, and culture." },
       { id: "theology",           label: "Systematic Theology",      grade: "9–11", prereqs: ["worldview","apologetics_basic"],col:0, row: 7,  desc: "Theology proper, anthropology, hamartiology, soteriology (TULIP), ecclesiology, eschatology. Reformed Baptist distinctives examined from Scripture." },
       { id: "apologetics_adv",    label: "Advanced Apologetics",     grade: "10–12",prereqs: ["theology"],                    col: 1, row: 7,  desc: "Presuppositional and evidential apologetics, comparative religion, responding to atheism, Islam, Roman Catholicism, and theological liberalism." },
     ],
   },
 };
 
-const STATUS = { LOCKED: "locked", UNLOCKED: "unlocked", IN_PROGRESS: "in_progress", MASTERED: "mastered" };
-const STATUS_LABELS = { locked: "Locked", unlocked: "Ready to Learn", in_progress: "In Progress", mastered: "Mastered" };
+const STATUS = { LOCKED:"locked", UNLOCKED:"unlocked", IN_PROGRESS:"in_progress", MASTERED:"mastered" };
+const STATUS_LABELS = { locked:"Locked", unlocked:"Ready to Learn", in_progress:"In Progress", mastered:"Mastered" };
 
-const NODE_W = 152;
-const NODE_H = 64;
-const COL_GAP = 48;
-const ROW_GAP = 44;
-const PAD_X = 32;
-const PAD_Y = 24;
+// ─── LAYOUT ──────────────────────────────────────────────────────────────────
+const NODE_W = 152, NODE_H = 64, COL_GAP = 48, ROW_GAP = 44, PAD_X = 32, PAD_Y = 24;
 
-function getNodePos(node) {
-  return {
-    x: PAD_X + node.col * (NODE_W + COL_GAP),
-    y: PAD_Y + node.row * (NODE_H + ROW_GAP),
-  };
+function getSubjectNodes(subjectId, data) {
+  const base = SUBJECTS[subjectId];
+  const overrides = data.nodeOverrides || {};
+  const custom = (data.customNodes || {})[subjectId] || [];
+  return [
+    ...base.nodes.map(n => ({ ...n, ...(overrides[n.id] || {}) })),
+    ...custom,
+  ];
 }
 
-function buildEdgePath(srcNode, tgtNode, allNodes) {
-  const src = getNodePos(srcNode);
-  const tgt = getNodePos(tgtNode);
-  const x1 = src.x + NODE_W / 2;
-  const y1 = src.y + NODE_H;
-  const x2 = tgt.x + NODE_W / 2;
-  const y2 = tgt.y;
+function getNodePos(node) {
+  return { x: PAD_X + node.col * (NODE_W + COL_GAP), y: PAD_Y + node.row * (NODE_H + ROW_GAP) };
+}
+
+function buildEdgePath(srcNode, tgtNode) {
+  const src = getNodePos(srcNode), tgt = getNodePos(tgtNode);
+  const x1 = src.x + NODE_W / 2, y1 = src.y + NODE_H;
+  const x2 = tgt.x + NODE_W / 2, y2 = tgt.y;
   const laneY = y1 + (y2 - y1) * 0.5;
   if (srcNode.col === tgtNode.col) {
     const cy = (y1 + y2) / 2;
     return `M${x1},${y1} C${x1},${cy} ${x2},${cy} ${x2},${y2}`;
   }
-  const r = 8;
-  const goRight = x2 > x1;
-  const hDir = goRight ? 1 : -1;
-  const downEnd = laneY - r;
-  const horizStart = x1 + hDir * r;
-  const horizEnd = x2 - hDir * r;
-  const upStart = laneY + r;
-  return [
-    `M${x1},${y1}`,
-    `L${x1},${downEnd}`,
-    `Q${x1},${laneY} ${horizStart},${laneY}`,
-    `L${horizEnd},${laneY}`,
-    `Q${x2},${laneY} ${x2},${upStart}`,
-    `L${x2},${y2}`,
-  ].join(" ");
+  const r = 8, hDir = x2 > x1 ? 1 : -1;
+  return [`M${x1},${y1}`,`L${x1},${laneY-r}`,`Q${x1},${laneY} ${x1+hDir*r},${laneY}`,`L${x2-hDir*r},${laneY}`,`Q${x2},${laneY} ${x2},${laneY+r}`,`L${x2},${y2}`].join(" ");
 }
 
 function computeStatuses(nodes, progress) {
-  const mastered = new Set(
-    Object.entries(progress)
-      .filter(([k, v]) => v === STATUS.MASTERED && !k.includes("_log"))
-      .map(([k]) => k)
-  );
+  const mastered = new Set(Object.entries(progress).filter(([k,v]) => v===STATUS.MASTERED && !k.includes("_log") && !k.includes("_score")).map(([k])=>k));
   const result = {};
   for (const node of nodes) {
-    const existing = progress[node.id];
-    if (existing === STATUS.MASTERED) { result[node.id] = STATUS.MASTERED; continue; }
-    if (existing === STATUS.IN_PROGRESS) { result[node.id] = STATUS.IN_PROGRESS; continue; }
+    const ex = progress[node.id];
+    if (ex===STATUS.MASTERED) { result[node.id]=STATUS.MASTERED; continue; }
+    if (ex===STATUS.IN_PROGRESS) { result[node.id]=STATUS.IN_PROGRESS; continue; }
     result[node.id] = node.prereqs.every(p => mastered.has(p)) ? STATUS.UNLOCKED : STATUS.LOCKED;
   }
   return result;
 }
 
 function statusColor(status, subject) {
-  if (status === STATUS.MASTERED) return subject.color;
-  if (status === STATUS.IN_PROGRESS) return subject.accent;
-  if (status === STATUS.UNLOCKED) return "#4A5568";
+  if (status===STATUS.MASTERED) return subject.color;
+  if (status===STATUS.IN_PROGRESS) return subject.accent;
+  if (status===STATUS.UNLOCKED) return "#4A5568";
   return "#2D3748";
 }
-
 function statusBg(status) {
-  if (status === STATUS.MASTERED) return "rgba(255,255,255,0.15)";
-  if (status === STATUS.IN_PROGRESS) return "rgba(255,255,255,0.09)";
-  if (status === STATUS.UNLOCKED) return "rgba(255,255,255,0.06)";
+  if (status===STATUS.MASTERED) return "rgba(255,255,255,0.15)";
+  if (status===STATUS.IN_PROGRESS) return "rgba(255,255,255,0.09)";
+  if (status===STATUS.UNLOCKED) return "rgba(255,255,255,0.06)";
   return "rgba(255,255,255,0.02)";
 }
 
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
 const STORAGE_KEY = "homeschool_tree_v2";
 function loadData() {
-  try { const r = localStorage.getItem(STORAGE_KEY); if (r) return JSON.parse(r); } catch {}
-  return { children: [{ id: "child1", name: "Child 1", color: "#E06C75" }], progress: {} };
+  const defaults = {
+    children: [{ id:"child1", name:"Child 1", color:"#E06C75" }],
+    progress: {}, questions: {}, nodeOverrides: {}, customNodes: {},
+    settings: { passingThreshold: 80 },
+  };
+  try { const r = localStorage.getItem(STORAGE_KEY); if (r) return { ...defaults, ...JSON.parse(r) }; } catch {}
+  return defaults;
 }
 function saveData(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {} }
 
+// ─── PRINT WORKSHEET ─────────────────────────────────────────────────────────
+function printWorksheet(childName, subjectLabel, node, questions) {
+  const lines = questions.map((q, i) => `
+    <div class="question">
+      <p class="qnum">Question ${i + 1}</p>
+      <p class="qtext">${q.text}</p>
+      <div class="answer-space"><div class="line"></div><div class="line"></div></div>
+    </div>`).join('');
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Mastery Test — ${node.label}</title>
+<style>
+  body{font-family:Georgia,serif;max-width:680px;margin:40px auto;color:#111;font-size:14px;line-height:1.6}
+  .header{padding-bottom:16px;margin-bottom:32px;border-bottom:2px solid #111}
+  .header h1{font-size:18px;margin-bottom:4px}
+  .sub{color:#555;font-size:13px;margin-bottom:16px}
+  .meta{display:flex;gap:48px;font-size:13px}
+  .field{display:flex;gap:8px;align-items:baseline}
+  .field-line{flex:1;border-bottom:1px solid #111;min-width:140px;display:inline-block}
+  .question{margin-bottom:32px}
+  .qnum{font-weight:bold;font-size:12px;color:#666;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+  .qtext{font-size:15px;margin-bottom:12px}
+  .line{border-bottom:1px solid #bbb;height:28px;margin-bottom:6px}
+  .score-box{margin-top:48px;padding-top:16px;border-top:2px solid #111;display:flex;gap:48px;font-size:13px}
+  .score-field{display:flex;gap:8px;align-items:baseline}
+  .score-line{border-bottom:1px solid #111;width:80px;display:inline-block}
+  @media print{@page{margin:1in}}
+</style></head><body>
+<div class="header">
+  <h1>Mastery Test — ${node.label}</h1>
+  <div class="sub">${subjectLabel} &nbsp;·&nbsp; Grade ${node.grade}</div>
+  <div class="meta">
+    <div class="field">Student: <span class="field-line">&nbsp;</span></div>
+    <div class="field">Date: <span class="field-line">&nbsp;</span></div>
+  </div>
+</div>
+${lines}
+<div class="score-box">
+  <div class="score-field">Score: <span class="score-line">&nbsp;</span> / ${questions.length}</div>
+  <div class="score-field">Percentage: <span class="score-line">&nbsp;</span>%</div>
+  <div class="score-field">Pass &nbsp;/&nbsp; Fail</div>
+</div>
+</body></html>`;
+  const w = window.open('', '_blank');
+  if (w) { w.document.write(html); w.document.close(); setTimeout(() => w.print(), 300); }
+}
+
+// ─── APP ─────────────────────────────────────────────────────────────────────
 function App() {
   const [data, setData] = useState(loadData);
   const [activeChild, setActiveChild] = useState(() => loadData().children[0]?.id ?? "child1");
@@ -318,17 +326,17 @@ function App() {
   const [newChildName, setNewChildName] = useState("");
   const [editingChild, setEditingChild] = useState(null);
   const [editChildName, setEditChildName] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [editingNodeId, setEditingNodeId] = useState(null);
   const COLORS = ["#E06C75","#61AFEF","#98C379","#E5C07B","#C678DD","#56B6C2","#FF8C61"];
 
   const persist = (next) => { setData(next); saveData(next); };
 
-  const setProgress = (nodeId, status) => {
+  // Fixed: single object, one persist call — no more stale closure race
+  const setProgress = (updates) => {
     persist({
       ...data,
-      progress: {
-        ...data.progress,
-        [activeChild]: { ...(data.progress[activeChild] || {}), [nodeId]: status },
-      },
+      progress: { ...data.progress, [activeChild]: { ...(data.progress[activeChild]||{}), ...updates } },
     });
   };
 
@@ -348,201 +356,184 @@ function App() {
     if (activeChild === cid) setActiveChild(next.children[0].id);
   };
 
-  const startEditChild = (c) => {
-    setEditingChild(c.id);
-    setEditChildName(c.name);
-  };
-
+  const startEditChild = (c) => { setEditingChild(c.id); setEditChildName(c.name); };
   const saveEditChild = () => {
     if (!editChildName.trim()) { setEditingChild(null); return; }
-    persist({ ...data, children: data.children.map(c => c.id === editingChild ? { ...c, name: editChildName.trim() } : c) });
+    persist({ ...data, children: data.children.map(c => c.id===editingChild ? { ...c, name: editChildName.trim() } : c) });
     setEditingChild(null);
   };
 
-  const subject = SUBJECTS[activeSubject];
-  const childProgress = data.progress[activeChild] || {};
-  const statuses = computeStatuses(subject.nodes, childProgress);
-  const child = data.children.find(c => c.id === activeChild);
-  const masteredCount = Object.values(statuses).filter(s => s === STATUS.MASTERED).length;
+  const saveNodeOverride = (nodeId, fields) => {
+    persist({ ...data, nodeOverrides: { ...(data.nodeOverrides||{}), [nodeId]: { ...((data.nodeOverrides||{})[nodeId]||{}), ...fields } } });
+  };
 
-  return React.createElement("div", {
-    style: {
-      minHeight: "100vh",
-      background: "linear-gradient(160deg,#0F1117 0%,#1A1E2E 50%,#0F1117 100%)",
-      color: "#E8EAF0", fontFamily: "'Inter','Segoe UI',sans-serif", fontSize: 14,
-    }
-  },
-    React.createElement("div", {
-      style: {
-        display:"flex", alignItems:"center", justifyContent:"space-between",
-        padding:"14px 20px", borderBottom:"1px solid rgba(255,255,255,0.07)",
-        background:"rgba(255,255,255,0.03)", position:"sticky", top:0, zIndex:200,
-      }
-    },
+  const addCustomNode = (subjectId, node) => {
+    const existing = (data.customNodes||{})[subjectId] || [];
+    persist({ ...data, customNodes: { ...(data.customNodes||{}), [subjectId]: [...existing, node] } });
+  };
+
+  const deleteCustomNode = (subjectId, nodeId) => {
+    const existing = (data.customNodes||{})[subjectId] || [];
+    persist({ ...data, customNodes: { ...(data.customNodes||{}), [subjectId]: existing.filter(n=>n.id!==nodeId) } });
+    if (selectedNode?.id === nodeId) setSelectedNode(null);
+  };
+
+  const saveQuestions = (nodeId, questions) => {
+    persist({ ...data, questions: { ...(data.questions||{}), [nodeId]: questions } });
+  };
+
+  const saveSettings = (s) => {
+    persist({ ...data, settings: { ...(data.settings||{}), ...s } });
+  };
+
+  const subject = SUBJECTS[activeSubject];
+  const nodes = useMemo(() => getSubjectNodes(activeSubject, data), [activeSubject, data]);
+  const childProgress = data.progress[activeChild] || {};
+  const statuses = useMemo(() => computeStatuses(nodes, childProgress), [nodes, childProgress]);
+  const child = data.children.find(c => c.id === activeChild);
+  const masteredCount = Object.values(statuses).filter(s => s===STATUS.MASTERED).length;
+  const passingThreshold = (data.settings||{}).passingThreshold ?? 80;
+
+  const editingNode = editingNodeId ? nodes.find(n => n.id === editingNodeId) : null;
+  const isCustomNode = (nodeId) => ((data.customNodes||{})[activeSubject]||[]).some(n => n.id === nodeId);
+
+  return React.createElement("div", { style:{ minHeight:"100vh", background:"linear-gradient(160deg,#0F1117 0%,#1A1E2E 50%,#0F1117 100%)", color:"#E8EAF0", fontFamily:"'Inter','Segoe UI',sans-serif", fontSize:14 } },
+
+    // TOP BAR
+    React.createElement("div", { style:{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 20px", borderBottom:"1px solid rgba(255,255,255,0.07)", background:"rgba(255,255,255,0.03)", position:"sticky", top:0, zIndex:200 } },
       React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:10 } },
         React.createElement("span", { style:{ fontSize:20, color:subject.accent } }, "❧"),
         React.createElement("span", { style:{ fontWeight:700, fontSize:16, color:"#fff", letterSpacing:"0.03em" } }, "Homeschool Path"),
         React.createElement("span", { style:{ fontSize:11, color:"rgba(255,255,255,0.25)", marginLeft:4 } }, "Refuge & Sword"),
       ),
-      React.createElement("div", { style:{ display:"flex", gap:6 } },
-        React.createElement(TabBtn, { active: view==="tree", onClick:()=>setView("tree") }, "Tree"),
-        React.createElement(TabBtn, { active: view==="progress", onClick:()=>setView("progress") }, "Progress"),
+      React.createElement("div", { style:{ display:"flex", gap:6, alignItems:"center" } },
+        React.createElement(TabBtn, { active:view==="tree", onClick:()=>setView("tree") }, "Tree"),
+        React.createElement(TabBtn, { active:view==="progress", onClick:()=>setView("progress") }, "Progress"),
+        React.createElement("button", {
+          onClick: () => setEditMode(e => !e),
+          title: editMode ? "Exit Edit Mode" : "Edit Mode",
+          style:{ padding:"6px 10px", borderRadius:8, border:editMode?"1px solid rgba(255,200,80,0.5)":"1px solid rgba(255,255,255,0.1)", background:editMode?"rgba(255,200,80,0.12)":"transparent", color:editMode?"#F5C842":"rgba(255,255,255,0.4)", fontSize:13, cursor:"pointer" }
+        }, editMode ? "⚙ Editing" : "⚙"),
       )
     ),
 
-    React.createElement("div", {
-      style:{ display:"flex", alignItems:"center", gap:8, overflowX:"auto",
-        padding:"10px 20px", borderBottom:"1px solid rgba(255,255,255,0.06)", scrollbarWidth:"none" }
-    },
+    // CHILD SELECTOR
+    React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:8, overflowX:"auto", padding:"10px 20px", borderBottom:"1px solid rgba(255,255,255,0.06)", scrollbarWidth:"none" } },
       ...data.children.map(c =>
         editingChild === c.id
-          ? React.createElement("div", { key: c.id, style:{ display:"flex", gap:4, alignItems:"center" } },
-              React.createElement("input", {
-                value: editChildName,
-                onChange: e => setEditChildName(e.target.value),
-                onKeyDown: e => { if (e.key === "Enter") saveEditChild(); if (e.key === "Escape") setEditingChild(null); },
-                onBlur: saveEditChild,
-                autoFocus: true,
-                style:{
-                  padding:"5px 10px", borderRadius:16, border:`1px solid ${c.color}`,
-                  background:"rgba(255,255,255,0.1)", color:"#fff", fontSize:13, width:110,
-                }
-              })
+          ? React.createElement("div", { key:c.id, style:{ display:"flex", gap:4, alignItems:"center" } },
+              React.createElement("input", { value:editChildName, onChange:e=>setEditChildName(e.target.value), onKeyDown:e=>{ if(e.key==="Enter") saveEditChild(); if(e.key==="Escape") setEditingChild(null); }, onBlur:saveEditChild, autoFocus:true, style:{ padding:"5px 10px", borderRadius:16, border:`1px solid ${c.color}`, background:"rgba(255,255,255,0.1)", color:"#fff", fontSize:13, width:110 } })
             )
-          : React.createElement("div", { key: c.id, style:{ display:"flex", alignItems:"center", gap:0 } },
-              React.createElement("button", {
-                onClick: ()=>setActiveChild(c.id),
-                style:{
-                  padding:"6px 10px 6px 14px", borderRadius: activeChild===c.id ? "20px 0 0 20px" : 20,
-                  border:"none", cursor:"pointer",
-                  background: activeChild===c.id ? c.color : "rgba(255,255,255,0.07)",
-                  color: activeChild===c.id ? "#fff" : "rgba(255,255,255,0.55)",
-                  fontWeight: activeChild===c.id ? 700 : 500, fontSize:13, whiteSpace:"nowrap",
-                  transition:"all 0.15s",
-                }
-              }, c.name),
-              activeChild===c.id && React.createElement("button", {
-                onClick: ()=>startEditChild(c),
-                title: "Rename",
-                style:{
-                  padding:"6px 10px 6px 6px", borderRadius:"0 20px 20px 0", border:"none",
-                  background: c.color, color:"rgba(255,255,255,0.75)", cursor:"pointer",
-                  fontSize:11, lineHeight:1, transition:"all 0.15s",
-                }
-              }, "✎")
+          : React.createElement("div", { key:c.id, style:{ display:"flex", alignItems:"center" } },
+              React.createElement("button", { onClick:()=>setActiveChild(c.id), style:{ padding:"6px 10px 6px 14px", borderRadius: activeChild===c.id?"20px 0 0 20px":20, border:"none", cursor:"pointer", background: activeChild===c.id?c.color:"rgba(255,255,255,0.07)", color: activeChild===c.id?"#fff":"rgba(255,255,255,0.55)", fontWeight: activeChild===c.id?700:500, fontSize:13, whiteSpace:"nowrap", transition:"all 0.15s" } }, c.name),
+              activeChild===c.id && React.createElement("button", { onClick:()=>startEditChild(c), title:"Rename", style:{ padding:"6px 10px 6px 6px", borderRadius:"0 20px 20px 0", border:"none", background:c.color, color:"rgba(255,255,255,0.75)", cursor:"pointer", fontSize:11 } }, "✎")
             )
       ),
       addingChild
         ? React.createElement("div", { style:{ display:"flex", gap:6 } },
-            React.createElement("input", {
-              value: newChildName,
-              onChange: e => setNewChildName(e.target.value),
-              onKeyDown: e => e.key==="Enter" && addChild(),
-              placeholder:"Name...", autoFocus: true,
-              style:{ padding:"5px 10px", borderRadius:16, border:"1px solid rgba(255,255,255,0.2)",
-                background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:13, width:100 }
-            }),
+            React.createElement("input", { value:newChildName, onChange:e=>setNewChildName(e.target.value), onKeyDown:e=>e.key==="Enter"&&addChild(), placeholder:"Name...", autoFocus:true, style:{ padding:"5px 10px", borderRadius:16, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:13, width:100 } }),
             React.createElement("button", { onClick:addChild, style:{ padding:"5px 12px", borderRadius:16, border:"none", background:"#4A6FA5", color:"#fff", cursor:"pointer", fontSize:13 } }, "Add"),
             React.createElement("button", { onClick:()=>setAddingChild(false), style:{ padding:"5px 10px", borderRadius:16, border:"none", background:"rgba(255,255,255,0.08)", color:"rgba(255,255,255,0.5)", cursor:"pointer", fontSize:13 } }, "✕"),
           )
-        : React.createElement("button", {
-            onClick:()=>setAddingChild(true),
-            style:{ padding:"6px 12px", borderRadius:20, border:"1px dashed rgba(255,255,255,0.2)",
-              background:"transparent", color:"rgba(255,255,255,0.4)", fontSize:13, cursor:"pointer" }
-          }, "+ Add child"),
-      data.children.length > 1 && React.createElement("button", {
-        onClick: ()=>removeChild(activeChild),
-        style:{ marginLeft:"auto", padding:"6px 10px", borderRadius:20, border:"none",
-          background:"rgba(255,80,80,0.12)", color:"rgba(255,120,120,0.7)", fontSize:12, cursor:"pointer" }
-      }, `Remove ${child?.name}`)
+        : React.createElement("button", { onClick:()=>setAddingChild(true), style:{ padding:"6px 12px", borderRadius:20, border:"1px dashed rgba(255,255,255,0.2)", background:"transparent", color:"rgba(255,255,255,0.4)", fontSize:13, cursor:"pointer" } }, "+ Add child"),
+      data.children.length > 1 && React.createElement("button", { onClick:()=>removeChild(activeChild), style:{ marginLeft:"auto", padding:"6px 10px", borderRadius:20, border:"none", background:"rgba(255,80,80,0.12)", color:"rgba(255,120,120,0.7)", fontSize:12, cursor:"pointer" } }, `Remove ${child?.name}`)
     ),
 
-    React.createElement("div", {
-      style:{ display:"flex", overflowX:"auto", padding:"0 20px",
-        borderBottom:"1px solid rgba(255,255,255,0.06)", scrollbarWidth:"none" }
-    },
+    // SUBJECT TABS
+    React.createElement("div", { style:{ display:"flex", overflowX:"auto", padding:"0 20px", borderBottom:"1px solid rgba(255,255,255,0.06)", scrollbarWidth:"none" } },
       ...Object.values(SUBJECTS).map(s => {
         const sp = data.progress[activeChild] || {};
-        const ss = computeStatuses(s.nodes, sp);
+        const sn = getSubjectNodes(s.id, data);
+        const ss = computeStatuses(sn, sp);
         const mc = Object.values(ss).filter(x=>x===STATUS.MASTERED).length;
         const isActive = activeSubject===s.id;
-        return React.createElement("button", {
-          key: s.id, onClick:()=>{ setActiveSubject(s.id); setSelectedNode(null); },
-          style:{
-            padding:"12px 16px", border:"none", background:"transparent",
-            borderBottom: isActive ? `2px solid ${s.color}` : "2px solid transparent",
-            color: isActive ? "#fff" : "rgba(255,255,255,0.45)",
-            fontWeight: isActive ? 700 : 400, fontSize:13, cursor:"pointer", whiteSpace:"nowrap",
-            display:"flex", alignItems:"center", gap:6, transition:"all 0.15s",
-          }
-        },
+        return React.createElement("button", { key:s.id, onClick:()=>{ setActiveSubject(s.id); setSelectedNode(null); }, style:{ padding:"12px 16px", border:"none", background:"transparent", borderBottom: isActive?`2px solid ${s.color}`:"2px solid transparent", color: isActive?"#fff":"rgba(255,255,255,0.45)", fontWeight: isActive?700:400, fontSize:13, cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:6, transition:"all 0.15s" } },
           React.createElement("span", { style:{ color: isActive?s.accent:"rgba(255,255,255,0.25)", fontSize:11 } }, s.icon),
           s.label,
-          React.createElement("span", {
-            style:{
-              fontSize:10, padding:"2px 6px", borderRadius:10,
-              background: isActive ? `${s.color}33` : "rgba(255,255,255,0.06)",
-              color: isActive ? s.accent : "rgba(255,255,255,0.3)",
-            }
-          }, `${mc}/${s.nodes.length}`)
+          React.createElement("span", { style:{ fontSize:10, padding:"2px 6px", borderRadius:10, background: isActive?`${s.color}33`:"rgba(255,255,255,0.06)", color: isActive?s.accent:"rgba(255,255,255,0.3)" } }, `${mc}/${sn.length}`)
         );
       })
     ),
 
+    // CONTENT
     view==="tree"
-      ? React.createElement(TreeView, { subject, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child })
-      : React.createElement(ProgressView, { data, activeChild, child })
+      ? React.createElement(TreeView, { subject, nodes, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child, editMode, onEditNode: setEditingNodeId, data, passingThreshold, onSaveQuestions: saveQuestions, onAddCustomNode: addCustomNode, activeSubject })
+      : React.createElement(ProgressView, { data, activeChild, child }),
+
+    // NODE EDIT SHEET
+    editingNode && React.createElement(NodeEditSheet, {
+      node: editingNode,
+      subject,
+      data,
+      isCustom: isCustomNode(editingNodeId),
+      allNodes: nodes,
+      onSaveFields: (fields) => { saveNodeOverride(editingNodeId, fields); },
+      onSaveQuestions: (qs) => saveQuestions(editingNodeId, qs),
+      onDelete: () => { deleteCustomNode(activeSubject, editingNodeId); setEditingNodeId(null); },
+      onClose: () => setEditingNodeId(null),
+      passingThreshold,
+      onSaveSettings: saveSettings,
+    })
   );
 }
 
-function TreeView({ subject, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child }) {
-  const maxCol = Math.max(...subject.nodes.map(n=>n.col));
-  const maxRow = Math.max(...subject.nodes.map(n=>n.row));
+// ─── TREE VIEW ────────────────────────────────────────────────────────────────
+function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child, editMode, onEditNode, data, passingThreshold, onSaveQuestions, onAddCustomNode, activeSubject }) {
+  const maxCol = Math.max(...nodes.map(n=>n.col), 0);
+  const maxRow = Math.max(...nodes.map(n=>n.row), 0);
   const svgW = PAD_X*2 + (maxCol+1)*(NODE_W+COL_GAP) - COL_GAP;
   const svgH = PAD_Y*2 + (maxRow+1)*(NODE_H+ROW_GAP) - ROW_GAP;
 
-  const nodeMap = useMemo(() => {
-    const m = {};
-    for (const n of subject.nodes) m[n.id] = n;
-    return m;
-  }, [subject]);
+  const nodeMap = useMemo(() => { const m={}; for(const n of nodes) m[n.id]=n; return m; }, [nodes]);
 
   const edges = useMemo(() => {
     const result = [];
-    for (const node of subject.nodes) {
+    for (const node of nodes) {
       for (const pid of node.prereqs) {
         const prereq = nodeMap[pid];
         if (!prereq) continue;
         const lit = statuses[pid]===STATUS.MASTERED && statuses[node.id]===STATUS.MASTERED;
-        result.push({ id:`${pid}-${node.id}`, path: buildEdgePath(prereq, node, subject.nodes), lit });
+        result.push({ id:`${pid}-${node.id}`, path:buildEdgePath(prereq, node), lit });
       }
     }
     return result;
-  }, [subject, statuses, nodeMap]);
+  }, [nodes, statuses, nodeMap]);
 
   const handleClick = (node) => {
+    if (editMode) { onEditNode(node.id); return; }
     if (statuses[node.id]===STATUS.LOCKED) return;
-    setSelectedNode(prev => prev?.id===node.id ? null : { ...node, status: statuses[node.id] });
+    setSelectedNode(prev => prev?.id===node.id ? null : node);
   };
 
-  return React.createElement("div", {
-    style:{ display:"flex", flexDirection:"column", alignItems:"center", padding:"20px 0 80px" }
-  },
-    React.createElement("div", {
-      style:{ width:"min(560px,90vw)", marginBottom:20, padding:"12px 16px",
-        borderRadius:12, background:"rgba(255,255,255,0.04)" }
-    },
+  const [addingNode, setAddingNode] = useState(false);
+  const [newNodeLabel, setNewNodeLabel] = useState("");
+  const [newNodeGrade, setNewNodeGrade] = useState("");
+
+  const submitNewNode = () => {
+    if (!newNodeLabel.trim()) return;
+    const id = "custom_" + Date.now();
+    const newRow = maxRow + 1;
+    onAddCustomNode(activeSubject, { id, label: newNodeLabel.trim(), grade: newNodeGrade.trim() || "?", prereqs: [], col: 0, row: newRow, desc: "" });
+    setNewNodeLabel(""); setNewNodeGrade(""); setAddingNode(false);
+  };
+
+  return React.createElement("div", { style:{ display:"flex", flexDirection:"column", alignItems:"center", padding:"20px 0 80px" } },
+    // Progress bar
+    React.createElement("div", { style:{ width:"min(560px,90vw)", marginBottom:20, padding:"12px 16px", borderRadius:12, background:"rgba(255,255,255,0.04)" } },
       React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:12, color:"rgba(255,255,255,0.45)" } },
         React.createElement("span", null, `${child?.name} · ${subject.label}`),
-        React.createElement("span", { style:{ color:subject.accent, fontWeight:700 } }, `${masteredCount} / ${subject.nodes.length} mastered`)
+        React.createElement("span", { style:{ color:subject.accent, fontWeight:700 } }, `${masteredCount} / ${nodes.length} mastered`)
       ),
       React.createElement("div", { style:{ height:6, borderRadius:3, background:"rgba(255,255,255,0.08)", overflow:"hidden" } },
-        React.createElement("div", { style:{ height:"100%", borderRadius:3, transition:"width 0.5s",
-          width:`${(masteredCount/subject.nodes.length)*100}%`,
-          background:`linear-gradient(90deg,${subject.color},${subject.accent})` } })
+        React.createElement("div", { style:{ height:"100%", borderRadius:3, transition:"width 0.5s", width:`${(masteredCount/nodes.length)*100}%`, background:`linear-gradient(90deg,${subject.color},${subject.accent})` } })
       )
     ),
 
+    editMode && React.createElement("div", { style:{ marginBottom:12, padding:"8px 16px", borderRadius:8, background:"rgba(255,200,80,0.08)", border:"1px solid rgba(255,200,80,0.2)", fontSize:12, color:"rgba(255,200,80,0.8)" } },
+      "Edit mode — tap any node to edit it"
+    ),
+
+    // Legend
     React.createElement("div", { style:{ display:"flex", gap:14, marginBottom:16, fontSize:11, flexWrap:"wrap", justifyContent:"center" } },
       [STATUS.LOCKED, STATUS.UNLOCKED, STATUS.IN_PROGRESS, STATUS.MASTERED].map(s =>
         React.createElement("div", { key:s, style:{ display:"flex", alignItems:"center", gap:5, color:"rgba(255,255,255,0.4)" } },
@@ -552,225 +543,314 @@ function TreeView({ subject, statuses, selectedNode, setSelectedNode, setProgres
       )
     ),
 
-    React.createElement("div", {
-      style:{ overflowX:"auto", overflowY:"auto", maxWidth:"100vw", maxHeight:"62vh",
-        border:"1px solid rgba(255,255,255,0.06)", borderRadius:16, background:"rgba(255,255,255,0.015)" }
-    },
+    // SVG Tree
+    React.createElement("div", { style:{ overflowX:"auto", overflowY:"auto", maxWidth:"100vw", maxHeight:"62vh", border:"1px solid rgba(255,255,255,0.06)", borderRadius:16, background:"rgba(255,255,255,0.015)" } },
       React.createElement("svg", { width:svgW, height:svgH, style:{ display:"block" } },
         React.createElement("defs", null,
-          React.createElement("marker", { id:"arr", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" },
-            React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:"rgba(255,255,255,0.15)" })
-          ),
-          React.createElement("marker", { id:"arr-lit", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" },
-            React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:subject.accent })
-          ),
+          React.createElement("marker", { id:"arr", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" }, React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:"rgba(255,255,255,0.15)" })),
+          React.createElement("marker", { id:"arr-lit", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" }, React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:subject.accent })),
         ),
-
-        ...edges.map(e =>
-          React.createElement("path", {
-            key: e.id, d: e.path, fill:"none",
-            stroke: e.lit ? subject.accent : "rgba(255,255,255,0.12)",
-            strokeWidth: e.lit ? 2 : 1.5,
-            strokeDasharray: e.lit ? "none" : "5 4",
-            markerEnd: e.lit ? "url(#arr-lit)" : "url(#arr)",
-            opacity: e.lit ? 0.85 : 0.55,
-          })
-        ),
-
-        ...subject.nodes.map(node => {
+        ...edges.map(e => React.createElement("path", { key:e.id, d:e.path, fill:"none", stroke:e.lit?subject.accent:"rgba(255,255,255,0.12)", strokeWidth:e.lit?2:1.5, strokeDasharray:e.lit?"none":"5 4", markerEnd:e.lit?"url(#arr-lit)":"url(#arr)", opacity:e.lit?0.85:0.55 })),
+        ...nodes.map(node => {
           const { x, y } = getNodePos(node);
           const status = statuses[node.id];
           const isSelected = selectedNode?.id===node.id;
-          const locked = status===STATUS.LOCKED;
+          const locked = status===STATUS.LOCKED && !editMode;
           const col = statusColor(status, subject);
+          const hasTest = ((data.questions||{})[node.id]||[]).length > 0;
 
           return React.createElement("g", { key:node.id, onClick:()=>handleClick(node), style:{ cursor: locked?"default":"pointer" } },
-            status===STATUS.MASTERED && React.createElement("rect", {
-              x:x-4, y:y-4, width:NODE_W+8, height:NODE_H+8, rx:14, ry:14,
-              fill:"none", stroke:subject.accent, strokeWidth:1.5, opacity:0.22
-            }),
-            isSelected && React.createElement("rect", {
-              x:x-5, y:y-5, width:NODE_W+10, height:NODE_H+10, rx:15, ry:15,
-              fill:"none", stroke:"#fff", strokeWidth:2, opacity:0.45
-            }),
-            React.createElement("rect", {
-              x, y, width:NODE_W, height:NODE_H, rx:10, ry:10,
-              fill:statusBg(status), stroke:col,
-              strokeWidth: status===STATUS.MASTERED ? 1.5 : 1,
-              opacity: locked ? 0.45 : 1
-            }),
-            React.createElement("text", { x:x+10, y:y+14, fontSize:9, fill:"rgba(255,255,255,0.3)", fontFamily:"monospace" },
-              `Gr. ${node.grade}`
-            ),
+            status===STATUS.MASTERED && React.createElement("rect", { x:x-4, y:y-4, width:NODE_W+8, height:NODE_H+8, rx:14, ry:14, fill:"none", stroke:subject.accent, strokeWidth:1.5, opacity:0.22 }),
+            isSelected && React.createElement("rect", { x:x-5, y:y-5, width:NODE_W+10, height:NODE_H+10, rx:15, ry:15, fill:"none", stroke:"#fff", strokeWidth:2, opacity:0.45 }),
+            editMode && React.createElement("rect", { x:x-3, y:y-3, width:NODE_W+6, height:NODE_H+6, rx:13, ry:13, fill:"none", stroke:"rgba(255,200,80,0.4)", strokeWidth:1.5 }),
+            React.createElement("rect", { x, y, width:NODE_W, height:NODE_H, rx:10, ry:10, fill:statusBg(status), stroke: editMode?"rgba(255,200,80,0.5)":col, strokeWidth:status===STATUS.MASTERED?1.5:1, opacity:locked?0.45:1 }),
+            React.createElement("text", { x:x+10, y:y+14, fontSize:9, fill:"rgba(255,255,255,0.3)", fontFamily:"monospace" }, `Gr. ${node.grade}`),
             status===STATUS.MASTERED
               ? React.createElement("text", { x:x+NODE_W-13, y:y+15, fontSize:10, fill:subject.accent, textAnchor:"middle" }, "★")
               : locked
                 ? React.createElement("text", { x:x+NODE_W-13, y:y+15, fontSize:9, fill:"rgba(255,255,255,0.2)", textAnchor:"middle" }, "🔒")
-                : React.createElement("circle", { cx:x+NODE_W-13, cy:y+11, r:4, fill:col }),
+                : editMode
+                  ? React.createElement("text", { x:x+NODE_W-13, y:y+15, fontSize:11, fill:"rgba(255,200,80,0.7)", textAnchor:"middle" }, "✎")
+                  : React.createElement("circle", { cx:x+NODE_W-13, cy:y+11, r:4, fill:col }),
+            hasTest && !editMode && React.createElement("circle", { cx:x+NODE_W-28, cy:y+11, r:3, fill:"rgba(255,255,255,0.3)" }),
             React.createElement("foreignObject", { x:x+8, y:y+18, width:NODE_W-18, height:NODE_H-22 },
-              React.createElement("div", {
-                xmlns:"http://www.w3.org/1999/xhtml",
-                style:{
-                  color: locked?"rgba(255,255,255,0.28)":"#E8EAF0",
-                  fontSize:12, fontWeight:600, lineHeight:1.3,
-                  overflow:"hidden", display:"-webkit-box",
-                  WebkitLineClamp:2, WebkitBoxOrient:"vertical",
-                  fontFamily:"'Inter','Segoe UI',sans-serif",
-                }
-              }, node.label)
+              React.createElement("div", { xmlns:"http://www.w3.org/1999/xhtml", style:{ color:locked?"rgba(255,255,255,0.28)":"#E8EAF0", fontSize:12, fontWeight:600, lineHeight:1.3, overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", fontFamily:"'Inter','Segoe UI',sans-serif" } }, node.label)
             )
           );
         })
       )
     ),
 
-    selectedNode && React.createElement(NodePanel, {
-      node: selectedNode, status: statuses[selectedNode.id],
-      subject, onSetStatus: setProgress,
+    // Add node (edit mode)
+    editMode && React.createElement("div", { style:{ marginTop:16 } },
+      addingNode
+        ? React.createElement("div", { style:{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap", justifyContent:"center" } },
+            React.createElement("input", { value:newNodeLabel, onChange:e=>setNewNodeLabel(e.target.value), placeholder:"Node name", autoFocus:true, style:{ padding:"7px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:13, width:160 } }),
+            React.createElement("input", { value:newNodeGrade, onChange:e=>setNewNodeGrade(e.target.value), placeholder:"Grade (e.g. 3–4)", style:{ padding:"7px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:13, width:130 } }),
+            React.createElement("button", { onClick:submitNewNode, style:{ padding:"7px 16px", borderRadius:10, border:"none", background:"#4A6FA5", color:"#fff", fontSize:13, cursor:"pointer" } }, "Add"),
+            React.createElement("button", { onClick:()=>setAddingNode(false), style:{ padding:"7px 12px", borderRadius:10, border:"none", background:"rgba(255,255,255,0.08)", color:"rgba(255,255,255,0.5)", fontSize:13, cursor:"pointer" } }, "Cancel"),
+          )
+        : React.createElement("button", { onClick:()=>setAddingNode(true), style:{ padding:"8px 20px", borderRadius:10, border:"1px dashed rgba(255,200,80,0.4)", background:"transparent", color:"rgba(255,200,80,0.6)", fontSize:13, cursor:"pointer" } }, "+ Add Node")
+    ),
+
+    // Node detail panel
+    selectedNode && !editMode && React.createElement(NodePanel, {
+      node: selectedNode,
+      status: statuses[selectedNode.id],
+      subject,
+      onSetProgress: setProgress,
       onClose: ()=>setSelectedNode(null),
       childProgress,
+      questions: (data.questions||{})[selectedNode.id] || [],
+      passingThreshold,
     })
   );
 }
 
-function NodePanel({ node, status, subject, onSetStatus, onClose, childProgress }) {
+// ─── NODE PANEL ───────────────────────────────────────────────────────────────
+function NodePanel({ node, status, subject, onSetProgress, onClose, childProgress, questions, passingThreshold }) {
   const logKey = `${node.id}_log`;
+  const scoreKey = `${node.id}_score`;
   const hist = childProgress[logKey] || [];
+  const lastScore = childProgress[scoreKey];
+  const [tab, setTab] = useState("info");
+  const [correct, setCorrect] = useState("");
 
   const markStatus = (s) => {
-    onSetStatus(node.id, s);
-    onSetStatus(logKey, [...hist, { status: s, date: new Date().toLocaleDateString() }]);
+    onSetProgress({
+      [node.id]: s,
+      [logKey]: [...hist, { status:s, date:new Date().toLocaleDateString() }],
+    });
   };
 
-  return React.createElement("div", {
-    style:{
-      position:"fixed", bottom:0, left:0, right:0, zIndex:300,
-      background:"linear-gradient(0deg,#131720 0%,#1C2232 100%)",
-      borderTop:`2px solid ${subject.color}`, borderRadius:"20px 20px 0 0",
-      padding:"20px 24px 36px", maxWidth:640, margin:"0 auto",
-      boxShadow:"0 -24px 60px rgba(0,0,0,0.55)",
-    }
-  },
-    React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:10 } },
-      React.createElement("div", null,
-        React.createElement("div", { style:{ fontSize:10, color:subject.accent, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:4 } },
-          `Grade ${node.grade}`),
-        React.createElement("div", { style:{ fontSize:18, fontWeight:700, color:"#fff" } }, node.label)
+  const submitScore = () => {
+    const c = parseInt(correct);
+    if (isNaN(c) || c < 0 || c > questions.length) return;
+    const pct = questions.length === 0 ? 0 : Math.round((c / questions.length) * 100);
+    const passed = pct >= passingThreshold;
+    const scoreEntry = { correct:c, total:questions.length, pct, date:new Date().toLocaleDateString(), passed };
+    const updates = {
+      [scoreKey]: scoreEntry,
+      [logKey]: [...hist, { status: passed ? "test_passed" : "test_failed", pct, date:new Date().toLocaleDateString() }],
+    };
+    if (passed) updates[node.id] = STATUS.MASTERED;
+    onSetProgress(updates);
+    setCorrect("");
+  };
+
+  const panelTabs = ["info", ...(questions.length > 0 ? ["test"] : [])];
+
+  return React.createElement("div", { style:{ position:"fixed", bottom:0, left:0, right:0, zIndex:300, background:"linear-gradient(0deg,#131720 0%,#1C2232 100%)", borderTop:`2px solid ${subject.color}`, borderRadius:"20px 20px 0 0", padding:"20px 24px 36px", maxWidth:640, margin:"0 auto", boxShadow:"0 -24px 60px rgba(0,0,0,0.55)" } },
+
+      // Header
+      React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 } },
+        React.createElement("div", null,
+          React.createElement("div", { style:{ fontSize:10, color:subject.accent, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:4 } }, `Grade ${node.grade}`),
+          React.createElement("div", { style:{ fontSize:18, fontWeight:700, color:"#fff" } }, node.label),
+          React.createElement("div", { style:{ fontSize:12, marginTop:4, color: status===STATUS.MASTERED?subject.accent:status===STATUS.IN_PROGRESS?"#E5C07B":"rgba(255,255,255,0.4)", fontWeight:600 } },
+            status===STATUS.MASTERED ? "★ Mastered" : status===STATUS.IN_PROGRESS ? "▶ In Progress" : "Ready to Start"
+          ),
+        ),
+        React.createElement("button", { onClick:onClose, style:{ background:"rgba(255,255,255,0.08)", border:"none", color:"rgba(255,255,255,0.45)", borderRadius:8, padding:"6px 10px", cursor:"pointer", fontSize:16 } }, "✕")
       ),
-      React.createElement("button", {
-        onClick: onClose,
-        style:{ background:"rgba(255,255,255,0.08)", border:"none", color:"rgba(255,255,255,0.45)", borderRadius:8, padding:"6px 10px", cursor:"pointer", fontSize:16 }
-      }, "✕")
-    ),
-    React.createElement("p", { style:{ color:"rgba(255,255,255,0.58)", fontSize:13, lineHeight:1.65, marginBottom:18 } }, node.desc),
-    React.createElement("div", { style:{ display:"flex", gap:8, flexWrap:"wrap" } },
-      status!==STATUS.IN_PROGRESS && status!==STATUS.MASTERED &&
-        React.createElement(ActionBtn, { color:"#E5C07B", onClick:()=>markStatus(STATUS.IN_PROGRESS) }, "▶ Start"),
-      status!==STATUS.MASTERED &&
-        React.createElement(ActionBtn, { color:subject.accent, onClick:()=>markStatus(STATUS.MASTERED) }, "★ Mark Mastered"),
-      status===STATUS.MASTERED &&
-        React.createElement(ActionBtn, { color:"rgba(255,100,100,0.7)", onClick:()=>{
-          onSetStatus(node.id, STATUS.UNLOCKED);
-          onSetStatus(logKey, [...hist, { status:"reverted", date:new Date().toLocaleDateString() }]);
-        }}, "↩ Undo Mastered"),
-    ),
-    hist.length > 0 && React.createElement("div", { style:{ marginTop:16, paddingTop:14, borderTop:"1px solid rgba(255,255,255,0.06)" } },
-      React.createElement("div", { style:{ fontSize:10, color:"rgba(255,255,255,0.25)", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Log"),
-      ...hist.map((h,i) =>
-        React.createElement("div", { key:i, style:{ fontSize:12, color:"rgba(255,255,255,0.38)", display:"flex", gap:10 } },
-          React.createElement("span", { style:{ color:"rgba(255,255,255,0.2)" } }, h.date),
-          React.createElement("span", null, STATUS_LABELS[h.status] || h.status)
+
+      // Tabs
+      panelTabs.length > 1 && React.createElement("div", { style:{ display:"flex", gap:4, marginBottom:16 } },
+        panelTabs.map(t => React.createElement("button", { key:t, onClick:()=>setTab(t), style:{ padding:"5px 14px", borderRadius:8, border:"none", background:tab===t?"rgba(255,255,255,0.12)":"transparent", color:tab===t?"#fff":"rgba(255,255,255,0.4)", fontWeight:tab===t?700:400, fontSize:12, cursor:"pointer" } }, t==="info"?"Info":"Test"))
+      ),
+
+      // INFO TAB
+      tab==="info" && React.createElement("div", null,
+        React.createElement("p", { style:{ color:"rgba(255,255,255,0.58)", fontSize:13, lineHeight:1.65, marginBottom:18 } }, node.desc),
+        React.createElement("div", { style:{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:16 } },
+          status!==STATUS.IN_PROGRESS && status!==STATUS.MASTERED &&
+            React.createElement(ActionBtn, { color:"#E5C07B", onClick:()=>markStatus(STATUS.IN_PROGRESS) }, "▶ Start"),
+          status!==STATUS.MASTERED &&
+            React.createElement(ActionBtn, { color:subject.accent, onClick:()=>markStatus(STATUS.MASTERED) }, "★ Mark Mastered"),
+          status===STATUS.MASTERED &&
+            React.createElement(ActionBtn, { color:"rgba(255,100,100,0.7)", onClick:()=>onSetProgress({ [node.id]:STATUS.UNLOCKED, [logKey]:[...hist,{status:"reverted",date:new Date().toLocaleDateString()}] }) }, "↩ Undo Mastered"),
+        ),
+        questions.length > 0 && React.createElement("div", { style:{ padding:"10px 14px", borderRadius:10, background:"rgba(255,255,255,0.04)", fontSize:12, color:"rgba(255,255,255,0.45)", marginBottom:12 } },
+          `This node has a ${questions.length}-question mastery test. Tap "Test" to view or enter a score.`
+        ),
+        hist.length > 0 && React.createElement("div", { style:{ marginTop:8, paddingTop:14, borderTop:"1px solid rgba(255,255,255,0.06)" } },
+          React.createElement("div", { style:{ fontSize:10, color:"rgba(255,255,255,0.25)", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Log"),
+          ...hist.slice(-5).map((h,i) =>
+            React.createElement("div", { key:i, style:{ fontSize:12, color:"rgba(255,255,255,0.38)", display:"flex", gap:10 } },
+              React.createElement("span", { style:{ color:"rgba(255,255,255,0.2)" } }, h.date),
+              React.createElement("span", null, h.status==="test_passed"?`Passed test (${h.pct}%)`:h.status==="test_failed"?`Failed test (${h.pct}%)`:STATUS_LABELS[h.status]||h.status)
+            )
+          )
+        )
+      ),
+
+      // TEST TAB
+      tab==="test" && React.createElement("div", null,
+        lastScore && React.createElement("div", { style:{ marginBottom:16, padding:"10px 14px", borderRadius:10, background: lastScore.passed?"rgba(74,175,80,0.12)":"rgba(255,80,80,0.1)", border:`1px solid ${lastScore.passed?"rgba(74,175,80,0.3)":"rgba(255,80,80,0.2)"}`, fontSize:13 } },
+          React.createElement("div", { style:{ fontWeight:700, color: lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed?"Last attempt: Passed":"Last attempt: Failed"),
+          React.createElement("div", { style:{ color:"rgba(255,255,255,0.5)", fontSize:12 } }, `${lastScore.correct}/${lastScore.total} correct — ${lastScore.pct}% — ${lastScore.date}`)
+        ),
+        React.createElement("div", { style:{ marginBottom:16, fontSize:12, color:"rgba(255,255,255,0.45)" } },
+          `${questions.length} questions · Passing score: ${passingThreshold}%`
+        ),
+        React.createElement(ActionBtn, { color:subject.accent, onClick:()=>printWorksheet("", subject.label, node, questions) }, "🖨 Print Test"),
+        React.createElement("div", { style:{ marginTop:20, paddingTop:16, borderTop:"1px solid rgba(255,255,255,0.06)" } },
+          React.createElement("div", { style:{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.7)", marginBottom:10 } }, "Enter Score"),
+          React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" } },
+            React.createElement("input", {
+              type:"number", min:0, max:questions.length, value:correct,
+              onChange:e=>setCorrect(e.target.value),
+              onKeyDown:e=>e.key==="Enter"&&submitScore(),
+              placeholder:"# correct",
+              style:{ padding:"8px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:14, width:100 }
+            }),
+            React.createElement("span", { style:{ color:"rgba(255,255,255,0.4)", fontSize:13 } }, `out of ${questions.length}`),
+            correct !== "" && !isNaN(parseInt(correct)) && React.createElement("span", { style:{ fontSize:13, color: Math.round(parseInt(correct)/questions.length*100)>=passingThreshold?"#4CAF80":"rgba(255,120,120,0.8)", fontWeight:700 } },
+              `= ${Math.round(parseInt(correct)/questions.length*100)}%`
+            ),
+          ),
+          React.createElement("button", { onClick:submitScore, disabled:correct==="", style:{ marginTop:12, padding:"9px 24px", borderRadius:10, border:"none", background:subject.color, color:"#fff", fontWeight:700, fontSize:13, cursor:"pointer", opacity:correct===""?0.5:1 } }, "Submit Score"),
+          React.createElement("div", { style:{ marginTop:8, fontSize:11, color:"rgba(255,255,255,0.3)" } }, `${passingThreshold}% or higher = mastered automatically`)
         )
       )
-    )
+    );
+}
+
+// ─── NODE EDIT SHEET ──────────────────────────────────────────────────────────
+function NodeEditSheet({ node, subject, data, isCustom, allNodes, onSaveFields, onSaveQuestions, onDelete, onClose, passingThreshold, onSaveSettings }) {
+  const [label, setLabel] = useState(node.label);
+  const [grade, setGrade] = useState(node.grade);
+  const [desc, setDesc] = useState(node.desc);
+  const [tab, setTab] = useState("details");
+  const questions = (data.questions||{})[node.id] || [];
+  const [qs, setQs] = useState(questions);
+  const [newQ, setNewQ] = useState("");
+  const [threshold, setThreshold] = useState(String(passingThreshold));
+
+  const saveDetails = () => onSaveFields({ label, grade, desc });
+  const saveQs = () => onSaveQuestions(qs);
+
+  const addQ = () => {
+    if (!newQ.trim()) return;
+    setQs(prev => [...prev, { id:"q_"+Date.now(), text:newQ.trim() }]);
+    setNewQ("");
+  };
+  const removeQ = (id) => setQs(prev => prev.filter(q=>q.id!==id));
+
+  return React.createElement("div", { style:{ position:"fixed", bottom:0, left:0, right:0, zIndex:400, background:"linear-gradient(0deg,#131720 0%,#1a2040 100%)", borderTop:`2px solid rgba(255,200,80,0.4)`, borderRadius:"20px 20px 0 0", padding:"20px 24px 40px", maxWidth:640, margin:"0 auto", boxShadow:"0 -24px 60px rgba(0,0,0,0.65)", maxHeight:"85vh", overflowY:"auto" } },
+
+    React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16 } },
+      React.createElement("div", { style:{ fontSize:14, fontWeight:700, color:"rgba(255,200,80,0.9)" } }, `Editing: ${node.label}`),
+      React.createElement("button", { onClick:onClose, style:{ background:"rgba(255,255,255,0.08)", border:"none", color:"rgba(255,255,255,0.45)", borderRadius:8, padding:"6px 10px", cursor:"pointer", fontSize:16 } }, "✕")
+    ),
+
+    // Tabs
+    React.createElement("div", { style:{ display:"flex", gap:4, marginBottom:20 } },
+      ["details","questions","settings"].map(t => React.createElement("button", { key:t, onClick:()=>setTab(t), style:{ padding:"5px 14px", borderRadius:8, border:"none", background:tab===t?"rgba(255,200,80,0.15)":"transparent", color:tab===t?"rgba(255,200,80,0.9)":"rgba(255,255,255,0.4)", fontWeight:tab===t?700:400, fontSize:12, cursor:"pointer", textTransform:"capitalize" } }, t))
+    ),
+
+    // DETAILS TAB
+    tab==="details" && React.createElement("div", null,
+      React.createElement("label", { style:{ display:"block", fontSize:11, color:"rgba(255,255,255,0.4)", marginBottom:4, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Label"),
+      React.createElement("input", { value:label, onChange:e=>setLabel(e.target.value), style:{ width:"100%", padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:14, marginBottom:14 } }),
+      React.createElement("label", { style:{ display:"block", fontSize:11, color:"rgba(255,255,255,0.4)", marginBottom:4, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Grade"),
+      React.createElement("input", { value:grade, onChange:e=>setGrade(e.target.value), placeholder:"e.g. 2–3", style:{ width:"100%", padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:14, marginBottom:14 } }),
+      React.createElement("label", { style:{ display:"block", fontSize:11, color:"rgba(255,255,255,0.4)", marginBottom:4, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Description"),
+      React.createElement("textarea", { value:desc, onChange:e=>setDesc(e.target.value), rows:4, style:{ width:"100%", padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:13, lineHeight:1.6, resize:"vertical", marginBottom:18 } }),
+      React.createElement("div", { style:{ display:"flex", gap:10, flexWrap:"wrap" } },
+        React.createElement("button", { onClick:saveDetails, style:{ padding:"9px 24px", borderRadius:10, border:"none", background:"rgba(255,200,80,0.2)", color:"rgba(255,200,80,0.9)", fontWeight:700, fontSize:13, cursor:"pointer" } }, "Save Changes"),
+        isCustom && React.createElement("button", { onClick:onDelete, style:{ padding:"9px 20px", borderRadius:10, border:"none", background:"rgba(255,60,60,0.12)", color:"rgba(255,100,100,0.8)", fontWeight:600, fontSize:13, cursor:"pointer" } }, "Delete Node"),
+      )
+    ),
+
+    // QUESTIONS TAB
+    tab==="questions" && React.createElement("div", null,
+      React.createElement("div", { style:{ fontSize:12, color:"rgba(255,255,255,0.4)", marginBottom:16, lineHeight:1.6 } },
+        "Add questions for the mastery test. Print from the Test tab on any node."
+      ),
+      qs.length > 0 && React.createElement("div", { style:{ marginBottom:16 } },
+        ...qs.map((q, i) =>
+          React.createElement("div", { key:q.id, style:{ display:"flex", alignItems:"flex-start", gap:10, padding:"10px 0", borderBottom:"1px solid rgba(255,255,255,0.06)" } },
+            React.createElement("span", { style:{ fontSize:12, color:"rgba(255,255,255,0.3)", minWidth:20, paddingTop:2 } }, `${i+1}.`),
+            React.createElement("span", { style:{ flex:1, fontSize:13, color:"rgba(255,255,255,0.75)", lineHeight:1.5 } }, q.text),
+            React.createElement("button", { onClick:()=>removeQ(q.id), style:{ background:"none", border:"none", color:"rgba(255,80,80,0.6)", cursor:"pointer", fontSize:16, padding:"0 4px" } }, "×")
+          )
+        )
+      ),
+      React.createElement("div", { style:{ display:"flex", gap:8, marginBottom:16 } },
+        React.createElement("input", { value:newQ, onChange:e=>setNewQ(e.target.value), onKeyDown:e=>e.key==="Enter"&&addQ(), placeholder:"Type a question...", style:{ flex:1, padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:13 } }),
+        React.createElement("button", { onClick:addQ, style:{ padding:"9px 16px", borderRadius:10, border:"none", background:"rgba(255,200,80,0.2)", color:"rgba(255,200,80,0.9)", fontWeight:700, fontSize:13, cursor:"pointer" } }, "+ Add"),
+      ),
+      React.createElement("button", { onClick:saveQs, style:{ padding:"9px 24px", borderRadius:10, border:"none", background:"rgba(255,200,80,0.2)", color:"rgba(255,200,80,0.9)", fontWeight:700, fontSize:13, cursor:"pointer" } }, "Save Questions"),
+    ),
+
+    // SETTINGS TAB
+    tab==="settings" && React.createElement("div", null,
+      React.createElement("div", { style:{ fontSize:12, color:"rgba(255,255,255,0.4)", marginBottom:16 } }, "Settings apply across all nodes and children."),
+      React.createElement("label", { style:{ display:"block", fontSize:11, color:"rgba(255,255,255,0.4)", marginBottom:4, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Passing Threshold (%)"),
+      React.createElement("div", { style:{ display:"flex", gap:10, alignItems:"center", marginBottom:20 } },
+        React.createElement("input", { type:"number", min:0, max:100, value:threshold, onChange:e=>setThreshold(e.target.value), style:{ width:80, padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:14 } }),
+        React.createElement("span", { style:{ fontSize:13, color:"rgba(255,255,255,0.4)" } }, "% correct to auto-master"),
+      ),
+      React.createElement("button", { onClick:()=>{ const v=parseInt(threshold); if(!isNaN(v)&&v>=0&&v<=100) onSaveSettings({passingThreshold:v}); }, style:{ padding:"9px 24px", borderRadius:10, border:"none", background:"rgba(255,200,80,0.2)", color:"rgba(255,200,80,0.9)", fontWeight:700, fontSize:13, cursor:"pointer" } }, "Save Settings"),
+    ),
   );
 }
 
+// ─── PROGRESS VIEW ────────────────────────────────────────────────────────────
 function ProgressView({ data, activeChild, child }) {
   return React.createElement("div", { style:{ padding:"24px 20px", maxWidth:700, margin:"0 auto" } },
     React.createElement("h2", { style:{ fontSize:18, fontWeight:700, marginBottom:4, color:"#fff" } }, `${child?.name}'s Progress`),
     React.createElement("p", { style:{ color:"rgba(255,255,255,0.38)", fontSize:13, marginBottom:24 } }, "Overview across all subjects"),
     ...Object.values(SUBJECTS).map(subject => {
       const sp = data.progress[activeChild] || {};
-      const ss = computeStatuses(subject.nodes, sp);
+      const sn = getSubjectNodes(subject.id, data);
+      const ss = computeStatuses(sn, sp);
       const mastered = Object.values(ss).filter(s=>s===STATUS.MASTERED).length;
       const inProgress = Object.values(ss).filter(s=>s===STATUS.IN_PROGRESS).length;
-      const total = subject.nodes.length;
+      const total = sn.length;
       const pct = Math.round((mastered/total)*100);
-
       const gradeGroups = {};
-      for (const node of subject.nodes) {
+      for (const node of sn) {
         const g = node.grade.split("–")[0].trim();
         if (!gradeGroups[g]) gradeGroups[g] = { total:0, mastered:0 };
         gradeGroups[g].total++;
         if (ss[node.id]===STATUS.MASTERED) gradeGroups[g].mastered++;
       }
       const gradeOrder = ["K","1","2","3","4","5","6","7","8","9","10","11","12"];
-
-      return React.createElement("div", {
-        key:subject.id,
-        style:{ marginBottom:18, padding:"16px 20px", borderRadius:14,
-          background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.06)" }
-      },
+      return React.createElement("div", { key:subject.id, style:{ marginBottom:18, padding:"16px 20px", borderRadius:14, background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.06)" } },
         React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 } },
           React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:8 } },
             React.createElement("span", { style:{ color:subject.accent, fontSize:14 } }, subject.icon),
             React.createElement("span", { style:{ fontWeight:700, fontSize:15, color:"#fff" } }, subject.label),
-            inProgress>0 && React.createElement("span", {
-              style:{ fontSize:11, background:`${subject.color}33`, color:subject.accent, padding:"2px 8px", borderRadius:10 }
-            }, `${inProgress} in progress`)
+            inProgress>0 && React.createElement("span", { style:{ fontSize:11, background:`${subject.color}33`, color:subject.accent, padding:"2px 8px", borderRadius:10 } }, `${inProgress} in progress`)
           ),
           React.createElement("span", { style:{ fontSize:13, fontWeight:700, color:subject.accent } }, `${pct}%`)
         ),
         React.createElement("div", { style:{ height:8, borderRadius:4, background:"rgba(255,255,255,0.07)", overflow:"hidden", marginBottom:12 } },
-          React.createElement("div", { style:{ height:"100%", borderRadius:4, transition:"width 0.5s",
-            width:`${pct}%`, background:`linear-gradient(90deg,${subject.color},${subject.accent})` } })
+          React.createElement("div", { style:{ height:"100%", borderRadius:4, transition:"width 0.5s", width:`${pct}%`, background:`linear-gradient(90deg,${subject.color},${subject.accent})` } })
         ),
         React.createElement("div", { style:{ display:"flex", gap:6, flexWrap:"wrap" } },
-          ...Object.entries(gradeGroups)
-            .sort((a,b) => gradeOrder.indexOf(a[0]) - gradeOrder.indexOf(b[0]))
-            .map(([grade,{total:t,mastered:m}]) =>
-              React.createElement("div", {
-                key:grade,
-                style:{
-                  fontSize:11, padding:"3px 8px", borderRadius:8,
-                  background: m===t ? `${subject.color}44` : "rgba(255,255,255,0.05)",
-                  color: m===t ? subject.accent : "rgba(255,255,255,0.32)",
-                  border:`1px solid ${m===t ? subject.color+"66" : "rgba(255,255,255,0.08)"}`,
-                }
-              }, `Gr.${grade} ${m}/${t}`)
-            )
+          ...Object.entries(gradeGroups).sort((a,b)=>gradeOrder.indexOf(a[0])-gradeOrder.indexOf(b[0])).map(([grade,{total:t,mastered:m}]) =>
+            React.createElement("div", { key:grade, style:{ fontSize:11, padding:"3px 8px", borderRadius:8, background:m===t?`${subject.color}44`:"rgba(255,255,255,0.05)", color:m===t?subject.accent:"rgba(255,255,255,0.32)", border:`1px solid ${m===t?subject.color+"66":"rgba(255,255,255,0.08)"}` } }, `Gr.${grade} ${m}/${t}`)
+          )
         )
       );
     })
   );
 }
 
+// ─── UTILITY COMPONENTS ───────────────────────────────────────────────────────
 function TabBtn({ active, onClick, children }) {
-  return React.createElement("button", {
-    onClick,
-    style:{
-      padding:"6px 14px", borderRadius:8, border:"none", cursor:"pointer",
-      background: active ? "rgba(255,255,255,0.12)" : "transparent",
-      color: active ? "#fff" : "rgba(255,255,255,0.4)",
-      fontWeight: active ? 700 : 400, fontSize:13,
-    }
-  }, children);
+  return React.createElement("button", { onClick, style:{ padding:"6px 14px", borderRadius:8, border:"none", cursor:"pointer", background:active?"rgba(255,255,255,0.12)":"transparent", color:active?"#fff":"rgba(255,255,255,0.4)", fontWeight:active?700:400, fontSize:13 } }, children);
+}
+function ActionBtn({ color, onClick, children, disabled }) {
+  return React.createElement("button", { onClick, disabled, style:{ padding:"8px 18px", borderRadius:10, border:`1px solid ${color}`, background:`${color}18`, color, fontWeight:600, fontSize:13, cursor:"pointer", opacity:disabled?0.5:1 } }, children);
 }
 
-function ActionBtn({ color, onClick, children }) {
-  return React.createElement("button", {
-    onClick,
-    style:{
-      padding:"8px 18px", borderRadius:10, border:`1px solid ${color}`,
-      background:`${color}18`, color, fontWeight:600, fontSize:13, cursor:"pointer",
-    }
-  }, children);
-}
-
+// ─── MOUNT ───────────────────────────────────────────────────────────────────
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(React.createElement(App));
 </script>
-
 </body>
 </html>
