@@ -316,6 +316,8 @@ function App() {
   const [view, setView] = useState("tree");
   const [addingChild, setAddingChild] = useState(false);
   const [newChildName, setNewChildName] = useState("");
+  const [editingChild, setEditingChild] = useState(null);
+  const [editChildName, setEditChildName] = useState("");
   const COLORS = ["#E06C75","#61AFEF","#98C379","#E5C07B","#C678DD","#56B6C2","#FF8C61"];
 
   const persist = (next) => { setData(next); saveData(next); };
@@ -344,6 +346,17 @@ function App() {
     delete next.progress[cid];
     persist(next);
     if (activeChild === cid) setActiveChild(next.children[0].id);
+  };
+
+  const startEditChild = (c) => {
+    setEditingChild(c.id);
+    setEditChildName(c.name);
+  };
+
+  const saveEditChild = () => {
+    if (!editChildName.trim()) { setEditingChild(null); return; }
+    persist({ ...data, children: data.children.map(c => c.id === editingChild ? { ...c, name: editChildName.trim() } : c) });
+    setEditingChild(null);
   };
 
   const subject = SUBJECTS[activeSubject];
@@ -382,16 +395,42 @@ function App() {
         padding:"10px 20px", borderBottom:"1px solid rgba(255,255,255,0.06)", scrollbarWidth:"none" }
     },
       ...data.children.map(c =>
-        React.createElement("button", {
-          key: c.id, onClick: ()=>setActiveChild(c.id),
-          style:{
-            padding:"6px 14px", borderRadius:20, border:"none", cursor:"pointer",
-            background: activeChild===c.id ? c.color : "rgba(255,255,255,0.07)",
-            color: activeChild===c.id ? "#fff" : "rgba(255,255,255,0.55)",
-            fontWeight: activeChild===c.id ? 700 : 500, fontSize:13, whiteSpace:"nowrap",
-            transition:"all 0.15s",
-          }
-        }, c.name)
+        editingChild === c.id
+          ? React.createElement("div", { key: c.id, style:{ display:"flex", gap:4, alignItems:"center" } },
+              React.createElement("input", {
+                value: editChildName,
+                onChange: e => setEditChildName(e.target.value),
+                onKeyDown: e => { if (e.key === "Enter") saveEditChild(); if (e.key === "Escape") setEditingChild(null); },
+                onBlur: saveEditChild,
+                autoFocus: true,
+                style:{
+                  padding:"5px 10px", borderRadius:16, border:`1px solid ${c.color}`,
+                  background:"rgba(255,255,255,0.1)", color:"#fff", fontSize:13, width:110,
+                }
+              })
+            )
+          : React.createElement("div", { key: c.id, style:{ display:"flex", alignItems:"center", gap:0 } },
+              React.createElement("button", {
+                onClick: ()=>setActiveChild(c.id),
+                style:{
+                  padding:"6px 10px 6px 14px", borderRadius: activeChild===c.id ? "20px 0 0 20px" : 20,
+                  border:"none", cursor:"pointer",
+                  background: activeChild===c.id ? c.color : "rgba(255,255,255,0.07)",
+                  color: activeChild===c.id ? "#fff" : "rgba(255,255,255,0.55)",
+                  fontWeight: activeChild===c.id ? 700 : 500, fontSize:13, whiteSpace:"nowrap",
+                  transition:"all 0.15s",
+                }
+              }, c.name),
+              activeChild===c.id && React.createElement("button", {
+                onClick: ()=>startEditChild(c),
+                title: "Rename",
+                style:{
+                  padding:"6px 10px 6px 6px", borderRadius:"0 20px 20px 0", border:"none",
+                  background: c.color, color:"rgba(255,255,255,0.75)", cursor:"pointer",
+                  fontSize:11, lineHeight:1, transition:"all 0.15s",
+                }
+              }, "✎")
+            )
       ),
       addingChild
         ? React.createElement("div", { style:{ display:"flex", gap:6 } },
