@@ -1,5 +1,6 @@
 ---
-const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
+const SUPABASE_URL = import.meta.env.SUPABASE_URL ?? "";
+const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
 ---
 
 <!DOCTYPE html>
@@ -12,6 +13,7 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; background: #0F1117; color: #E8EAF0; font-family: 'Inter', 'Segoe UI', sans-serif; }
@@ -43,27 +45,58 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
 <div id="gate">
   <div class="logo">Refuge &amp; Sword</div>
   <h1>Homeschool Path</h1>
-  <p>Enter the password to continue.</p>
+  <p id="gate-sub">Sign in to continue.</p>
+  <input type="email" id="email-input" placeholder="Email" autocomplete="email" />
   <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" />
-  <button id="pw-submit">Enter</button>
-  <div class="error" id="pw-error" style="display:none">Incorrect password.</div>
+  <button id="pw-submit">Sign In</button>
+  <div class="error" id="pw-error" style="display:none">Incorrect email or password.</div>
+  <div id="gate-loading" style="display:none;font-size:13px;color:rgba(255,255,255,0.35)">Signing in...</div>
 </div>
 
 <div id="root" style="display:none;height:100%"></div>
 
-<script define:vars={{ PASSWORD }}>
-  const SESSION_KEY = "hs_auth_v1";
+<script is:inline define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
   function unlock() {
     document.getElementById("gate").style.display = "none";
     document.getElementById("root").style.display = "block";
   }
-  if (sessionStorage.getItem(SESSION_KEY) === "1") unlock();
-  document.getElementById("pw-submit").addEventListener("click", attempt);
-  document.getElementById("pw-input").addEventListener("keydown", e => { if (e.key === "Enter") attempt(); });
-  function attempt() {
-    const val = document.getElementById("pw-input").value;
-    if (val === PASSWORD) { sessionStorage.setItem(SESSION_KEY, "1"); unlock(); }
-    else { document.getElementById("pw-error").style.display = "block"; document.getElementById("pw-input").value = ""; document.getElementById("pw-input").focus(); }
+
+  function showError(msg) {
+    const el = document.getElementById("pw-error");
+    el.textContent = msg;
+    el.style.display = "block";
+    document.getElementById("gate-loading").style.display = "none";
+    document.getElementById("pw-submit").disabled = false;
+  }
+
+  if (!SUPABASE_URL) {
+    document.getElementById("gate-sub").textContent = "Service not yet configured. Check back soon.";
+    document.getElementById("pw-submit").disabled = true;
+  } else {
+    const { createClient } = supabase;
+    window.HS_DB = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Check for existing session on load
+    window.HS_DB.auth.getSession().then(({ data: { session } }) => {
+      if (session) unlock();
+    });
+
+    function attemptLogin() {
+      const email = document.getElementById("email-input").value.trim();
+      const password = document.getElementById("pw-input").value;
+      if (!email || !password) return;
+      document.getElementById("pw-submit").disabled = true;
+      document.getElementById("gate-loading").style.display = "block";
+      document.getElementById("pw-error").style.display = "none";
+      window.HS_DB.auth.signInWithPassword({ email, password }).then(({ error }) => {
+        if (error) showError(error.message);
+        else unlock();
+      });
+    }
+
+    document.getElementById("pw-submit").addEventListener("click", attemptLogin);
+    document.getElementById("pw-input").addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
+    document.getElementById("email-input").addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("pw-input").focus(); });
   }
 </script>
 
@@ -71,7 +104,7 @@ const PASSWORD = import.meta.env.HOMESCHOOL_PASSWORD ?? "refuge";
 <script is:inline src="/curriculum-data.js"></script>
 
 <script type="text/babel">
-const { useState, useMemo } = React;
+const { useState, useMemo, useRef, useEffect } = React;
 
 // ─── CURRICULUM DATA ─────────────────────────────────────────────────────────
 // RAW_SUBJECTS holds node structure. window.CURRICULUM merges in tests + resources.
@@ -315,16 +348,45 @@ function statusColor(status, subject) {
 
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
 const STORAGE_KEY = "homeschool_tree_v2";
-function loadData() {
-  const defaults = {
-    children: [{ id:"child1", name:"Child 1", color:"#E06C75" }],
-    progress: {}, questions: {}, nodeOverrides: {}, customNodes: {},
-    settings: { passingThreshold: 80 },
-  };
-  try { const r = localStorage.getItem(STORAGE_KEY); if (r) return { ...defaults, ...JSON.parse(r) }; } catch {}
-  return defaults;
+const DATA_DEFAULTS = {
+  children: [{ id:"child1", name:"Child 1", color:"#E06C75" }],
+  progress: {}, questions: {}, nodeOverrides: {}, customNodes: {},
+  settings: { passingThreshold: 80 },
+};
+
+function loadFromCache() {
+  try { const r = localStorage.getItem(STORAGE_KEY); if (r) return { ...DATA_DEFAULTS, ...JSON.parse(r) }; } catch {}
+  return DATA_DEFAULTS;
 }
-function saveData(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {} }
+
+function saveToCache(d) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {}
+}
+
+async function loadFromSupabase() {
+  try {
+    if (!window.HS_DB) return null;
+    const { data: { user } } = await window.HS_DB.auth.getUser();
+    if (!user) return null;
+    const { data, error } = await window.HS_DB.from("family_data").select("data").eq("user_id", user.id).maybeSingle();
+    if (error || !data) return null;
+    return { ...DATA_DEFAULTS, ...data.data };
+  } catch { return null; }
+}
+
+async function saveToSupabase(d) {
+  try {
+    if (!window.HS_DB) return;
+    const { data: { user } } = await window.HS_DB.auth.getUser();
+    if (!user) return;
+    await window.HS_DB.from("family_data").upsert({ user_id: user.id, data: d, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+  } catch {}
+}
+
+async function signOut() {
+  if (window.HS_DB) await window.HS_DB.auth.signOut();
+  window.location.reload();
+}
 
 // ─── PRINT WORKSHEET ─────────────────────────────────────────────────────────
 function printWorksheet(childName, subjectLabel, node, questions) {
@@ -373,8 +435,8 @@ ${lines}
 
 // ─── APP ─────────────────────────────────────────────────────────────────────
 function App() {
-  const [data, setData] = useState(loadData);
-  const [activeChild, setActiveChild] = useState(() => loadData().children[0]?.id ?? "child1");
+  const [data, setData] = useState(loadFromCache);
+  const [activeChild, setActiveChild] = useState(() => loadFromCache().children[0]?.id ?? "child1");
   const [activeSubject, setActiveSubject] = useState("math");
   const [selectedNode, setSelectedNode] = useState(null);
   const [view, setView] = useState("tree");
@@ -384,9 +446,32 @@ function App() {
   const [editChildName, setEditChildName] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editingNodeId, setEditingNodeId] = useState(null);
+  const [syncStatus, setSyncStatus] = useState("idle"); // idle | saving | saved | error
+  const saveTimer = React.useRef(null);
   const COLORS = ["#E06C75","#61AFEF","#98C379","#E5C07B","#C678DD","#56B6C2","#FF8C61"];
 
-  const persist = (next) => { setData(next); saveData(next); };
+  // On mount: pull latest data from Supabase and override local cache
+  React.useEffect(() => {
+    loadFromSupabase().then(remote => {
+      if (remote) {
+        setData(remote);
+        saveToCache(remote);
+      }
+    });
+  }, []);
+
+  const persist = (next) => {
+    setData(next);
+    saveToCache(next);
+    // Debounced cloud save
+    setSyncStatus("saving");
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      saveToSupabase(next)
+        .then(() => setSyncStatus("saved"))
+        .catch(() => setSyncStatus("error"));
+    }, 1500);
+  };
 
   // Fixed: single object, one persist call — no more stale closure race
   const setProgress = (updates) => {
@@ -472,6 +557,14 @@ function App() {
           title: editMode ? "Exit Edit Mode" : "Edit Mode",
           style:{ padding:"6px 10px", borderRadius:8, border:editMode?"1px solid rgba(255,200,80,0.5)":"1px solid rgba(255,255,255,0.1)", background:editMode?"rgba(255,200,80,0.12)":"transparent", color:editMode?"#F5C842":"rgba(255,255,255,0.4)", fontSize:13, cursor:"pointer" }
         }, editMode ? "⚙ Editing" : "⚙"),
+        React.createElement("div", { style:{ fontSize:10, color: syncStatus==="saved"?"#4CAF80":syncStatus==="saving"?"rgba(255,255,255,0.3)":syncStatus==="error"?"rgba(255,120,120,0.7)":"transparent", minWidth:32, textAlign:"center" } },
+          syncStatus==="saving" ? "⟳" : syncStatus==="saved" ? "✓" : syncStatus==="error" ? "!" : ""
+        ),
+        React.createElement("button", {
+          onClick: signOut,
+          title: "Sign out",
+          style:{ padding:"5px 9px", borderRadius:8, border:"1px solid rgba(255,255,255,0.08)", background:"transparent", color:"rgba(255,255,255,0.3)", fontSize:12, cursor:"pointer" }
+        }, "↪"),
       )
     ),
 
