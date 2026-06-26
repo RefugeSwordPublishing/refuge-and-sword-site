@@ -13,7 +13,6 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; background: #0F1117; color: #E8EAF0; font-family: 'Inter', 'Segoe UI', sans-serif; }
@@ -55,22 +54,12 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
 
 <div id="root" style="display:none;height:100%"></div>
 
-<!-- Step 1: init Supabase client (define:vars injects SUPABASE_URL + SUPABASE_ANON_KEY) -->
+<!-- Stash credentials in window vars via define:vars, then load Supabase dynamically -->
 <script is:inline define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
-  try {
-    if (!SUPABASE_URL) {
-      window.HS_DB_ERROR = "SUPABASE_URL env var is missing or empty";
-    } else if (typeof supabase === 'undefined') {
-      window.HS_DB_ERROR = "Supabase library failed to load from CDN";
-    } else {
-      window.HS_DB = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-  } catch(e) {
-    window.HS_DB_ERROR = e.message;
-  }
+  window._SB_URL = SUPABASE_URL;
+  window._SB_KEY = SUPABASE_ANON_KEY;
 </script>
 
-<!-- Step 2: gate logic (no define:vars — uses window.HS_DB set above) -->
 <script is:inline>
   function unlock() {
     document.getElementById("gate").style.display = "none";
@@ -78,28 +67,15 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
   }
 
   function showError(msg) {
-    const el = document.getElementById("pw-error");
+    var el = document.getElementById("pw-error");
     el.textContent = msg;
     el.style.display = "block";
     document.getElementById("gate-loading").style.display = "none";
     document.getElementById("pw-submit").disabled = false;
   }
 
-  // Show any init error right away
-  if (window.HS_DB_ERROR) {
-    showError("Setup error: " + window.HS_DB_ERROR);
-  } else if (!window.HS_DB) {
-    document.getElementById("gate-sub").textContent = "Service not configured. Contact Dustin.";
-    document.getElementById("pw-submit").disabled = true;
-  } else {
-    // Check for an existing session so returning users skip the form
-    window.HS_DB.auth.getSession().then(function(result) {
-      if (result.data && result.data.session) unlock();
-    });
-  }
-
-  document.getElementById("pw-submit").addEventListener("click", function() {
-    if (!window.HS_DB) { showError("Client not ready — please refresh."); return; }
+  function attemptLogin() {
+    if (!window.HS_DB) { showError("Still loading — please wait a moment and try again."); return; }
     var email = document.getElementById("email-input").value.trim();
     var password = document.getElementById("pw-input").value;
     if (!email || !password) { showError("Please enter your email and password."); return; }
@@ -107,19 +83,33 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
     document.getElementById("gate-loading").style.display = "block";
     document.getElementById("pw-error").style.display = "none";
     window.HS_DB.auth.signInWithPassword({ email: email, password: password })
-      .then(function(result) {
-        if (result.error) showError(result.error.message);
+      .then(function(r) {
+        if (r.error) showError(r.error.message);
         else unlock();
       })
-      .catch(function(err) { showError(err.message || "Sign in failed."); });
-  });
+      .catch(function(e) { showError(e.message || "Sign in failed."); });
+  }
 
-  document.getElementById("pw-input").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") document.getElementById("pw-submit").click();
-  });
-  document.getElementById("email-input").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") document.getElementById("pw-input").focus();
-  });
+  document.getElementById("pw-submit").addEventListener("click", attemptLogin);
+  document.getElementById("pw-input").addEventListener("keydown", function(e) { if (e.key === "Enter") attemptLogin(); });
+  document.getElementById("email-input").addEventListener("keydown", function(e) { if (e.key === "Enter") document.getElementById("pw-input").focus(); });
+
+  if (!window._SB_URL) {
+    showError("SUPABASE_URL is not configured — check Vercel env vars.");
+  } else {
+    var sbScript = document.createElement("script");
+    sbScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
+    sbScript.onload = function() {
+      try {
+        window.HS_DB = supabase.createClient(window._SB_URL, window._SB_KEY);
+        window.HS_DB.auth.getSession().then(function(r) {
+          if (r.data && r.data.session) unlock();
+        });
+      } catch(e) { showError("Init error: " + e.message); }
+    };
+    sbScript.onerror = function() { showError("Could not load Supabase library — check your internet connection."); };
+    document.head.appendChild(sbScript);
+  }
 </script>
 
 <!-- Curriculum data: tests, resources, updated colors. Loaded before React. -->
