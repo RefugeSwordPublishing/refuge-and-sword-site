@@ -84,14 +84,17 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
     function attemptLogin() {
       const email = document.getElementById("email-input").value.trim();
       const password = document.getElementById("pw-input").value;
-      if (!email || !password) return;
+      if (!email || !password) { showError("Please enter your email and password."); return; }
+      if (!window.HS_DB) { showError("Client not ready — please refresh and try again."); return; }
       document.getElementById("pw-submit").disabled = true;
       document.getElementById("gate-loading").style.display = "block";
       document.getElementById("pw-error").style.display = "none";
-      window.HS_DB.auth.signInWithPassword({ email, password }).then(({ error }) => {
-        if (error) showError(error.message);
-        else unlock();
-      });
+      window.HS_DB.auth.signInWithPassword({ email, password })
+        .then(({ error }) => {
+          if (error) showError(error.message);
+          else unlock();
+        })
+        .catch(err => showError(err.message || "Sign in failed — check your connection."));
     }
 
     document.getElementById("pw-submit").addEventListener("click", attemptLogin);
