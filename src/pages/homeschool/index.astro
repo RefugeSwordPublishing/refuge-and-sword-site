@@ -124,6 +124,7 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
 
 <script type="text/babel">
 const { useState, useMemo, useRef, useEffect } = React;
+const IS_MOBILE = window.innerWidth < 700;
 
 // ─── CURRICULUM DATA ─────────────────────────────────────────────────────────
 // RAW_SUBJECTS holds node structure. window.CURRICULUM merges in tests + resources.
@@ -614,36 +615,36 @@ function App() {
   return React.createElement("div", { style:{ minHeight:"100vh", background:`radial-gradient(ellipse at 25% 15%, ${subject.color}22 0%, transparent 55%), radial-gradient(ellipse at 75% 85%, ${subject.accent}14 0%, transparent 50%), #080C18`, color:"#E8EAF0", fontFamily:"'Inter','Segoe UI',sans-serif", fontSize:14, backgroundAttachment:"fixed" } },
 
     // TOP BAR
-    React.createElement("div", { style:{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 20px", borderBottom:`1px solid ${subject.color}30`, background:`linear-gradient(90deg, ${subject.color}18 0%, rgba(8,12,28,0.95) 100%)`, position:"sticky", top:0, zIndex:200, backdropFilter:"blur(12px)" } },
-      React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:10 } },
-        React.createElement("div", { style:{ width:32, height:32, borderRadius:10, background:`linear-gradient(135deg, ${subject.color}, ${subject.accent})`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:16, boxShadow:`0 0 12px ${subject.color}60` } }, subject.icon),
-        React.createElement("div", null,
+    React.createElement("div", { style:{ display:"flex", alignItems:"center", justifyContent:"space-between", padding: IS_MOBILE ? "10px 12px" : "12px 20px", borderBottom:`1px solid ${subject.color}30`, background:`linear-gradient(90deg, ${subject.color}18 0%, rgba(8,12,28,0.95) 100%)`, position:"sticky", top:0, zIndex:200, backdropFilter:"blur(12px)" } },
+      React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:8 } },
+        React.createElement("div", { style:{ width: IS_MOBILE?28:32, height: IS_MOBILE?28:32, borderRadius:10, background:`linear-gradient(135deg, ${subject.color}, ${subject.accent})`, display:"flex", alignItems:"center", justifyContent:"center", fontSize: IS_MOBILE?13:16, boxShadow:`0 0 12px ${subject.color}60`, flexShrink:0 } }, subject.icon),
+        !IS_MOBILE && React.createElement("div", null,
           React.createElement("div", { style:{ fontWeight:800, fontSize:15, color:"#fff", letterSpacing:"0.02em", lineHeight:1.1 } }, "Homeschool Path"),
           React.createElement("div", { style:{ fontSize:10, color:`${subject.accent}CC`, fontWeight:600, letterSpacing:"0.06em" } }, subject.label.toUpperCase()),
         ),
       ),
-      React.createElement("div", { style:{ display:"flex", gap:6, alignItems:"center" } },
-        React.createElement(TabBtn, { active:view==="dashboard", onClick:()=>setView("dashboard"), color:"#6366F1" }, "📋 This Week"),
-        React.createElement(TabBtn, { active:view==="tree", onClick:()=>setView("tree"), color:subject.color }, "🌳 Tree"),
-        React.createElement(TabBtn, { active:view==="progress", onClick:()=>setView("progress"), color:subject.color }, "📊 Progress"),
+      React.createElement("div", { style:{ display:"flex", gap: IS_MOBILE?3:6, alignItems:"center" } },
+        React.createElement(TabBtn, { active:view==="dashboard", onClick:()=>setView("dashboard"), color:"#6366F1", mobile:IS_MOBILE }, IS_MOBILE ? "📋" : "📋 This Week"),
+        React.createElement(TabBtn, { active:view==="tree", onClick:()=>setView("tree"), color:subject.color, mobile:IS_MOBILE }, IS_MOBILE ? "🌳" : "🌳 Tree"),
+        React.createElement(TabBtn, { active:view==="progress", onClick:()=>setView("progress"), color:subject.color, mobile:IS_MOBILE }, IS_MOBILE ? "📊" : "📊 Progress"),
         React.createElement("button", {
           onClick: () => setEditMode(e => !e),
           title: editMode ? "Exit Edit Mode" : "Edit Mode",
-          style:{ padding:"6px 10px", borderRadius:8, border:editMode?"1px solid rgba(255,200,80,0.5)":"1px solid rgba(255,255,255,0.1)", background:editMode?"rgba(255,200,80,0.12)":"transparent", color:editMode?"#F5C842":"rgba(255,255,255,0.4)", fontSize:13, cursor:"pointer" }
-        }, editMode ? "⚙ Editing" : "⚙"),
+          style:{ padding: IS_MOBILE?"5px 7px":"6px 10px", borderRadius:8, border:editMode?"1px solid rgba(255,200,80,0.5)":"1px solid rgba(255,255,255,0.1)", background:editMode?"rgba(255,200,80,0.12)":"transparent", color:editMode?"#F5C842":"rgba(255,255,255,0.4)", fontSize:13, cursor:"pointer" }
+        }, "⚙"),
         syncStatus==="error"
           ? React.createElement("button", {
               onClick: () => forceSyncNow(data),
               title: "Sync error — tap to retry\n" + syncError,
-              style:{ padding:"4px 8px", borderRadius:8, border:"1px solid rgba(255,100,100,0.4)", background:"rgba(255,80,80,0.12)", color:"rgba(255,120,120,0.9)", fontSize:11, cursor:"pointer", fontWeight:700 }
-            }, "⚠ Sync Error — Retry")
-          : React.createElement("div", { title: syncError, style:{ fontSize:10, color: syncStatus==="saved"?"#4CAF80":syncStatus==="saving"?"rgba(255,255,255,0.3)":syncStatus==="loading"?"rgba(255,255,255,0.3)":"transparent", minWidth:32, textAlign:"center" } },
-              syncStatus==="saving" ? "⟳ saving" : syncStatus==="saved" ? "✓ saved" : syncStatus==="loading" ? "⟳" : ""
+              style:{ padding:"4px 6px", borderRadius:8, border:"1px solid rgba(255,100,100,0.4)", background:"rgba(255,80,80,0.12)", color:"rgba(255,120,120,0.9)", fontSize: IS_MOBILE?10:11, cursor:"pointer", fontWeight:700 }
+            }, IS_MOBILE ? "⚠" : "⚠ Sync Error — Retry")
+          : !IS_MOBILE && React.createElement("div", { title: syncError, style:{ fontSize:10, color: syncStatus==="saved"?"#4CAF80":syncStatus==="saving"?"rgba(255,255,255,0.3)":syncStatus==="loading"?"rgba(255,255,255,0.3)":"transparent", minWidth:32, textAlign:"center" } },
+              syncStatus==="saving" ? "⟳" : syncStatus==="saved" ? "✓" : syncStatus==="loading" ? "⟳" : ""
             ),
         React.createElement("button", {
           onClick: signOut,
           title: "Sign out",
-          style:{ padding:"5px 9px", borderRadius:8, border:"1px solid rgba(255,255,255,0.08)", background:"transparent", color:"rgba(255,255,255,0.3)", fontSize:12, cursor:"pointer" }
+          style:{ padding: IS_MOBILE?"5px 7px":"5px 9px", borderRadius:8, border:"1px solid rgba(255,255,255,0.08)", background:"transparent", color:"rgba(255,255,255,0.3)", fontSize:12, cursor:"pointer" }
         }, "↪"),
       )
     ),
@@ -671,7 +672,7 @@ function App() {
     ),
 
     // SUBJECT TABS
-    React.createElement("div", { style:{ display:"flex", overflowX:"auto", gap:6, padding:"10px 20px", borderBottom:`1px solid rgba(255,255,255,0.06)`, scrollbarWidth:"none" } },
+    React.createElement("div", { style:{ display:"flex", overflowX:"auto", gap: IS_MOBILE?4:6, padding: IS_MOBILE?"8px 10px":"10px 20px", borderBottom:`1px solid rgba(255,255,255,0.06)`, scrollbarWidth:"none", WebkitOverflowScrolling:"touch" } },
       ...Object.values(SUBJECTS).map(s => {
         const sp = data.progress[activeChild] || {};
         const sn = getSubjectNodes(s.id, data);
@@ -682,16 +683,17 @@ function App() {
         return React.createElement("button", {
           key:s.id, onClick:()=>{ setActiveSubject(s.id); setSelectedNode(null); },
           style:{
-            padding:"8px 14px", borderRadius:12, border: isActive?`1.5px solid ${s.color}88`:"1.5px solid rgba(255,255,255,0.07)",
+            padding: IS_MOBILE?"7px 10px":"8px 14px", borderRadius:12,
+            border: isActive?`1.5px solid ${s.color}88`:"1.5px solid rgba(255,255,255,0.07)",
             background: isActive?`linear-gradient(135deg, ${s.color}33, ${s.accent}18)`:"rgba(255,255,255,0.04)",
             color: isActive?"#fff":"rgba(255,255,255,0.45)", fontWeight: isActive?700:400,
-            fontSize:12, cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center",
-            gap:6, transition:"all 0.2s", boxShadow: isActive?`0 0 12px ${s.color}30`:"none",
+            fontSize: IS_MOBILE?11:12, cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center",
+            gap: IS_MOBILE?4:6, transition:"all 0.2s", boxShadow: isActive?`0 0 12px ${s.color}30`:"none", flexShrink:0,
           }
         },
-          React.createElement("span", { style:{ fontSize:13 } }, s.icon),
-          s.label,
-          React.createElement("span", { style:{ fontSize:10, padding:"2px 7px", borderRadius:8, background: isActive?`${s.color}44`:"rgba(255,255,255,0.08)", color: isActive?s.accent:"rgba(255,255,255,0.3)", fontWeight:700 } }, `${pct}%`)
+          React.createElement("span", { style:{ fontSize: IS_MOBILE?14:13 } }, s.icon),
+          !IS_MOBILE && s.label,
+          React.createElement("span", { style:{ fontSize:10, padding:"2px 6px", borderRadius:8, background: isActive?`${s.color}44`:"rgba(255,255,255,0.08)", color: isActive?s.accent:"rgba(255,255,255,0.3)", fontWeight:700 } }, `${pct}%`)
         );
       })
     ),
@@ -764,7 +766,7 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
 
   return React.createElement("div", { style:{ display:"flex", flexDirection:"column", alignItems:"center", padding:"20px 0 80px" } },
     // Progress card
-    React.createElement("div", { style:{ width:"min(580px,92vw)", marginBottom:16, padding:"16px 20px", borderRadius:16, background:`linear-gradient(135deg, ${subject.color}22, ${subject.accent}10)`, border:`1px solid ${subject.color}35`, boxShadow:`0 4px 24px ${subject.color}18` } },
+    React.createElement("div", { style:{ width: IS_MOBILE?"calc(100vw - 20px)":"min(580px,92vw)", marginBottom:12, padding: IS_MOBILE?"12px 14px":"16px 20px", borderRadius:14, background:`linear-gradient(135deg, ${subject.color}22, ${subject.accent}10)`, border:`1px solid ${subject.color}35`, boxShadow:`0 4px 24px ${subject.color}18` } },
       React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 } },
         React.createElement("div", null,
           React.createElement("div", { style:{ fontSize:13, fontWeight:700, color:"#fff" } }, `${child?.name} — ${subject.label}`),
@@ -792,7 +794,7 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
     ),
 
     // SVG Tree
-    React.createElement("div", { className:"hs-tree-bg", style:{ overflowX:"auto", overflowY:"auto", maxWidth:"100vw", maxHeight:"62vh", borderRadius:16, border:`1px solid ${subject.color}25`, background:`radial-gradient(ellipse at 50% 0%, ${subject.color}12 0%, transparent 60%), rgba(8,12,28,0.7)` } },
+    React.createElement("div", { className:"hs-tree-bg", style:{ overflowX:"auto", overflowY:"auto", maxWidth:"100vw", maxHeight: IS_MOBILE?"68vh":"62vh", borderRadius: IS_MOBILE?12:16, border:`1px solid ${subject.color}25`, background:`radial-gradient(ellipse at 50% 0%, ${subject.color}12 0%, transparent 60%), rgba(8,12,28,0.7)`, WebkitOverflowScrolling:"touch" } },
       React.createElement("svg", { width:svgW, height:svgH, style:{ display:"block" } },
         React.createElement("defs", null,
           React.createElement("marker", { id:"arr", markerWidth:7, markerHeight:7, refX:3.5, refY:3.5, orient:"auto" }, React.createElement("path", { d:"M0,0 L7,3.5 L0,7 Z", fill:"rgba(255,255,255,0.18)" })),
@@ -944,7 +946,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
 
   const panelTabs = ["info", ...(questions.length > 0 ? ["test"] : [])];
 
-  return React.createElement("div", { style:{ position:"fixed", bottom:0, left:0, right:0, zIndex:300, background:"linear-gradient(0deg,#131720 0%,#1C2232 100%)", borderTop:`2px solid ${subject.color}`, borderRadius:"20px 20px 0 0", padding:"20px 24px 36px", maxWidth:640, margin:"0 auto", boxShadow:"0 -24px 60px rgba(0,0,0,0.55)" } },
+  return React.createElement("div", { style:{ position:"fixed", bottom:0, left:0, right:0, zIndex:300, background:"linear-gradient(0deg,#131720 0%,#1C2232 100%)", borderTop:`2px solid ${subject.color}`, borderRadius:"20px 20px 0 0", padding: IS_MOBILE?"16px 16px 32px":"20px 24px 36px", maxWidth: IS_MOBILE?"100%":640, margin:"0 auto", boxShadow:"0 -24px 60px rgba(0,0,0,0.55)", maxHeight:"80vh", overflowY:"auto" } },
 
       // Header
       React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 } },
@@ -1364,9 +1366,9 @@ function ProgressView({ data, activeChild, child }) {
 }
 
 // ─── UTILITY COMPONENTS ───────────────────────────────────────────────────────
-function TabBtn({ active, onClick, children, color }) {
+function TabBtn({ active, onClick, children, color, mobile }) {
   const c = color || "#3B82F6";
-  return React.createElement("button", { onClick, style:{ padding:"7px 16px", borderRadius:10, border: active?`1px solid ${c}55`:"1px solid transparent", cursor:"pointer", background: active?`${c}22`:"transparent", color:active?"#fff":"rgba(255,255,255,0.45)", fontWeight:active?700:400, fontSize:13, transition:"all 0.15s" } }, children);
+  return React.createElement("button", { onClick, style:{ padding: mobile?"6px 8px":"7px 16px", borderRadius:10, border: active?`1px solid ${c}55`:"1px solid transparent", cursor:"pointer", background: active?`${c}22`:"transparent", color:active?"#fff":"rgba(255,255,255,0.45)", fontWeight:active?700:400, fontSize: mobile?16:13, transition:"all 0.15s", minWidth: mobile?36:undefined } }, children);
 }
 function ActionBtn({ color, onClick, children, disabled }) {
   return React.createElement("button", { onClick, disabled, style:{ padding:"9px 20px", borderRadius:11, border:`1px solid ${color}66`, background:`${color}22`, color, fontWeight:700, fontSize:13, cursor:"pointer", opacity:disabled?0.4:1, transition:"all 0.15s", boxShadow:`0 0 8px ${color}25` } }, children);
