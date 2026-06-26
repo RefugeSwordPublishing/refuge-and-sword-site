@@ -259,10 +259,10 @@ const RAW_SUBJECTS = {
 function buildSubjects(raw) {
   if (!window.CURRICULUM) return raw;
   const result = {};
+  // Merge curriculum data into existing subjects
   for (const [sid, subject] of Object.entries(raw)) {
     const ext = window.CURRICULUM[sid];
     if (!ext) { result[sid] = subject; continue; }
-    // Always apply colors from curriculum-data.js
     const base = { ...subject, color: ext.color || subject.color, accent: ext.accent || subject.accent };
     if (!ext.nodes?.length) { result[sid] = base; continue; }
     const extMap = {};
@@ -275,6 +275,12 @@ function buildSubjects(raw) {
         resources: extMap[n.id]?.resources || [],
       })),
     };
+  }
+  // Include new subjects defined entirely in curriculum-data.js
+  for (const [sid, ext] of Object.entries(window.CURRICULUM)) {
+    if (!result[sid] && ext.nodes?.length) {
+      result[sid] = ext;
+    }
   }
   return result;
 }
