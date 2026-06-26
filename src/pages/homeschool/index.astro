@@ -55,7 +55,19 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
 
 <div id="root" style="display:none;height:100%"></div>
 
+<!-- Step 1: init Supabase client (define:vars injects SUPABASE_URL + SUPABASE_ANON_KEY) -->
 <script is:inline define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+  try {
+    if (SUPABASE_URL && typeof supabase !== 'undefined') {
+      window.HS_DB = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  } catch(e) {
+    window.HS_DB_ERROR = e.message;
+  }
+</script>
+
+<!-- Step 2: gate logic (no define:vars — uses window.HS_DB set above) -->
+<script is:inline>
   function unlock() {
     document.getElementById("gate").style.display = "none";
     document.getElementById("root").style.display = "block";
@@ -69,38 +81,41 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
     document.getElementById("pw-submit").disabled = false;
   }
 
-  if (!SUPABASE_URL) {
-    document.getElementById("gate-sub").textContent = "Service not yet configured. Check back soon.";
+  // Show any init error right away
+  if (window.HS_DB_ERROR) {
+    showError("Setup error: " + window.HS_DB_ERROR);
+  } else if (!window.HS_DB) {
+    document.getElementById("gate-sub").textContent = "Service not configured. Contact Dustin.";
     document.getElementById("pw-submit").disabled = true;
   } else {
-    const { createClient } = supabase;
-    window.HS_DB = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Check for existing session on load
-    window.HS_DB.auth.getSession().then(({ data: { session } }) => {
-      if (session) unlock();
+    // Check for an existing session so returning users skip the form
+    window.HS_DB.auth.getSession().then(function(result) {
+      if (result.data && result.data.session) unlock();
     });
-
-    function attemptLogin() {
-      const email = document.getElementById("email-input").value.trim();
-      const password = document.getElementById("pw-input").value;
-      if (!email || !password) { showError("Please enter your email and password."); return; }
-      if (!window.HS_DB) { showError("Client not ready — please refresh and try again."); return; }
-      document.getElementById("pw-submit").disabled = true;
-      document.getElementById("gate-loading").style.display = "block";
-      document.getElementById("pw-error").style.display = "none";
-      window.HS_DB.auth.signInWithPassword({ email, password })
-        .then(({ error }) => {
-          if (error) showError(error.message);
-          else unlock();
-        })
-        .catch(err => showError(err.message || "Sign in failed — check your connection."));
-    }
-
-    document.getElementById("pw-submit").addEventListener("click", attemptLogin);
-    document.getElementById("pw-input").addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
-    document.getElementById("email-input").addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("pw-input").focus(); });
   }
+
+  document.getElementById("pw-submit").addEventListener("click", function() {
+    if (!window.HS_DB) { showError("Client not ready — please refresh."); return; }
+    var email = document.getElementById("email-input").value.trim();
+    var password = document.getElementById("pw-input").value;
+    if (!email || !password) { showError("Please enter your email and password."); return; }
+    document.getElementById("pw-submit").disabled = true;
+    document.getElementById("gate-loading").style.display = "block";
+    document.getElementById("pw-error").style.display = "none";
+    window.HS_DB.auth.signInWithPassword({ email: email, password: password })
+      .then(function(result) {
+        if (result.error) showError(result.error.message);
+        else unlock();
+      })
+      .catch(function(err) { showError(err.message || "Sign in failed."); });
+  });
+
+  document.getElementById("pw-input").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") document.getElementById("pw-submit").click();
+  });
+  document.getElementById("email-input").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") document.getElementById("pw-input").focus();
+  });
 </script>
 
 <!-- Curriculum data: tests, resources, updated colors. Loaded before React. -->
