@@ -407,24 +407,35 @@ function saveToCache(d) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {}
 }
 
+async function getSession() {
+  if (!window.HS_DB) return null;
+  const { data: { session } } = await window.HS_DB.auth.getSession();
+  return session;
+}
+
 async function loadFromSupabase() {
-  try {
-    if (!window.HS_DB) return null;
-    const { data: { user } } = await window.HS_DB.auth.getUser();
-    if (!user) return null;
-    const { data, error } = await window.HS_DB.from("family_data").select("data").eq("user_id", user.id).maybeSingle();
-    if (error || !data) return null;
-    return { ...DATA_DEFAULTS, ...data.data };
-  } catch { return null; }
+  const session = await getSession();
+  if (!session) return null;
+  const { data, error } = await window.HS_DB
+    .from("family_data")
+    .select("data")
+    .eq("user_id", session.user.id)
+    .maybeSingle();
+  if (error) throw new Error("Load failed: " + error.message);
+  if (!data) return null;
+  return { ...DATA_DEFAULTS, ...data.data };
 }
 
 async function saveToSupabase(d) {
-  try {
-    if (!window.HS_DB) return;
-    const { data: { user } } = await window.HS_DB.auth.getUser();
-    if (!user) return;
-    await window.HS_DB.from("family_data").upsert({ user_id: user.id, data: d, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
-  } catch {}
+  const session = await getSession();
+  if (!session) throw new Error("Not signed in");
+  const { error } = await window.HS_DB
+    .from("family_data")
+    .upsert(
+      { user_id: session.user.id, data: d, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" }
+    );
+  if (error) throw new Error("Save failed: " + error.message);
 }
 
 async function signOut() {
@@ -490,30 +501,40 @@ function App() {
   const [editChildName, setEditChildName] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editingNodeId, setEditingNodeId] = useState(null);
-  const [syncStatus, setSyncStatus] = useState("idle"); // idle | saving | saved | error
+  const [syncStatus, setSyncStatus] = useState("loading"); // loading | idle | saving | saved | error
+  const [syncError, setSyncError] = useState("");
   const saveTimer = React.useRef(null);
   const COLORS = ["#E06C75","#61AFEF","#98C379","#E5C07B","#C678DD","#56B6C2","#FF8C61"];
 
   // On mount: pull latest data from Supabase and override local cache
   React.useEffect(() => {
-    loadFromSupabase().then(remote => {
-      if (remote) {
-        setData(remote);
-        saveToCache(remote);
-      }
-    });
+    loadFromSupabase()
+      .then(remote => {
+        if (remote) { setData(remote); saveToCache(remote); }
+        setSyncStatus("idle");
+      })
+      .catch(err => {
+        setSyncError(err.message);
+        setSyncStatus("error");
+      });
   }, []);
+
+  const forceSyncNow = (currentData) => {
+    setSyncStatus("saving"); setSyncError("");
+    saveToSupabase(currentData)
+      .then(() => setSyncStatus("saved"))
+      .catch(err => { setSyncError(err.message); setSyncStatus("error"); });
+  };
 
   const persist = (next) => {
     setData(next);
     saveToCache(next);
-    // Debounced cloud save
-    setSyncStatus("saving");
+    setSyncStatus("saving"); setSyncError("");
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       saveToSupabase(next)
         .then(() => setSyncStatus("saved"))
-        .catch(() => setSyncStatus("error"));
+        .catch(err => { setSyncError(err.message); setSyncStatus("error"); });
     }, 1500);
   };
 
@@ -602,9 +623,15 @@ function App() {
           title: editMode ? "Exit Edit Mode" : "Edit Mode",
           style:{ padding:"6px 10px", borderRadius:8, border:editMode?"1px solid rgba(255,200,80,0.5)":"1px solid rgba(255,255,255,0.1)", background:editMode?"rgba(255,200,80,0.12)":"transparent", color:editMode?"#F5C842":"rgba(255,255,255,0.4)", fontSize:13, cursor:"pointer" }
         }, editMode ? "⚙ Editing" : "⚙"),
-        React.createElement("div", { style:{ fontSize:10, color: syncStatus==="saved"?"#4CAF80":syncStatus==="saving"?"rgba(255,255,255,0.3)":syncStatus==="error"?"rgba(255,120,120,0.7)":"transparent", minWidth:32, textAlign:"center" } },
-          syncStatus==="saving" ? "⟳" : syncStatus==="saved" ? "✓" : syncStatus==="error" ? "!" : ""
-        ),
+        syncStatus==="error"
+          ? React.createElement("button", {
+              onClick: () => forceSyncNow(data),
+              title: "Sync error — tap to retry\n" + syncError,
+              style:{ padding:"4px 8px", borderRadius:8, border:"1px solid rgba(255,100,100,0.4)", background:"rgba(255,80,80,0.12)", color:"rgba(255,120,120,0.9)", fontSize:11, cursor:"pointer", fontWeight:700 }
+            }, "⚠ Sync Error — Retry")
+          : React.createElement("div", { title: syncError, style:{ fontSize:10, color: syncStatus==="saved"?"#4CAF80":syncStatus==="saving"?"rgba(255,255,255,0.3)":syncStatus==="loading"?"rgba(255,255,255,0.3)":"transparent", minWidth:32, textAlign:"center" } },
+              syncStatus==="saving" ? "⟳ saving" : syncStatus==="saved" ? "✓ saved" : syncStatus==="loading" ? "⟳" : ""
+            ),
         React.createElement("button", {
           onClick: signOut,
           title: "Sign out",
