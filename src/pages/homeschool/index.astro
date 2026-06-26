@@ -58,7 +58,11 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
 <!-- Step 1: init Supabase client (define:vars injects SUPABASE_URL + SUPABASE_ANON_KEY) -->
 <script is:inline define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
   try {
-    if (SUPABASE_URL && typeof supabase !== 'undefined') {
+    if (!SUPABASE_URL) {
+      window.HS_DB_ERROR = "SUPABASE_URL env var is missing or empty";
+    } else if (typeof supabase === 'undefined') {
+      window.HS_DB_ERROR = "Supabase library failed to load from CDN";
+    } else {
       window.HS_DB = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
   } catch(e) {
