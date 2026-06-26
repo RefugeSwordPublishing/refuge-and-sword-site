@@ -506,17 +506,25 @@ function App() {
   const saveTimer = React.useRef(null);
   const COLORS = ["#E06C75","#61AFEF","#98C379","#E5C07B","#C678DD","#56B6C2","#FF8C61"];
 
-  // On mount: pull latest data from Supabase and override local cache
+  // On mount: sync with Supabase
+  // - If cloud has data → use it (canonical truth)
+  // - If cloud is empty → push local data up (first-time sync)
   React.useEffect(() => {
+    const localData = loadFromCache();
     loadFromSupabase()
       .then(remote => {
-        if (remote) { setData(remote); saveToCache(remote); }
-        setSyncStatus("idle");
+        if (remote) {
+          // Cloud wins — update local
+          setData(remote);
+          saveToCache(remote);
+          setSyncStatus("idle");
+        } else {
+          // Nothing in cloud yet — push local data up
+          setSyncStatus("saving");
+          return saveToSupabase(localData).then(() => setSyncStatus("saved"));
+        }
       })
-      .catch(err => {
-        setSyncError(err.message);
-        setSyncStatus("error");
-      });
+      .catch(err => { setSyncError(err.message); setSyncStatus("error"); });
   }, []);
 
   const forceSyncNow = (currentData) => {
