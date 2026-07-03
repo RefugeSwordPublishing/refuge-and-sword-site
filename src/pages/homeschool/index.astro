@@ -509,9 +509,15 @@ function App() {
 
   // On mount: sync with Supabase
   // - If cloud has data → use it (canonical truth)
-  // - If cloud is empty → push local data up (first-time sync)
+  // - If cloud is empty AND local has real data → push local up (first-time migration)
+  // - If cloud is empty AND local is bare defaults → do nothing (new device, no data yet)
   React.useEffect(() => {
     const localData = loadFromCache();
+    const localHasRealData = (
+      localData.children.length > 1 ||
+      localData.children.some(c => c.name !== "Child 1") ||
+      Object.keys(localData.progress || {}).length > 0
+    );
     loadFromSupabase()
       .then(remote => {
         if (remote) {
@@ -519,10 +525,13 @@ function App() {
           setData(remote);
           saveToCache(remote);
           setSyncStatus("idle");
-        } else {
-          // Nothing in cloud yet — push local data up
+        } else if (localHasRealData) {
+          // Cloud is empty but local has real data → first-time sync, push it up
           setSyncStatus("saving");
           return saveToSupabase(localData).then(() => setSyncStatus("saved"));
+        } else {
+          // Cloud is empty and local has no real data — new device, just idle
+          setSyncStatus("idle");
         }
       })
       .catch(err => { setSyncError(err.message); setSyncStatus("error"); });
