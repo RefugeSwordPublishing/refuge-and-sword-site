@@ -324,7 +324,7 @@ const STATUS = { LOCKED:"locked", UNLOCKED:"unlocked", IN_PROGRESS:"in_progress"
 const STATUS_LABELS = { locked:"Locked", unlocked:"Ready to Learn", in_progress:"In Progress", mastered:"Mastered" };
 
 // ─── LAYOUT ──────────────────────────────────────────────────────────────────
-const NODE_W = 162, NODE_H = 70, COL_GAP = 52, ROW_GAP = 50, PAD_X = 32, PAD_Y = 28;
+const NODE_W = 168, NODE_H = 72, COL_GAP = 80, ROW_GAP = 80, PAD_X = 40, PAD_Y = 36;
 
 function getSubjectNodes(subjectId, data) {
   const base = SUBJECTS[subjectId];
@@ -344,13 +344,8 @@ function buildEdgePath(srcNode, tgtNode) {
   const src = getNodePos(srcNode), tgt = getNodePos(tgtNode);
   const x1 = src.x + NODE_W / 2, y1 = src.y + NODE_H;
   const x2 = tgt.x + NODE_W / 2, y2 = tgt.y;
-  const laneY = y1 + (y2 - y1) * 0.5;
-  if (srcNode.col === tgtNode.col) {
-    const cy = (y1 + y2) / 2;
-    return `M${x1},${y1} C${x1},${cy} ${x2},${cy} ${x2},${y2}`;
-  }
-  const r = 8, hDir = x2 > x1 ? 1 : -1;
-  return [`M${x1},${y1}`,`L${x1},${laneY-r}`,`Q${x1},${laneY} ${x1+hDir*r},${laneY}`,`L${x2-hDir*r},${laneY}`,`Q${x2},${laneY} ${x2},${laneY+r}`,`L${x2},${y2}`].join(" ");
+  const cp = Math.max((y2 - y1) * 0.55, 40);
+  return `M${x1},${y1} C${x1},${y1+cp} ${x2},${y2-cp} ${x2},${y2}`;
 }
 
 function computeStatuses(nodes, progress) {
@@ -746,8 +741,11 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
       for (const pid of node.prereqs) {
         const prereq = nodeMap[pid];
         if (!prereq) continue;
-        const lit = statuses[pid]===STATUS.MASTERED && statuses[node.id]===STATUS.MASTERED;
-        result.push({ id:`${pid}-${node.id}`, path:buildEdgePath(prereq, node), lit });
+        const srcMastered = statuses[pid]===STATUS.MASTERED;
+        const tgtMastered = statuses[node.id]===STATUS.MASTERED;
+        const lit = srcMastered && tgtMastered;
+        const partial = srcMastered && !tgtMastered;
+        result.push({ id:`${pid}-${node.id}`, path:buildEdgePath(prereq, node), lit, partial });
       }
     }
     return result;
@@ -816,7 +814,13 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
             )
           ),
         ),
-        ...edges.map(e => React.createElement("path", { key:e.id, d:e.path, fill:"none", stroke:e.lit?subject.accent:"rgba(255,255,255,0.1)", strokeWidth:e.lit?2.5:1.5, strokeDasharray:e.lit?"none":"6 5", markerEnd:e.lit?"url(#arr-lit)":"url(#arr)", opacity:e.lit?0.9:0.4 })),
+        ...edges.map(e => React.createElement("path", { key:e.id, d:e.path, fill:"none",
+          stroke: e.lit ? subject.accent : e.partial ? subject.color : "rgba(255,255,255,0.15)",
+          strokeWidth: e.lit ? 3 : e.partial ? 2 : 1.5,
+          strokeDasharray: e.lit || e.partial ? "none" : "6 6",
+          markerEnd: e.lit ? "url(#arr-lit)" : "url(#arr)",
+          opacity: e.lit ? 1 : e.partial ? 0.65 : 0.3
+        })),
         ...nodes.map(node => {
           const { x, y } = getNodePos(node);
           const status = statuses[node.id];
@@ -1183,139 +1187,90 @@ function NodeEditSheet({ node, subject, data, isCustom, allNodes, onSaveFields, 
 // ─── PROGRESS VIEW ────────────────────────────────────────────────────────────
 // ─── DASHBOARD VIEW ──────────────────────────────────────────────────────────
 function DashboardView({ data, setActiveChild, setActiveSubject, setView }) {
-  const INDIGO = "#6366F1";
+  const navigate = (childId, subjectId) => {
+    setActiveChild(childId);
+    setActiveSubject(subjectId);
+    setView("tree");
+  };
 
-  return React.createElement("div", { style:{ padding:"20px", maxWidth:900, margin:"0 auto" } },
+  return React.createElement("div", { style:{ padding:"20px", maxWidth:960, margin:"0 auto" } },
     React.createElement("div", { style:{ marginBottom:24 } },
       React.createElement("div", { style:{ fontSize:22, fontWeight:800, color:"#fff", marginBottom:4 } }, "This Week"),
-      React.createElement("div", { style:{ fontSize:13, color:"rgba(255,255,255,0.4)" } }, "What each child should focus on right now")
+      React.createElement("div", { style:{ fontSize:13, color:"rgba(255,255,255,0.4)" } }, "Where each child stands across every subject")
     ),
 
-    data.children.map(child => {
-      const suggestions = getWeekSuggestions(child.id, data);
-      const totalMastered = Object.values(SUBJECTS).reduce((acc, s) => {
-        const ns = getSubjectNodes(s.id, data);
-        const ss = computeStatuses(ns, data.progress[child.id]||{});
-        return acc + Object.values(ss).filter(x=>x===STATUS.MASTERED).length;
-      }, 0);
-      const totalNodes = Object.values(SUBJECTS).reduce((acc, s) => acc + getSubjectNodes(s.id, data).length, 0);
-      const overallPct = Math.round(totalMastered / totalNodes * 100);
+    Object.values(SUBJECTS).map(subject => {
+      // Gather per-child data for this subject
+      const subjectNodes = getSubjectNodes(subject.id, data);
 
-      const navigate = (subjectId) => {
-        setActiveChild(child.id);
-        setActiveSubject(subjectId);
-        setView("tree");
-      };
+      const childRows = data.children.map(child => {
+        const progress = data.progress[child.id] || {};
+        const statuses = computeStatuses(subjectNodes, progress);
+        const mastered = Object.values(statuses).filter(x => x === STATUS.MASTERED).length;
+        const pct = Math.round(mastered / subjectNodes.length * 100);
+        const inProg = subjectNodes.filter(n => statuses[n.id] === STATUS.IN_PROGRESS);
+        const ready = subjectNodes.filter(n => statuses[n.id] === STATUS.UNLOCKED);
+        const testReady = subjectNodes.filter(n => statuses[n.id] === STATUS.IN_PROGRESS);
+        return { child, pct, mastered, inProg, ready, testReady };
+      });
 
-      return React.createElement("div", { key: child.id, style:{ marginBottom:24, borderRadius:20, overflow:"hidden", border:`1px solid ${child.color}30`, boxShadow:`0 4px 24px ${child.color}18` } },
+      const anyActivity = childRows.some(r => r.mastered > 0 || r.inProg.length > 0 || r.ready.length > 0);
 
-        // Child header
-        React.createElement("div", { style:{ padding:"16px 20px", background:`linear-gradient(135deg, ${child.color}CC, ${child.color}88)`, display:"flex", justifyContent:"space-between", alignItems:"center" } },
-          React.createElement("div", { style:{ display:"flex", alignItems:"center", gap:12 } },
-            React.createElement("div", { style:{ width:40, height:40, borderRadius:"50%", background:"rgba(255,255,255,0.25)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, fontWeight:800, color:"#fff" } }, child.name[0].toUpperCase()),
-            React.createElement("div", null,
-              React.createElement("div", { style:{ fontSize:17, fontWeight:800, color:"#fff" } }, child.name),
-              React.createElement("div", { style:{ fontSize:11, color:"rgba(255,255,255,0.7)" } }, `${totalMastered} of ${totalNodes} topics mastered overall`)
-            ),
-          ),
-          React.createElement("div", { style:{ fontSize:28, fontWeight:800, color:"#fff" } }, `${overallPct}%`)
+      return React.createElement("div", { key: subject.id, style:{ marginBottom:20, borderRadius:18, overflow:"hidden", border:`1px solid ${subject.color}30` } },
+
+        // Subject header
+        React.createElement("div", { style:{ padding:"13px 18px", background:`linear-gradient(135deg,${subject.color}99,${subject.color}55)`, display:"flex", alignItems:"center", gap:10 } },
+          React.createElement("div", { style:{ fontSize:18 } }, subject.icon),
+          React.createElement("div", { style:{ fontSize:15, fontWeight:800, color:"#fff" } }, subject.label),
+          React.createElement("div", { style:{ fontSize:11, color:"rgba(255,255,255,0.5)", marginLeft:4 } }, `${subjectNodes.length} topics`)
         ),
 
-        // Subject mini-bars
-        React.createElement("div", { style:{ padding:"14px 20px 0", background:"rgba(8,12,28,0.6)", display:"flex", gap:8, flexWrap:"wrap" } },
-          Object.values(SUBJECTS).map(s => {
-            const ns = getSubjectNodes(s.id, data);
-            const ss = computeStatuses(ns, data.progress[child.id]||{});
-            const m = Object.values(ss).filter(x=>x===STATUS.MASTERED).length;
-            const pct = Math.round(m/ns.length*100);
-            return React.createElement("button", {
-              key: s.id,
-              onClick: () => navigate(s.id),
-              style:{ flex:1, minWidth:80, padding:"8px 10px", borderRadius:10, background:`${s.color}18`, border:`1px solid ${s.color}33`, cursor:"pointer", textAlign:"left" }
+        // Child rows
+        React.createElement("div", { style:{ background:"rgba(8,12,28,0.7)", padding:"4px 0 8px" } },
+          childRows.map(({ child, pct, mastered, inProg, ready, testReady }) =>
+            React.createElement("div", {
+              key: child.id,
+              onClick: () => navigate(child.id, subject.id),
+              style:{ display:"flex", alignItems:"center", gap:12, padding:"10px 18px", cursor:"pointer", borderBottom:"1px solid rgba(255,255,255,0.04)", transition:"background 0.15s" },
+              onMouseEnter: e => e.currentTarget.style.background="rgba(255,255,255,0.04)",
+              onMouseLeave: e => e.currentTarget.style.background="transparent"
             },
-              React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 } },
-                React.createElement("span", { style:{ fontSize:10, color:s.accent } }, s.icon + " " + s.label.split(" ")[0]),
-                React.createElement("span", { style:{ fontSize:10, fontWeight:700, color:s.accent } }, `${pct}%`)
+              // Child name pill
+              React.createElement("div", { style:{ width:28, height:28, borderRadius:"50%", background:child.color, display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:800, color:"#fff", flexShrink:0 } }, child.name[0]),
+              React.createElement("div", { style:{ width:64, fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.85)", flexShrink:0, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" } }, child.name),
+
+              // Progress bar + pct
+              React.createElement("div", { style:{ flex:1, minWidth:0 } },
+                React.createElement("div", { style:{ height:5, borderRadius:3, background:"rgba(255,255,255,0.07)", marginBottom:3 } },
+                  React.createElement("div", { style:{ height:"100%", borderRadius:3, width:`${pct}%`, background:`linear-gradient(90deg,${subject.color},${subject.accent})`, minWidth: pct>0?"6px":"0" } })
+                ),
+                React.createElement("div", { style:{ fontSize:10, color:"rgba(255,255,255,0.3)" } }, `${mastered} of ${subjectNodes.length} mastered`)
               ),
-              React.createElement("div", { style:{ height:4, borderRadius:2, background:"rgba(255,255,255,0.08)" } },
-                React.createElement("div", { style:{ height:"100%", borderRadius:2, width:`${pct}%`, background:`linear-gradient(90deg,${s.color},${s.accent})` } })
-              )
-            );
-          })
-        ),
+              React.createElement("div", { style:{ fontSize:13, fontWeight:800, color: pct>0?subject.accent:"rgba(255,255,255,0.2)", width:36, textAlign:"right", flexShrink:0 } }, `${pct}%`),
 
-        // Suggestions body
-        React.createElement("div", { style:{ padding:"16px 20px 20px", background:"rgba(8,12,28,0.6)" } },
-
-          // In Progress
-          suggestions.inProgress.length > 0 && React.createElement("div", { style:{ marginBottom:16 } },
-            React.createElement("div", { style:{ fontSize:11, fontWeight:700, color:"rgba(255,255,255,0.35)", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 } }, "▶ Keep Going"),
-            React.createElement("div", { style:{ display:"flex", flexDirection:"column", gap:6 } },
-              suggestions.inProgress.map(({ node, subject }) =>
-                React.createElement("button", {
-                  key: node.id,
-                  onClick: () => navigate(subject.id),
-                  style:{ display:"flex", alignItems:"center", gap:10, padding:"10px 14px", borderRadius:12, background:`${subject.color}25`, border:`1px solid ${subject.color}55`, cursor:"pointer", textAlign:"left" }
-                },
-                  React.createElement("div", { style:{ width:28, height:28, borderRadius:8, background:`linear-gradient(135deg,${subject.color},${subject.accent})`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, flexShrink:0 } }, subject.icon),
-                  React.createElement("div", { style:{ flex:1 } },
-                    React.createElement("div", { style:{ fontSize:13, fontWeight:700, color:"#fff" } }, node.label),
-                    React.createElement("div", { style:{ fontSize:11, color:subject.accent } }, subject.label + " · Grade " + node.grade)
-                  ),
-                  React.createElement("div", { style:{ fontSize:11, padding:"3px 8px", borderRadius:8, background:"#E5C07B22", color:"#E5C07B", fontWeight:600 } }, "In Progress")
-                )
+              // Status tags
+              React.createElement("div", { style:{ display:"flex", gap:5, flexShrink:0, flexWrap:"wrap", justifyContent:"flex-end", minWidth:160 } },
+                inProg.length > 0 && React.createElement("div", { style:{ fontSize:10, padding:"2px 8px", borderRadius:6, background:`${subject.color}30`, color:subject.accent, fontWeight:600 } },
+                  `▶ ${inProg[0].label}`
+                ),
+                ready.length > 0 && inProg.length === 0 && React.createElement("div", { style:{ fontSize:10, padding:"2px 8px", borderRadius:6, background:"rgba(255,255,255,0.07)", color:"rgba(255,255,255,0.5)", fontWeight:600 } },
+                  `✦ ${ready[0].label} ready`
+                ),
+                testReady.length > 0 && React.createElement("div", { style:{ fontSize:10, padding:"2px 8px", borderRadius:6, background:"rgba(99,102,241,0.15)", color:"#A78BFA", fontWeight:600 } },
+                  `📋 Test ready`
+                ),
+                mastered === subjectNodes.length && React.createElement("div", { style:{ fontSize:10, padding:"2px 8px", borderRadius:6, background:`${subject.accent}25`, color:subject.accent, fontWeight:600 } },
+                  `⭐ Complete`
+                ),
+                mastered === 0 && inProg.length === 0 && ready.length === 0 && React.createElement("div", { style:{ fontSize:10, color:"rgba(255,255,255,0.2)" } }, "Not started")
               )
             )
-          ),
-
-          // Ready to start
-          suggestions.readyNext.length > 0 && React.createElement("div", { style:{ marginBottom:16 } },
-            React.createElement("div", { style:{ fontSize:11, fontWeight:700, color:"rgba(255,255,255,0.35)", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 } }, "✦ Ready to Start"),
-            React.createElement("div", { style:{ display:"flex", flexWrap:"wrap", gap:6 } },
-              suggestions.readyNext.map(({ node, subject }) =>
-                React.createElement("button", {
-                  key: node.id,
-                  onClick: () => navigate(subject.id),
-                  style:{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px", borderRadius:10, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", cursor:"pointer" }
-                },
-                  React.createElement("span", { style:{ fontSize:12, color:subject.accent } }, subject.icon),
-                  React.createElement("div", null,
-                    React.createElement("div", { style:{ fontSize:12, fontWeight:600, color:"rgba(255,255,255,0.85)" } }, node.label),
-                    React.createElement("div", { style:{ fontSize:10, color:"rgba(255,255,255,0.35)" } }, subject.label)
-                  )
-                )
-              )
-            )
-          ),
-
-          // Test ready
-          suggestions.testReady.length > 0 && React.createElement("div", null,
-            React.createElement("div", { style:{ fontSize:11, fontWeight:700, color:"rgba(255,255,255,0.35)", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 } }, "📋 Test Ready"),
-            React.createElement("div", { style:{ display:"flex", flexWrap:"wrap", gap:6 } },
-              suggestions.testReady.map(({ node, subject }) =>
-                React.createElement("button", {
-                  key: node.id,
-                  onClick: () => navigate(subject.id),
-                  style:{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px", borderRadius:10, background:"rgba(99,102,241,0.12)", border:"1px solid rgba(99,102,241,0.3)", cursor:"pointer" }
-                },
-                  React.createElement("span", { style:{ fontSize:12, color:"#A78BFA" } }, "📋"),
-                  React.createElement("div", null,
-                    React.createElement("div", { style:{ fontSize:12, fontWeight:600, color:"rgba(255,255,255,0.85)" } }, node.label),
-                    React.createElement("div", { style:{ fontSize:10, color:"rgba(255,255,255,0.35)" } }, subject.label)
-                  )
-                )
-              )
-            )
-          ),
-
-          suggestions.inProgress.length === 0 && suggestions.readyNext.length === 0 &&
-            React.createElement("div", { style:{ textAlign:"center", padding:"20px", color:"rgba(255,255,255,0.3)", fontSize:13 } },
-              "Nothing started yet — go to the Tree tab and tap a node to begin!"
-            )
+          )
         )
       );
     })
   );
+
 }
 
 function ProgressView({ data, activeChild, child }) {
