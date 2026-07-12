@@ -909,8 +909,9 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
   const [photoState, setPhotoState] = useState("idle"); // idle | loading | results | error
   const [photoResults, setPhotoResults] = useState(null);
   const [photoError, setPhotoError] = useState("");
-  const [photoPath, setPhotoPath] = useState(null); // Supabase Storage path after upload
-  const fileInputRef = React.useRef(null);
+  const [photoPath, setPhotoPath] = useState(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [reviewShots, setReviewShots] = useState([]);
   const [genQuestions, setGenQuestions] = useState(null); // null = not yet generated
   const [genLoading, setGenLoading] = useState(false);
   const [genError, setGenError] = useState("");
@@ -965,25 +966,41 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     setPhotoPath(null);
   };
 
-  const handlePhotoChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const b64ToBlob = (b64) => {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Blob([bytes], { type: "image/jpeg" });
+  };
+
+  const handleMultiPhotoGrade = async (shots) => {
+    if (!shots.length) return;
+    setCameraOpen(false);
     setPhotoState("loading");
     setPhotoError("");
     setPhotoResults(null);
     setPhotoPath(null);
 
     try {
-      // Get session for storage path
       const { data: { session } } = await window.HS_DB.auth.getSession();
       const userId = session?.user?.id;
-      const ext = file.type === "image/png" ? "png" : "jpg";
-      const storagePath = userId ? `${userId}/${activeChild}/${node.id}/${Date.now()}.${ext}` : null;
+      const ts = Date.now();
 
-      // Upload to storage + grade in parallel
-      const [gradeJson, uploadResult] = await Promise.all([
-        fetch("/api/grade-test", { method: "POST", body: (() => { const fd = new FormData(); fd.append("image", file); fd.append("questions", JSON.stringify(activeQuestions)); return fd; })() }).then(r => r.json()),
-        storagePath ? window.HS_DB.storage.from("test-photos").upload(storagePath, file, { contentType: file.type, upsert: false }) : Promise.resolve(null),
+      // Upload all shots + grade in parallel
+      const uploadPromises = shots.map((shot, i) => {
+        if (!userId) return Promise.resolve(null);
+        const path = `${userId}/${activeChild}/${node.id}/${ts}_${i}.jpg`;
+        return window.HS_DB.storage.from("test-photos").upload(path, b64ToBlob(shot.base64), { contentType: "image/jpeg", upsert: false })
+          .then(r => r.error ? null : path);
+      });
+
+      const [gradeJson, ...uploadPaths] = await Promise.all([
+        fetch("/api/grade-test", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ images: shots.map(s => s.base64), questions: activeQuestions }),
+        }).then(r => r.json()),
+        ...uploadPromises,
       ]);
 
       if (gradeJson.error) throw new Error(gradeJson.error);
@@ -991,17 +1008,18 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
       setCorrect(String(gradeJson.totalCorrect));
       setPhotoState("results");
 
-      if (uploadResult && !uploadResult.error) setPhotoPath(storagePath);
+      const savedPaths = uploadPaths.filter(Boolean);
+      if (savedPaths.length) setPhotoPath(savedPaths.join(","));
     } catch (err) {
       setPhotoError(err.message || "Something went wrong. Enter score manually.");
       setPhotoState("error");
     }
-    e.target.value = "";
   };
 
   const panelTabs = ["info", "test"];
 
-  return React.createElement("div", { style:{ position:"fixed", bottom:0, left:0, right:0, zIndex:300, background:"linear-gradient(0deg,#131720 0%,#1C2232 100%)", borderTop:`2px solid ${subject.color}`, borderRadius:"20px 20px 0 0", padding: IS_MOBILE?"16px 16px 32px":"20px 24px 36px", maxWidth: IS_MOBILE?"100%":640, margin:"0 auto", boxShadow:"0 -24px 60px rgba(0,0,0,0.55)", maxHeight:"80vh", overflowY:"auto" } },
+  return React.createElement(React.Fragment, null,
+    React.createElement("div", { style:{ position:"fixed", bottom:0, left:0, right:0, zIndex:300, background:"linear-gradient(0deg,#131720 0%,#1C2232 100%)", borderTop:`2px solid ${subject.color}`, borderRadius:"20px 20px 0 0", padding: IS_MOBILE?"16px 16px 32px":"20px 24px 36px", maxWidth: IS_MOBILE?"100%":640, margin:"0 auto", boxShadow:"0 -24px 60px rgba(0,0,0,0.55)", maxHeight:"80vh", overflowY:"auto" } },
 
       // Header
       React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 } },
@@ -1060,9 +1078,6 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
       // TEST TAB
       tab==="test" && React.createElement("div", null,
 
-        // Hidden file input — accepts camera on mobile
-        React.createElement("input", { ref:fileInputRef, type:"file", accept:"image/*", capture:"environment", style:{ display:"none" }, onChange:handlePhotoChange }),
-
         // Last score badge
         lastScore && React.createElement("div", { style:{ marginBottom:16, padding:"10px 14px", borderRadius:10, background:lastScore.passed?"rgba(74,175,80,0.12)":"rgba(255,80,80,0.1)", border:`1px solid ${lastScore.passed?"rgba(74,175,80,0.3)":"rgba(255,80,80,0.2)"}`, fontSize:13 } },
           React.createElement("div", { style:{ fontWeight:700, color:lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed ? "Last attempt: Passed" : "Last attempt: Failed"),
@@ -1105,10 +1120,31 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
             )
           ),
 
+          // Shot review strip (if shots captured but not yet graded)
+          reviewShots.length > 0 && photoState === "idle" && React.createElement("div", { style:{ marginBottom:14 } },
+            React.createElement("div", { style:{ display:"flex", gap:6, overflowX:"auto", marginBottom:10, paddingBottom:4 } },
+              ...reviewShots.map((s, i) =>
+                React.createElement("div", { key:s.id, style:{ position:"relative", flexShrink:0 } },
+                  React.createElement("img", { src:s.preview, style:{ height:60, width:46, objectFit:"cover", borderRadius:6, border:"1px solid rgba(255,255,255,0.2)" } }),
+                  React.createElement("button", {
+                    onClick:()=>setReviewShots(prev=>prev.filter(x=>x.id!==s.id)),
+                    style:{ position:"absolute", top:-4, right:-4, width:16, height:16, borderRadius:"50%", background:"rgba(255,60,60,0.85)", border:"none", color:"#fff", fontSize:9, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }
+                  }, "×")
+                )
+              )
+            ),
+            React.createElement("div", { style:{ display:"flex", gap:8, flexWrap:"wrap" } },
+              React.createElement(ActionBtn, { color:subject.accent, onClick:()=>handleMultiPhotoGrade(reviewShots) },
+                `📷 Grade ${reviewShots.length} Photo${reviewShots.length>1?"s":""}`
+              ),
+              React.createElement(ActionBtn, { color:"rgba(255,255,255,0.15)", onClick:()=>setCameraOpen(true) }, "+ Add More"),
+            )
+          ),
+
           // Action row
           React.createElement("div", { style:{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:20 } },
             React.createElement(ActionBtn, { color:subject.accent, onClick:()=>printWorksheet("", subject.label, node, activeQuestions) }, "🖨 Print Test"),
-            photoState !== "loading" && React.createElement(ActionBtn, { color:"#7BA3D4", onClick:()=>fileInputRef.current?.click() }, "📷 Grade with Photo"),
+            photoState !== "loading" && reviewShots.length === 0 && React.createElement(ActionBtn, { color:"#7BA3D4", onClick:()=>setCameraOpen(true) }, "📷 Grade with Photo"),
           ),
         ),
 
@@ -1166,8 +1202,116 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
           ),
           React.createElement("div", { style:{ marginTop:8, fontSize:11, color:"rgba(255,255,255,0.3)" } }, `${passingThreshold}% or higher = mastered automatically`)
         )
+      ),
+
+    // Camera overlay — full screen, above everything
+    cameraOpen && React.createElement(MultiShotCamera, {
+      initialShots: reviewShots,
+      onDone: (shots) => { setReviewShots(shots); setCameraOpen(false); },
+      onCancel: () => setCameraOpen(false),
+    })
+  );
+}
+
+// ─── MULTI-SHOT CAMERA ────────────────────────────────────────────────────────
+function MultiShotCamera({ initialShots, onDone, onCancel }) {
+  const videoRef = useRef(null);
+  const canvasRef = useRef(document.createElement('canvas'));
+  const streamRef = useRef(null);
+  const [shots, setShots] = useState(initialShots || []);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [flash, setFlash] = useState(false);
+  const [permError, setPermError] = useState("");
+
+  useEffect(() => {
+    let live = true;
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" }, width: { ideal: 3840 }, height: { ideal: 2160 } },
+      audio: false,
+    }).then(stream => {
+      if (!live) { stream.getTracks().forEach(t => t.stop()); return; }
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.onloadedmetadata = () => { if (live) setCameraReady(true); };
+      }
+    }).catch(err => {
+      if (live) setPermError("Camera access denied. Please allow camera permission and try again.");
+    });
+    return () => {
+      live = false;
+      if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+    };
+  }, []);
+
+  const capture = () => {
+    if (!cameraReady || !videoRef.current) return;
+    const v = videoRef.current, c = canvasRef.current;
+    c.width = v.videoWidth; c.height = v.videoHeight;
+    c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+    const dataUrl = c.toDataURL('image/jpeg', 0.88);
+    const id = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Date.now() + '_' + Math.random();
+    setShots(prev => [...prev, { id, base64: dataUrl.split(',')[1], preview: dataUrl }]);
+    setFlash(true);
+    setTimeout(() => setFlash(false), 80);
+  };
+
+  const handleDone = () => {
+    if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+    onDone(shots);
+  };
+
+  return React.createElement("div", { style:{ position:"fixed", inset:0, zIndex:600, background:"#000", display:"flex", flexDirection:"column" } },
+
+    // Viewfinder
+    React.createElement("video", { ref:videoRef, autoPlay:true, playsInline:true, muted:true, style:{ flex:1, width:"100%", objectFit:"cover" } }),
+
+    // Flash
+    flash && React.createElement("div", { style:{ position:"absolute", inset:0, background:"rgba(255,255,255,0.82)", pointerEvents:"none", zIndex:10 } }),
+
+    // Permission error
+    permError && React.createElement("div", { style:{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16, padding:32, background:"rgba(0,0,0,0.9)", zIndex:20 } },
+      React.createElement("div", { style:{ fontSize:14, color:"rgba(255,255,255,0.8)", textAlign:"center" } }, permError),
+      React.createElement("button", { onClick:onCancel, style:{ padding:"10px 24px", borderRadius:10, border:"none", background:"rgba(255,255,255,0.12)", color:"#fff", cursor:"pointer" } }, "Close")
+    ),
+
+    // Top bar
+    React.createElement("div", { style:{ position:"absolute", top:0, left:0, right:0, display:"flex", justifyContent:"space-between", alignItems:"center", padding:"env(safe-area-inset-top, 16px) 20px 16px", background:"linear-gradient(180deg,rgba(0,0,0,0.6),transparent)", zIndex:5 } },
+      React.createElement("button", { onClick:onCancel, style:{ background:"rgba(0,0,0,0.45)", border:"none", color:"#fff", borderRadius:20, padding:"7px 16px", fontSize:13, cursor:"pointer", fontWeight:600 } }, "✕ Cancel"),
+      shots.length > 0 && React.createElement("div", { style:{ background:"rgba(0,0,0,0.55)", color:"#fff", borderRadius:12, padding:"5px 14px", fontSize:13, fontWeight:700 } },
+        `${shots.length} page${shots.length > 1 ? "s" : ""}`
       )
-    );
+    ),
+
+    // Thumbnail strip
+    shots.length > 0 && React.createElement("div", { style:{ position:"absolute", bottom:110, left:0, right:0, display:"flex", gap:8, padding:"0 20px", overflowX:"auto", zIndex:5, WebkitOverflowScrolling:"touch" } },
+      ...shots.map((s, i) =>
+        React.createElement("div", { key:s.id, style:{ position:"relative", flexShrink:0 } },
+          React.createElement("img", { src:s.preview, style:{ height:58, width:44, objectFit:"cover", borderRadius:7, border:"2px solid rgba(255,255,255,0.55)" } }),
+          React.createElement("button", {
+            onClick: () => setShots(prev => prev.filter(x => x.id !== s.id)),
+            style:{ position:"absolute", top:-5, right:-5, width:18, height:18, borderRadius:"50%", background:"rgba(220,50,50,0.9)", border:"none", color:"#fff", fontSize:10, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", lineHeight:1 }
+          }, "×")
+        )
+      )
+    ),
+
+    // Bottom bar
+    React.createElement("div", { style:{ position:"absolute", bottom:0, left:0, right:0, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"20px 40px calc(env(safe-area-inset-bottom, 0px) + 24px)", background:"linear-gradient(0deg,rgba(0,0,0,0.7),transparent)", zIndex:5 } },
+      // Spacer left
+      React.createElement("div", { style:{ width:72 } }),
+      // Shutter
+      React.createElement("button", { onClick:capture, disabled:!cameraReady,
+        style:{ width:74, height:74, borderRadius:"50%", border:"4px solid #fff", background:"rgba(255,255,255,0.15)", cursor:cameraReady?"pointer":"default", display:"flex", alignItems:"center", justifyContent:"center", opacity:cameraReady?1:0.4, flexShrink:0 }
+      },
+        React.createElement("div", { style:{ width:56, height:56, borderRadius:"50%", background:"#fff" } })
+      ),
+      // Done
+      React.createElement("button", { onClick:handleDone, disabled:shots.length===0,
+        style:{ padding:"11px 22px", borderRadius:22, border:"none", background:shots.length>0?"#4CAF80":"rgba(255,255,255,0.15)", color:"#fff", fontWeight:700, fontSize:15, cursor:shots.length>0?"pointer":"default", opacity:shots.length===0?0.35:1, minWidth:72 }
+      }, "Done")
+    )
+  );
 }
 
 // ─── NODE EDIT SHEET ──────────────────────────────────────────────────────────
