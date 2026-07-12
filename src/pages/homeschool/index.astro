@@ -952,7 +952,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     const passed = pct >= passingThreshold;
     const scoreEntry = {
       correct: c, total, pct, date: new Date().toLocaleDateString(), passed,
-      ...(photoPath?.length ? { photoPaths: photoPath } : {}),
+      ...(photoPath && photoPath.length ? { photoPaths: photoPath } : {}),
     };
     const updates = {
       [scoreKey]: scoreEntry,
@@ -966,14 +966,17 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     setPhotoPath(null);
   };
 
-  const viewPhotos = async (paths) => {
-    // normalize: new scores have photoPaths (array), old had photoPath (comma string)
+  const viewPhotos = (paths) => {
     const list = Array.isArray(paths) ? paths : String(paths).split(",").filter(Boolean);
-    for (const path of list) {
-      const { data } = await window.HS_DB.storage.from("test-photos").createSignedUrl(path.trim(), 3600);
-      if (data?.signedUrl) window.open(data.signedUrl, "_blank");
-    }
+    Promise.all(list.map(function(p) {
+      return window.HS_DB.storage.from("test-photos").createSignedUrl(p.trim(), 3600);
+    })).then(function(results) {
+      results.forEach(function(r) { if (r.data && r.data.signedUrl) window.open(r.data.signedUrl, "_blank"); });
+    });
   };
+
+  const handleViewLastPhotos = (e) => { e.stopPropagation(); viewPhotos(lastScore && (lastScore.photoPaths || lastScore.photoPath)); };
+  const handleViewCurrentPhotos = () => { viewPhotos(photoPath); };
 
   const b64ToBlob = (b64) => {
     const bin = atob(b64);
@@ -1092,10 +1095,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
           React.createElement("div", { style:{ fontWeight:700, color:lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed ? "Last attempt: Passed" : "Last attempt: Failed"),
           React.createElement("div", { style:{ color:"rgba(255,255,255,0.5)", fontSize:12 } },
             `${lastScore.correct}/${lastScore.total} correct — ${lastScore.pct}% — ${lastScore.date}`,
-            (lastScore.photoPaths || lastScore.photoPath) && React.createElement("button", {
-              onClick: (e) => { e.stopPropagation(); viewPhotos(lastScore.photoPaths || lastScore.photoPath); },
-              style:{ marginLeft:8, fontSize:11, padding:"2px 9px", borderRadius:6, border:"none", background:"rgba(74,175,80,0.18)", color:"#4CAF80", cursor:"pointer", fontWeight:600 }
-            }, "📎 View Photos")
+            (lastScore.photoPaths || lastScore.photoPath) && React.createElement("button", { onClick:handleViewLastPhotos, style:{ marginLeft:8, fontSize:11, padding:"2px 9px", borderRadius:6, border:"none", background:"rgba(74,175,80,0.18)", color:"#4CAF80", cursor:"pointer", fontWeight:600 } }, "📎 View Photos")
           )
         ),
 
@@ -1186,11 +1186,8 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
               )
             )
           ),
-          photoPath?.length
-            ? React.createElement("button", {
-                onClick: () => viewPhotos(photoPath),
-                style:{ marginTop:10, fontSize:11, padding:"3px 10px", borderRadius:6, border:"none", background:"rgba(74,175,80,0.18)", color:"#4CAF80", cursor:"pointer", fontWeight:600 }
-              }, "📎 Photos saved — tap to view")
+          photoPath && photoPath.length
+            ? React.createElement("button", { onClick:handleViewCurrentPhotos, style:{ marginTop:10, fontSize:11, padding:"3px 10px", borderRadius:6, border:"none", background:"rgba(74,175,80,0.18)", color:"#4CAF80", cursor:"pointer", fontWeight:600 } }, "View Saved Photos")
             : React.createElement("div", { style:{ marginTop:10, fontSize:11, color:"rgba(255,255,255,0.3)" } }, "Review above then adjust if needed before submitting.")
         ),
 
@@ -1218,6 +1215,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
           React.createElement("div", { style:{ marginTop:8, fontSize:11, color:"rgba(255,255,255,0.3)" } }, `${passingThreshold}% or higher = mastered automatically`)
         )
       ),
+    ),
 
     // Camera overlay — full screen, above everything
     cameraOpen && React.createElement(MultiShotCamera, {
