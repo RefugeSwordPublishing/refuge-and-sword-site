@@ -952,7 +952,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     const passed = pct >= passingThreshold;
     const scoreEntry = {
       correct: c, total, pct, date: new Date().toLocaleDateString(), passed,
-      ...(photoPath ? { photoPath } : {}),
+      ...(photoPath?.length ? { photoPaths: photoPath } : {}),
     };
     const updates = {
       [scoreKey]: scoreEntry,
@@ -964,6 +964,15 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     setPhotoResults(null);
     setPhotoState("idle");
     setPhotoPath(null);
+  };
+
+  const viewPhotos = async (paths) => {
+    // normalize: new scores have photoPaths (array), old had photoPath (comma string)
+    const list = Array.isArray(paths) ? paths : String(paths).split(",").filter(Boolean);
+    for (const path of list) {
+      const { data } = await window.HS_DB.storage.from("test-photos").createSignedUrl(path.trim(), 3600);
+      if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+    }
   };
 
   const b64ToBlob = (b64) => {
@@ -1009,7 +1018,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
       setPhotoState("results");
 
       const savedPaths = uploadPaths.filter(Boolean);
-      if (savedPaths.length) setPhotoPath(savedPaths.join(","));
+      if (savedPaths.length) setPhotoPath(savedPaths);
     } catch (err) {
       setPhotoError(err.message || "Something went wrong. Enter score manually.");
       setPhotoState("error");
@@ -1083,7 +1092,10 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
           React.createElement("div", { style:{ fontWeight:700, color:lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed ? "Last attempt: Passed" : "Last attempt: Failed"),
           React.createElement("div", { style:{ color:"rgba(255,255,255,0.5)", fontSize:12 } },
             `${lastScore.correct}/${lastScore.total} correct — ${lastScore.pct}% — ${lastScore.date}`,
-            lastScore.photoPath && React.createElement("span", { style:{ marginLeft:8, color:"#4CAF80" } }, "📎 photo on file")
+            (lastScore.photoPaths || lastScore.photoPath) && React.createElement("button", {
+              onClick: (e) => { e.stopPropagation(); viewPhotos(lastScore.photoPaths || lastScore.photoPath); },
+              style:{ marginLeft:8, fontSize:11, padding:"2px 9px", borderRadius:6, border:"none", background:"rgba(74,175,80,0.18)", color:"#4CAF80", cursor:"pointer", fontWeight:600 }
+            }, "📎 View Photos")
           )
         ),
 
@@ -1174,9 +1186,12 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
               )
             )
           ),
-          React.createElement("div", { style:{ marginTop:10, fontSize:11, color: photoPath ? "#4CAF80" : "rgba(255,255,255,0.3)" } },
-            photoPath ? "📎 Test photo saved to records." : "Review above then adjust if needed before submitting."
-          )
+          photoPath?.length
+            ? React.createElement("button", {
+                onClick: () => viewPhotos(photoPath),
+                style:{ marginTop:10, fontSize:11, padding:"3px 10px", borderRadius:6, border:"none", background:"rgba(74,175,80,0.18)", color:"#4CAF80", cursor:"pointer", fontWeight:600 }
+              }, "📎 Photos saved — tap to view")
+            : React.createElement("div", { style:{ marginTop:10, fontSize:11, color:"rgba(255,255,255,0.3)" } }, "Review above then adjust if needed before submitting.")
         ),
 
         // Score entry + submit
