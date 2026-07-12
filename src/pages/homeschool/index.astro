@@ -893,12 +893,13 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
       childProgress,
       customQuestions: (data.questions||{})[selectedNode.id] || [],
       passingThreshold,
+      activeChild,
     })
   );
 }
 
 // ─── NODE PANEL ───────────────────────────────────────────────────────────────
-function NodePanel({ node, status, subject, onSetProgress, onClose, childProgress, customQuestions, passingThreshold }) {
+function NodePanel({ node, status, subject, onSetProgress, onClose, childProgress, customQuestions, passingThreshold, activeChild }) {
   const logKey = `${node.id}_log`;
   const scoreKey = `${node.id}_score`;
   const hist = childProgress[logKey] || [];
@@ -908,6 +909,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
   const [photoState, setPhotoState] = useState("idle"); // idle | loading | results | error
   const [photoResults, setPhotoResults] = useState(null);
   const [photoError, setPhotoError] = useState("");
+  const [photoPath, setPhotoPath] = useState(null); // Supabase Storage path after upload
   const fileInputRef = React.useRef(null);
   const [genQuestions, setGenQuestions] = useState(null); // null = not yet generated
   const [genLoading, setGenLoading] = useState(false);
@@ -947,16 +949,20 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     const total = activeQuestions.length;
     const pct = total === 0 ? 0 : Math.round((c / total) * 100);
     const passed = pct >= passingThreshold;
-    const scoreEntry = { correct:c, total, pct, date:new Date().toLocaleDateString(), passed };
+    const scoreEntry = {
+      correct: c, total, pct, date: new Date().toLocaleDateString(), passed,
+      ...(photoPath ? { photoPath } : {}),
+    };
     const updates = {
       [scoreKey]: scoreEntry,
-      [logKey]: [...hist, { status: passed ? "test_passed" : "test_failed", pct, date:new Date().toLocaleDateString() }],
+      [logKey]: [...hist, { status: passed ? "test_passed" : "test_failed", pct, date: new Date().toLocaleDateString() }],
     };
     if (passed) updates[node.id] = STATUS.MASTERED;
     onSetProgress(updates);
     setCorrect("");
     setPhotoResults(null);
     setPhotoState("idle");
+    setPhotoPath(null);
   };
 
   const handlePhotoChange = async (e) => {
@@ -965,16 +971,27 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     setPhotoState("loading");
     setPhotoError("");
     setPhotoResults(null);
+    setPhotoPath(null);
+
     try {
-      const fd = new FormData();
-      fd.append("image", file);
-      fd.append("questions", JSON.stringify(activeQuestions));
-      const res = await fetch("/api/grade-test", { method:"POST", body:fd });
-      const json = await res.json();
-      if (!res.ok || json.error) throw new Error(json.error || "Grading failed");
-      setPhotoResults(json);
-      setCorrect(String(json.totalCorrect));
+      // Get session for storage path
+      const { data: { session } } = await window.HS_DB.auth.getSession();
+      const userId = session?.user?.id;
+      const ext = file.type === "image/png" ? "png" : "jpg";
+      const storagePath = userId ? `${userId}/${activeChild}/${node.id}/${Date.now()}.${ext}` : null;
+
+      // Upload to storage + grade in parallel
+      const [gradeJson, uploadResult] = await Promise.all([
+        fetch("/api/grade-test", { method: "POST", body: (() => { const fd = new FormData(); fd.append("image", file); fd.append("questions", JSON.stringify(activeQuestions)); return fd; })() }).then(r => r.json()),
+        storagePath ? window.HS_DB.storage.from("test-photos").upload(storagePath, file, { contentType: file.type, upsert: false }) : Promise.resolve(null),
+      ]);
+
+      if (gradeJson.error) throw new Error(gradeJson.error);
+      setPhotoResults(gradeJson);
+      setCorrect(String(gradeJson.totalCorrect));
       setPhotoState("results");
+
+      if (uploadResult && !uploadResult.error) setPhotoPath(storagePath);
     } catch (err) {
       setPhotoError(err.message || "Something went wrong. Enter score manually.");
       setPhotoState("error");
@@ -1049,7 +1066,10 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
         // Last score badge
         lastScore && React.createElement("div", { style:{ marginBottom:16, padding:"10px 14px", borderRadius:10, background:lastScore.passed?"rgba(74,175,80,0.12)":"rgba(255,80,80,0.1)", border:`1px solid ${lastScore.passed?"rgba(74,175,80,0.3)":"rgba(255,80,80,0.2)"}`, fontSize:13 } },
           React.createElement("div", { style:{ fontWeight:700, color:lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed ? "Last attempt: Passed" : "Last attempt: Failed"),
-          React.createElement("div", { style:{ color:"rgba(255,255,255,0.5)", fontSize:12 } }, `${lastScore.correct}/${lastScore.total} correct — ${lastScore.pct}% — ${lastScore.date}`)
+          React.createElement("div", { style:{ color:"rgba(255,255,255,0.5)", fontSize:12 } },
+            `${lastScore.correct}/${lastScore.total} correct — ${lastScore.pct}% — ${lastScore.date}`,
+            lastScore.photoPath && React.createElement("span", { style:{ marginLeft:8, color:"#4CAF80" } }, "📎 photo on file")
+          )
         ),
 
         // Generate button / loading / error
@@ -1118,7 +1138,9 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
               )
             )
           ),
-          React.createElement("div", { style:{ marginTop:10, fontSize:11, color:"rgba(255,255,255,0.3)" } }, "Review above then adjust if needed before submitting.")
+          React.createElement("div", { style:{ marginTop:10, fontSize:11, color: photoPath ? "#4CAF80" : "rgba(255,255,255,0.3)" } },
+            photoPath ? "📎 Test photo saved to records." : "Review above then adjust if needed before submitting."
+          )
         ),
 
         // Score entry + submit
