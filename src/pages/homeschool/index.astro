@@ -706,7 +706,7 @@ function App() {
     view==="dashboard"
       ? React.createElement(DashboardView, { data, setActiveChild, setActiveSubject, setView })
       : view==="tree"
-        ? React.createElement(TreeView, { subject, nodes, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child, editMode, onEditNode: setEditingNodeId, data, passingThreshold, onSaveQuestions: saveQuestions, onAddCustomNode: addCustomNode, activeSubject })
+        ? React.createElement(TreeView, { subject, nodes, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child, editMode, onEditNode: setEditingNodeId, data, passingThreshold, onSaveQuestions: saveQuestions, onAddCustomNode: addCustomNode, activeSubject, activeChild })
         : React.createElement(ProgressView, { data, activeChild, child }),
 
     // NODE EDIT SHEET
@@ -727,7 +727,7 @@ function App() {
 }
 
 // ─── TREE VIEW ────────────────────────────────────────────────────────────────
-function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child, editMode, onEditNode, data, passingThreshold, onSaveQuestions, onAddCustomNode, activeSubject }) {
+function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, setProgress, childProgress, masteredCount, child, editMode, onEditNode, data, passingThreshold, onSaveQuestions, onAddCustomNode, activeSubject, activeChild }) {
   const maxCol = Math.max(...nodes.map(n=>n.col), 0);
   const maxRow = Math.max(...nodes.map(n=>n.row), 0);
   const svgW = PAD_X*2 + (maxCol+1)*(NODE_W+COL_GAP) - COL_GAP;
