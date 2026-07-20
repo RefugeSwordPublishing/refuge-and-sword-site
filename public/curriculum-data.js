@@ -1,4 +1,4 @@
-// Homeschool Path — Curriculum Data
+// Homeschool Path, Curriculum Data
 // Plain JS (no build step). Loaded before the React app.
 // Subjects added: Math | ELA | History | Science | Bible
 
@@ -9,7 +9,7 @@ window.CURRICULUM = {
     nodes: [
       {
         id: "counting", label: "Counting & Numbers", grade: "K", prereqs: [], col: 1, row: 0,
-        desc: "Count to 100, recognize numerals 0–20, understand one-to-one correspondence.",
+        desc: "Count to 100, recognize numerals 0-20, understand one-to-one correspondence.",
         tests: [
           "Count from 1 to 20 and write each number in order.",
           "What number comes after 9? ___",
@@ -23,12 +23,12 @@ window.CURRICULUM = {
           "Write the number that comes between 10 and 12: ___",
         ],
         resources: [
-          { title: "Counting — Khan Academy", url: "https://www.khanacademy.org/math/cc-kindergarten-math/cc-kindergarten-counting" },
+          { title: "Counting, Khan Academy", url: "https://www.khanacademy.org/math/cc-kindergarten-math/cc-kindergarten-counting" },
           { title: "Counting to 100 (YouTube)", url: "https://www.youtube.com/results?search_query=counting+to+100+for+kindergarten" },
         ],
       },
       {
-        id: "add_basic", label: "Basic Addition", grade: "K–1", prereqs: ["counting"], col: 0, row: 1,
+        id: "add_basic", label: "Basic Addition", grade: "K-1", prereqs: ["counting"], col: 0, row: 1,
         desc: "Add single-digit numbers, understand the concept of combining groups.",
         tests: [
           "2 + 3 = ___",
@@ -43,12 +43,12 @@ window.CURRICULUM = {
           "Write your own addition problem and solve it: ___ + ___ = ___",
         ],
         resources: [
-          { title: "Basic Addition — Khan Academy", url: "https://www.khanacademy.org/math/cc-kindergarten-math/cc-kindergarten-add-subtract" },
+          { title: "Basic Addition, Khan Academy", url: "https://www.khanacademy.org/math/cc-kindergarten-math/cc-kindergarten-add-subtract" },
           { title: "Addition for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=basic+addition+for+kids+grade+1" },
         ],
       },
       {
-        id: "sub_basic", label: "Basic Subtraction", grade: "K–1", prereqs: ["counting"], col: 2, row: 1,
+        id: "sub_basic", label: "Basic Subtraction", grade: "K-1", prereqs: ["counting"], col: 2, row: 1,
         desc: "Subtract single-digit numbers, understand taking away from a group.",
         tests: [
           "8 - 3 = ___",
@@ -63,12 +63,12 @@ window.CURRICULUM = {
           "Fill in the blank: 8 - ___ = 5",
         ],
         resources: [
-          { title: "Basic Subtraction — Khan Academy", url: "https://www.khanacademy.org/math/cc-kindergarten-math/cc-kindergarten-add-subtract" },
+          { title: "Basic Subtraction, Khan Academy", url: "https://www.khanacademy.org/math/cc-kindergarten-math/cc-kindergarten-add-subtract" },
           { title: "Subtraction for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=basic+subtraction+for+kids+grade+1" },
         ],
       },
       {
-        id: "add_adv", label: "2-Digit Addition", grade: "1–2", prereqs: ["add_basic"], col: 0, row: 2,
+        id: "add_adv", label: "2-Digit Addition", grade: "1-2", prereqs: ["add_basic"], col: 0, row: 2,
         desc: "Add two-digit numbers with and without regrouping.",
         tests: [
           "24 + 13 = ___",
@@ -85,12 +85,12 @@ window.CURRICULUM = {
           "James walked 45 steps and then 38 more. How many total? ___",
         ],
         resources: [
-          { title: "2-Digit Addition — Khan Academy", url: "https://www.khanacademy.org/math/cc-1st-grade-math/cc-1st-addition-subtraction" },
+          { title: "2-Digit Addition, Khan Academy", url: "https://www.khanacademy.org/math/cc-1st-grade-math/cc-1st-addition-subtraction" },
           { title: "2-Digit Addition with Regrouping (YouTube)", url: "https://www.youtube.com/results?search_query=2+digit+addition+with+regrouping+grade+2" },
         ],
       },
       {
-        id: "place_value", label: "Place Value", grade: "1–2", prereqs: ["add_basic", "sub_basic"], col: 1, row: 2,
+        id: "place_value", label: "Place Value", grade: "1-2", prereqs: ["add_basic", "sub_basic"], col: 1, row: 2,
         desc: "Understand ones, tens, hundreds, and thousands place.",
         tests: [
           "In the number 53, the digit 5 is in the ___ place and 3 is in the ___ place.",
@@ -107,12 +107,12 @@ window.CURRICULUM = {
           "What number has 2 in the tens place and 8 in the ones place? ___",
         ],
         resources: [
-          { title: "Place Value — Khan Academy", url: "https://www.khanacademy.org/math/cc-1st-grade-math/cc-1st-place-value" },
+          { title: "Place Value, Khan Academy", url: "https://www.khanacademy.org/math/cc-1st-grade-math/cc-1st-place-value" },
           { title: "Place Value for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=place+value+ones+tens+hundreds+for+kids" },
         ],
       },
       {
-        id: "sub_adv", label: "2-Digit Subtraction", grade: "1–2", prereqs: ["sub_basic"], col: 2, row: 2,
+        id: "sub_adv", label: "2-Digit Subtraction", grade: "1-2", prereqs: ["sub_basic"], col: 2, row: 2,
         desc: "Subtract two-digit numbers with borrowing.",
         tests: [
           "67 - 23 = ___",
@@ -129,13 +129,13 @@ window.CURRICULUM = {
           "70 - 33 = ___",
         ],
         resources: [
-          { title: "Subtraction with Borrowing — Khan Academy", url: "https://www.khanacademy.org/math/cc-2nd-grade-math/cc-2nd-add-subtract" },
+          { title: "Subtraction with Borrowing, Khan Academy", url: "https://www.khanacademy.org/math/cc-2nd-grade-math/cc-2nd-add-subtract" },
           { title: "2-Digit Subtraction with Borrowing (YouTube)", url: "https://www.youtube.com/results?search_query=2+digit+subtraction+with+borrowing+grade+2" },
         ],
       },
       {
-        id: "mult_basic", label: "Multiplication", grade: "2–3", prereqs: ["add_adv", "place_value"], col: 0, row: 3,
-        desc: "Multiplication tables 1–12, understand as repeated addition.",
+        id: "mult_basic", label: "Multiplication", grade: "2-3", prereqs: ["add_adv", "place_value"], col: 0, row: 3,
+        desc: "Multiplication tables 1-12, understand as repeated addition.",
         tests: [
           "3 × 4 = ___",
           "6 × 7 = ___",
@@ -151,12 +151,12 @@ window.CURRICULUM = {
           "11 × 8 = ___",
         ],
         resources: [
-          { title: "Multiplication — Khan Academy", url: "https://www.khanacademy.org/math/cc-third-grade-math/intro-to-multiplication" },
+          { title: "Multiplication, Khan Academy", url: "https://www.khanacademy.org/math/cc-third-grade-math/intro-to-multiplication" },
           { title: "Times Tables (YouTube)", url: "https://www.youtube.com/results?search_query=multiplication+tables+1+to+12+for+kids" },
         ],
       },
       {
-        id: "time_money", label: "Time & Money", grade: "2–3", prereqs: ["place_value"], col: 1, row: 3,
+        id: "time_money", label: "Time & Money", grade: "2-3", prereqs: ["place_value"], col: 1, row: 3,
         desc: "Tell time to the minute, count coins and bills, make change.",
         tests: [
           "A clock shows the hour hand on 3 and the minute hand on 12. What time is it? ___",
@@ -173,7 +173,7 @@ window.CURRICULUM = {
           "Draw a clock showing 6:30.",
         ],
         resources: [
-          { title: "Time — Khan Academy", url: "https://www.khanacademy.org/math/cc-2nd-grade-math/cc-2nd-measure-data" },
+          { title: "Time, Khan Academy", url: "https://www.khanacademy.org/math/cc-2nd-grade-math/cc-2nd-measure-data" },
           { title: "Telling Time and Counting Money (YouTube)", url: "https://www.youtube.com/results?search_query=telling+time+and+counting+money+grade+2+3" },
         ],
       },
@@ -195,12 +195,12 @@ window.CURRICULUM = {
           "You have 36 cookies and put 6 in each bag. How many bags? ___",
         ],
         resources: [
-          { title: "Introduction to Division — Khan Academy", url: "https://www.khanacademy.org/math/cc-third-grade-math/intro-to-division" },
+          { title: "Introduction to Division, Khan Academy", url: "https://www.khanacademy.org/math/cc-third-grade-math/intro-to-division" },
           { title: "Division for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=basic+division+for+kids+grade+3" },
         ],
       },
       {
-        id: "fractions", label: "Fractions", grade: "3–4", prereqs: ["div_basic"], col: 0, row: 4,
+        id: "fractions", label: "Fractions", grade: "3-4", prereqs: ["div_basic"], col: 0, row: 4,
         desc: "Understand fractions as parts of a whole, equivalent fractions, compare fractions.",
         tests: [
           "A pizza is cut into 8 equal slices. You eat 3. What fraction did you eat? ___",
@@ -217,7 +217,7 @@ window.CURRICULUM = {
           "Is 7/8 closer to 0, 1/2, or 1? Explain.",
         ],
         resources: [
-          { title: "Fractions — Khan Academy", url: "https://www.khanacademy.org/math/cc-third-grade-math/fractions-3rd" },
+          { title: "Fractions, Khan Academy", url: "https://www.khanacademy.org/math/cc-third-grade-math/fractions-3rd" },
           { title: "Fractions for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=fractions+for+kids+grade+3+4" },
         ],
       },
@@ -239,12 +239,12 @@ window.CURRICULUM = {
           "47 × 32 = ___",
         ],
         resources: [
-          { title: "Multi-Digit Multiplication — Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2" },
+          { title: "Multi-Digit Multiplication, Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2" },
           { title: "Long Multiplication (YouTube)", url: "https://www.youtube.com/results?search_query=multi+digit+multiplication+grade+4" },
         ],
       },
       {
-        id: "measurement", label: "Measurement", grade: "3–4", prereqs: ["time_money", "div_basic"], col: 2, row: 4,
+        id: "measurement", label: "Measurement", grade: "3-4", prereqs: ["time_money", "div_basic"], col: 2, row: 4,
         desc: "Length, weight, volume; customary and metric units; area and perimeter.",
         tests: [
           "How many inches are in 1 foot? ___",
@@ -261,12 +261,12 @@ window.CURRICULUM = {
           "A square room has a perimeter of 48 feet. What is the side length? ___",
         ],
         resources: [
-          { title: "Measurement — Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/imp-units-of-measurement" },
+          { title: "Measurement, Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/imp-units-of-measurement" },
           { title: "Measurement for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=measurement+area+perimeter+grade+3+4" },
         ],
       },
       {
-        id: "decimals", label: "Decimals", grade: "4–5", prereqs: ["fractions", "mult_adv"], col: 0, row: 5,
+        id: "decimals", label: "Decimals", grade: "4-5", prereqs: ["fractions", "mult_adv"], col: 0, row: 5,
         desc: "Understand place value with decimals, add/subtract/multiply decimals.",
         tests: [
           "Write 0.7 as a fraction: ___",
@@ -286,12 +286,12 @@ window.CURRICULUM = {
           "A runner's times were 12.4, 11.9, and 12.1 seconds. What was her average? ___",
         ],
         resources: [
-          { title: "Decimals — Khan Academy", url: "https://www.khanacademy.org/math/cc-fifth-grade-math/imp-decimals-place-value" },
+          { title: "Decimals, Khan Academy", url: "https://www.khanacademy.org/math/cc-fifth-grade-math/imp-decimals-place-value" },
           { title: "Decimals for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=decimals+place+value+grade+4+5" },
         ],
       },
       {
-        id: "long_div", label: "Long Division", grade: "4–5", prereqs: ["mult_adv", "div_basic"], col: 1, row: 5,
+        id: "long_div", label: "Long Division", grade: "4-5", prereqs: ["mult_adv", "div_basic"], col: 1, row: 5,
         desc: "Divide multi-digit numbers, understand remainders.",
         tests: [
           "84 ÷ 4 = ___",
@@ -311,12 +311,12 @@ window.CURRICULUM = {
           "Write a word problem that requires long division. Solve it.",
         ],
         resources: [
-          { title: "Long Division — Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2/imp-multi-digit-division/v/long-division" },
+          { title: "Long Division, Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2/imp-multi-digit-division/v/long-division" },
           { title: "Long Division Step by Step (YouTube)", url: "https://www.youtube.com/results?search_query=long+division+step+by+step+grade+4+5" },
         ],
       },
       {
-        id: "geometry_basic", label: "Basic Geometry", grade: "4–5", prereqs: ["measurement"], col: 2, row: 5,
+        id: "geometry_basic", label: "Basic Geometry", grade: "4-5", prereqs: ["measurement"], col: 2, row: 5,
         desc: "2D and 3D shapes, angles, symmetry, coordinate plane basics.",
         tests: [
           "Name three types of triangles based on their angles.",
@@ -325,7 +325,7 @@ window.CURRICULUM = {
           "What is the difference between a square and a rectangle?",
           "What is a right angle? Give one real-world example.",
           "Draw a coordinate grid and plot the points (2, 3) and (4, 1).",
-          "Classify this angle: 135° — acute, right, or obtuse? ___",
+          "Classify this angle: 135°, acute, right, or obtuse? ___",
           "A square has a perimeter of 36 cm. What is the side length? ___",
           "How many faces does a cube have? ___",
           "What is a line of symmetry? Draw a shape that has one.",
@@ -336,7 +336,7 @@ window.CURRICULUM = {
           "How many lines of symmetry does a square have? ___",
         ],
         resources: [
-          { title: "Geometry — Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/plane-figures" },
+          { title: "Geometry, Khan Academy", url: "https://www.khanacademy.org/math/cc-fourth-grade-math/plane-figures" },
           { title: "Basic Geometry for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=basic+geometry+shapes+angles+grade+4+5" },
         ],
       },
@@ -361,12 +361,12 @@ window.CURRICULUM = {
           "A photograph is 4 in × 6 in. It's enlarged so the shorter side is 10 in. What is the new longer side? ___",
         ],
         resources: [
-          { title: "Ratios & Proportions — Khan Academy", url: "https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-ratios-prop-topic" },
+          { title: "Ratios & Proportions, Khan Academy", url: "https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-ratios-prop-topic" },
           { title: "Ratios and Proportions (YouTube)", url: "https://www.youtube.com/results?search_query=ratios+and+proportions+6th+grade" },
         ],
       },
       {
-        id: "fractions_adv", label: "Fraction Operations", grade: "5–6", prereqs: ["decimals", "fractions"], col: 1, row: 6,
+        id: "fractions_adv", label: "Fraction Operations", grade: "5-6", prereqs: ["decimals", "fractions"], col: 1, row: 6,
         desc: "Add, subtract, multiply, and divide fractions and mixed numbers.",
         tests: [
           "1/3 + 1/4 = ___",
@@ -386,7 +386,7 @@ window.CURRICULUM = {
           "Write a word problem that requires dividing fractions. Solve it.",
         ],
         resources: [
-          { title: "Fraction Arithmetic — Khan Academy", url: "https://www.khanacademy.org/math/cc-fifth-grade-math/imp-fractions-and-decimals" },
+          { title: "Fraction Arithmetic, Khan Academy", url: "https://www.khanacademy.org/math/cc-fifth-grade-math/imp-fractions-and-decimals" },
           { title: "Fraction Operations (YouTube)", url: "https://www.youtube.com/results?search_query=adding+subtracting+multiplying+dividing+fractions+grade+5+6" },
         ],
       },
@@ -406,17 +406,17 @@ window.CURRICULUM = {
           "A survey of 20 students found 8 prefer cats and 12 prefer dogs. What percentage prefer cats? ___",
           "What type of graph is best for showing change over time?",
           "Create a stem-and-leaf plot for: 23, 35, 41, 28, 35, 47, 23, 52.",
-          "If you remove the outlier 2 from: 2, 10, 12, 11, 13, 10 — how does the mean change?",
+          "If you remove the outlier 2 from: 2, 10, 12, 11, 13, 10, how does the mean change?",
           "Describe the difference between a bar graph and a histogram.",
           "A student scored 80, 90, 70, and 100 on four tests. What score on the fifth test gives an average of 85? ___",
         ],
         resources: [
-          { title: "Statistics — Khan Academy", url: "https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-data-statistics" },
+          { title: "Statistics, Khan Academy", url: "https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-data-statistics" },
           { title: "Mean, Median, Mode, Range (YouTube)", url: "https://www.youtube.com/results?search_query=mean+median+mode+range+6th+grade" },
         ],
       },
       {
-        id: "prealgebra", label: "Pre-Algebra", grade: "6–7", prereqs: ["ratios", "fractions_adv"], col: 0, row: 7,
+        id: "prealgebra", label: "Pre-Algebra", grade: "6-7", prereqs: ["ratios", "fractions_adv"], col: 0, row: 7,
         desc: "Variables, expressions, equations, inequalities, integers.",
         tests: [
           "Solve: x + 7 = 15, x = ___",
@@ -436,12 +436,12 @@ window.CURRICULUM = {
           "Graph the solution to x > 2 on a number line.",
         ],
         resources: [
-          { title: "Pre-Algebra — Khan Academy", url: "https://www.khanacademy.org/math/pre-algebra" },
+          { title: "Pre-Algebra, Khan Academy", url: "https://www.khanacademy.org/math/pre-algebra" },
           { title: "Pre-Algebra for Beginners (YouTube)", url: "https://www.youtube.com/results?search_query=pre+algebra+equations+variables+6th+7th+grade" },
         ],
       },
       {
-        id: "percent", label: "Percents", grade: "6–7", prereqs: ["ratios", "fractions_adv"], col: 1, row: 7,
+        id: "percent", label: "Percents", grade: "6-7", prereqs: ["ratios", "fractions_adv"], col: 1, row: 7,
         desc: "Convert between fractions/decimals/percents, solve percent problems.",
         tests: [
           "Write 0.45 as a percent: ___%",
@@ -461,12 +461,12 @@ window.CURRICULUM = {
           "You answered 42 out of 50 questions correctly. What is your score as a percent? ___%",
         ],
         resources: [
-          { title: "Percentages — Khan Academy", url: "https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-fractions-decimals" },
+          { title: "Percentages, Khan Academy", url: "https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-fractions-decimals" },
           { title: "Percents Made Easy (YouTube)", url: "https://www.youtube.com/results?search_query=percents+fractions+decimals+grade+6+7" },
         ],
       },
       {
-        id: "geometry_adv", label: "Geometry", grade: "7–8", prereqs: ["statistics_basic", "fractions_adv"], col: 2, row: 7,
+        id: "geometry_adv", label: "Geometry", grade: "7-8", prereqs: ["statistics_basic", "fractions_adv"], col: 2, row: 7,
         desc: "Area, surface area, volume; similar figures; Pythagorean theorem.",
         tests: [
           "Find the area of a triangle with base 10 cm and height 6 cm: ___",
@@ -486,12 +486,12 @@ window.CURRICULUM = {
           "A right triangle has legs 9 and 12. Find the hypotenuse: ___",
         ],
         resources: [
-          { title: "7th Grade Geometry — Khan Academy", url: "https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-geometry" },
+          { title: "7th Grade Geometry, Khan Academy", url: "https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-geometry" },
           { title: "Geometry & Pythagorean Theorem (YouTube)", url: "https://www.youtube.com/results?search_query=pythagorean+theorem+surface+area+volume+grade+7+8" },
         ],
       },
       {
-        id: "algebra1", label: "Algebra I", grade: "8–9", prereqs: ["prealgebra", "percent"], col: 0, row: 8,
+        id: "algebra1", label: "Algebra I", grade: "8-9", prereqs: ["prealgebra", "percent"], col: 0, row: 8,
         desc: "Linear equations and inequalities, systems of equations, functions, polynomials.",
         tests: [
           "Solve: 3x + 4 = 19, x = ___",
@@ -514,12 +514,12 @@ window.CURRICULUM = {
           "What is the slope of a horizontal line? ___",
         ],
         resources: [
-          { title: "Algebra I — Khan Academy", url: "https://www.khanacademy.org/math/algebra" },
+          { title: "Algebra I, Khan Academy", url: "https://www.khanacademy.org/math/algebra" },
           { title: "Algebra 1 Full Course (YouTube)", url: "https://www.youtube.com/results?search_query=algebra+1+complete+course+linear+equations+functions" },
         ],
       },
       {
-        id: "statistics_adv", label: "Probability & Stats", grade: "8–9", prereqs: ["percent", "geometry_adv"], col: 1, row: 8,
+        id: "statistics_adv", label: "Probability & Stats", grade: "8-9", prereqs: ["percent", "geometry_adv"], col: 1, row: 8,
         desc: "Probability, permutations, combinations, statistical analysis.",
         tests: [
           "A bag has 3 red and 7 blue marbles. What is the probability of drawing red? ___",
@@ -542,12 +542,12 @@ window.CURRICULUM = {
           "A student has a 70% chance of passing each of 3 independent quizzes. Probability of passing all three? ___",
         ],
         resources: [
-          { title: "Probability & Statistics — Khan Academy", url: "https://www.khanacademy.org/math/statistics-probability" },
+          { title: "Probability & Statistics, Khan Academy", url: "https://www.khanacademy.org/math/statistics-probability" },
           { title: "Probability and Statistics (YouTube)", url: "https://www.youtube.com/results?search_query=probability+statistics+8th+9th+grade" },
         ],
       },
       {
-        id: "geometry_hs", label: "HS Geometry", grade: "9–10", prereqs: ["algebra1"], col: 0, row: 9,
+        id: "geometry_hs", label: "HS Geometry", grade: "9-10", prereqs: ["algebra1"], col: 0, row: 9,
         desc: "Formal proofs, congruence, similarity, circles, trigonometry intro.",
         tests: [
           "State the Triangle Congruence Postulate that applies: two triangles with two equal sides and the included angle.",
@@ -570,7 +570,7 @@ window.CURRICULUM = {
           "What is the relationship between a central angle and its intercepted arc?",
         ],
         resources: [
-          { title: "High School Geometry — Khan Academy", url: "https://www.khanacademy.org/math/geometry" },
+          { title: "High School Geometry, Khan Academy", url: "https://www.khanacademy.org/math/geometry" },
           { title: "Geometry Full Course (YouTube)", url: "https://www.youtube.com/results?search_query=high+school+geometry+proofs+congruence+similarity" },
         ],
       },
@@ -598,7 +598,7 @@ window.CURRICULUM = {
           "A ball is thrown with height h(t) = -16t² + 64t + 5. Find the maximum height.",
         ],
         resources: [
-          { title: "Algebra II — Khan Academy", url: "https://www.khanacademy.org/math/algebra2" },
+          { title: "Algebra II, Khan Academy", url: "https://www.khanacademy.org/math/algebra2" },
           { title: "Algebra 2 Full Course (YouTube)", url: "https://www.youtube.com/results?search_query=algebra+2+complete+course+quadratics+logarithms" },
         ],
       },
@@ -626,12 +626,12 @@ window.CURRICULUM = {
           "Describe the end behavior of f(x) = -x³ + 2x as x → +∞.",
         ],
         resources: [
-          { title: "Precalculus — Khan Academy", url: "https://www.khanacademy.org/math/precalculus" },
+          { title: "Precalculus, Khan Academy", url: "https://www.khanacademy.org/math/precalculus" },
           { title: "Pre-Calculus Full Course (YouTube)", url: "https://www.youtube.com/results?search_query=precalculus+trigonometry+vectors+sequences+series" },
         ],
       },
       {
-        id: "stats_hs", label: "AP Statistics", grade: "11–12", prereqs: ["algebra2", "statistics_adv"], col: 1, row: 10,
+        id: "stats_hs", label: "AP Statistics", grade: "11-12", prereqs: ["algebra2", "statistics_adv"], col: 1, row: 10,
         desc: "Experimental design, probability distributions, inference, regression.",
         tests: [
           "What is the difference between a population and a sample?",
@@ -654,7 +654,7 @@ window.CURRICULUM = {
           "A 95% CI for a proportion is (0.42, 0.58). Can you conclude the true proportion is 0.5?",
         ],
         resources: [
-          { title: "AP Statistics — Khan Academy", url: "https://www.khanacademy.org/math/ap-statistics" },
+          { title: "AP Statistics, Khan Academy", url: "https://www.khanacademy.org/math/ap-statistics" },
           { title: "AP Statistics Full Review (YouTube)", url: "https://www.youtube.com/results?search_query=AP+statistics+full+course+review" },
         ],
       },
@@ -682,7 +682,7 @@ window.CURRICULUM = {
           "A ladder 10 ft long leans on a wall. The bottom slides away at 2 ft/sec. How fast is the top falling when the bottom is 6 ft from the wall? (Related rates)",
         ],
         resources: [
-          { title: "AP Calculus — Khan Academy", url: "https://www.khanacademy.org/math/ap-calculus-ab" },
+          { title: "AP Calculus, Khan Academy", url: "https://www.khanacademy.org/math/ap-calculus-ab" },
           { title: "Calculus for Beginners (YouTube)", url: "https://www.youtube.com/results?search_query=calculus+derivatives+integrals+full+course" },
         ],
       },
@@ -708,12 +708,12 @@ window.CURRICULUM = {
           "What two letters make the /sh/ sound together? ___",
         ],
         resources: [
-          { title: "Phonics — Khan Academy Kids", url: "https://www.khanacademy.org/ela/cc-kindergarten-reading-foundational-skills" },
+          { title: "Phonics, Khan Academy Kids", url: "https://www.khanacademy.org/ela/cc-kindergarten-reading-foundational-skills" },
           { title: "Phonics Songs for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=phonics+letter+sounds+for+kindergarten" },
         ],
       },
       {
-        id: "sight_words", label: "Sight Words", grade: "K–1", prereqs: ["phonics"], col: 1, row: 0,
+        id: "sight_words", label: "Sight Words", grade: "K-1", prereqs: ["phonics"], col: 1, row: 0,
         desc: "Recognize common high-frequency words by sight (Dolch/Fry lists).",
         tests: [
           "Read and write these sight words: the, and, a, to, is",
@@ -728,12 +728,12 @@ window.CURRICULUM = {
           "Write five sight words you know by heart.",
         ],
         resources: [
-          { title: "Sight Words — Khan Academy", url: "https://www.khanacademy.org/ela/cc-kindergarten-reading-foundational-skills" },
+          { title: "Sight Words, Khan Academy", url: "https://www.khanacademy.org/ela/cc-kindergarten-reading-foundational-skills" },
           { title: "Sight Words Practice (YouTube)", url: "https://www.youtube.com/results?search_query=dolch+sight+words+practice+kindergarten+first+grade" },
         ],
       },
       {
-        id: "reading_basic", label: "Early Reading", grade: "K–1", prereqs: ["phonics", "sight_words"], col: 0, row: 1,
+        id: "reading_basic", label: "Early Reading", grade: "K-1", prereqs: ["phonics", "sight_words"], col: 0, row: 1,
         desc: "Decode simple words, read simple sentences and short books.",
         tests: [
           "Sound out and write each word: c-a-t, d-o-g, r-u-n, s-i-t",
@@ -748,19 +748,19 @@ window.CURRICULUM = {
           "Write two words you can read all by yourself.",
         ],
         resources: [
-          { title: "Early Reading — Khan Academy", url: "https://www.khanacademy.org/ela/cc-1st-grade-reading-foundational-skills" },
+          { title: "Early Reading, Khan Academy", url: "https://www.khanacademy.org/ela/cc-1st-grade-reading-foundational-skills" },
           { title: "Learn to Read (YouTube)", url: "https://www.youtube.com/results?search_query=learn+to+read+phonics+grade+1" },
         ],
       },
       {
-        id: "handwriting", label: "Handwriting", grade: "K–2", prereqs: ["phonics"], col: 1, row: 1,
+        id: "handwriting", label: "Handwriting", grade: "K-2", prereqs: ["phonics"], col: 1, row: 1,
         desc: "Proper letter formation, pencil grip, print handwriting.",
         tests: [
           "Write the uppercase alphabet neatly from A to Z.",
           "Write the lowercase alphabet neatly from a to z.",
           "Copy this sentence in your neatest handwriting: The quick brown fox jumps.",
           "Write your full name neatly.",
-          "Write numbers 1–20 in your best handwriting.",
+          "Write numbers 1-20 in your best handwriting.",
           "Copy these letters with correct strokes: B, D, G, P, Q",
           "Write three sentences about your family. Focus on staying on the line.",
           "Write the days of the week in order.",
@@ -773,7 +773,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "reading_fluency", label: "Reading Fluency", grade: "1–2", prereqs: ["reading_basic"], col: 0, row: 2,
+        id: "reading_fluency", label: "Reading Fluency", grade: "1-2", prereqs: ["reading_basic"], col: 0, row: 2,
         desc: "Read aloud with accuracy and appropriate pace, expression.",
         tests: [
           "Read this passage aloud to your teacher. They will note errors and time you: 'Sam has a big red dog. The dog likes to run and play. Sam and his dog go to the park every day. The dog jumps and barks with joy.'",
@@ -783,17 +783,17 @@ window.CURRICULUM = {
           "How many words per minute did you read? (Have teacher time you on a 1-minute passage) ___",
           "What should you do when you come to a word you don't know?",
           "Read this sentence with proper pausing: 'After dinner, we read, sang, and prayed together.'",
-          "Write a short paragraph (3–4 sentences). Then practice reading it aloud twice.",
+          "Write a short paragraph (3-4 sentences). Then practice reading it aloud twice.",
           "What is a period, question mark, and exclamation point used for?",
           "Read aloud to your teacher for 3 minutes without stopping. What book did you read? ___",
         ],
         resources: [
-          { title: "Reading Fluency — Khan Academy", url: "https://www.khanacademy.org/ela/cc-2nd-grade-reading-foundational-skills" },
+          { title: "Reading Fluency, Khan Academy", url: "https://www.khanacademy.org/ela/cc-2nd-grade-reading-foundational-skills" },
           { title: "Reading Fluency Practice (YouTube)", url: "https://www.youtube.com/results?search_query=reading+fluency+practice+grade+1+2" },
         ],
       },
       {
-        id: "cursive", label: "Cursive Writing", grade: "2–3", prereqs: ["handwriting"], col: 1, row: 2,
+        id: "cursive", label: "Cursive Writing", grade: "2-3", prereqs: ["handwriting"], col: 1, row: 2,
         desc: "Cursive letter formation, connect letters, write in cursive.",
         tests: [
           "Write the cursive lowercase alphabet from a to z.",
@@ -802,7 +802,7 @@ window.CURRICULUM = {
           "Write your full name in cursive.",
           "Write these tricky cursive letters five times each: f, q, z, k",
           "Copy this verse in cursive: 'The Lord is my shepherd.' (Psalm 23:1)",
-          "Write the numbers 1–10 in cursive.",
+          "Write the numbers 1-10 in cursive.",
           "Write three sentences about your favorite book in cursive.",
           "Connect these letters in cursive: an, in, it, on, th, wh",
           "Write a thank-you note to someone using cursive writing.",
@@ -813,7 +813,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "comprehension", label: "Reading Comprehension", grade: "2–3", prereqs: ["reading_fluency"], col: 0, row: 3,
+        id: "comprehension", label: "Reading Comprehension", grade: "2-3", prereqs: ["reading_fluency"], col: 0, row: 3,
         desc: "Main idea, supporting details, making inferences, story elements.",
         tests: [
           "Read a short passage your teacher gives you. What is the main idea? ___",
@@ -823,19 +823,19 @@ window.CURRICULUM = {
           "What is the problem in the story, and how is it solved?",
           "What do you think will happen next? Make an inference using clues from the text.",
           "What does the word ___ mean as used in the passage? (Teacher fills in word)",
-          "Retell the story in your own words in 3–4 sentences.",
+          "Retell the story in your own words in 3-4 sentences.",
           "What lesson does the author want you to learn from this story?",
           "How does the main character feel at the beginning vs. the end?",
           "Write a question you have after reading the passage.",
           "Give the story a new title and explain why you chose it.",
         ],
         resources: [
-          { title: "Reading Comprehension — Khan Academy", url: "https://www.khanacademy.org/ela/cc-2nd-grade-reading-informational-text" },
+          { title: "Reading Comprehension, Khan Academy", url: "https://www.khanacademy.org/ela/cc-2nd-grade-reading-informational-text" },
           { title: "Reading Comprehension Strategies (YouTube)", url: "https://www.youtube.com/results?search_query=reading+comprehension+main+idea+details+grade+2+3" },
         ],
       },
       {
-        id: "grammar_basic", label: "Grammar Foundations", grade: "2–3", prereqs: ["reading_basic", "handwriting"], col: 1, row: 3,
+        id: "grammar_basic", label: "Grammar Foundations", grade: "2-3", prereqs: ["reading_basic", "handwriting"], col: 1, row: 3,
         desc: "Nouns, verbs, adjectives, sentence structure, punctuation basics.",
         tests: [
           "Circle all the nouns: dog, run, happy, teacher, sky, quickly, book",
@@ -852,20 +852,20 @@ window.CURRICULUM = {
           "Circle the subject and underline the predicate: The little girl ran home.",
         ],
         resources: [
-          { title: "Grammar — Khan Academy", url: "https://www.khanacademy.org/ela/cc-2nd-grade-language" },
+          { title: "Grammar, Khan Academy", url: "https://www.khanacademy.org/ela/cc-2nd-grade-language" },
           { title: "Nouns Verbs Adjectives for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=nouns+verbs+adjectives+grammar+grade+2+3" },
         ],
       },
       {
-        id: "spelling", label: "Spelling Patterns", grade: "2–4", prereqs: ["reading_fluency", "handwriting"], col: 2, row: 3,
+        id: "spelling", label: "Spelling Patterns", grade: "2-4", prereqs: ["reading_fluency", "handwriting"], col: 2, row: 3,
         desc: "Word families, spelling rules, commonly misspelled words.",
         tests: [
           "Spell these words: because, friend, people, said, again",
           "Write four words in the '-ight' word family: ___, ___, ___, ___",
-          "Apply the rule: words ending in silent E — write the plural of 'cake', 'bike', 'home'",
+          "Apply the rule: words ending in silent E, write the plural of 'cake', 'bike', 'home'",
           "Double the final consonant rule: add -ing to run, sit, hop, swim",
           "Spell these commonly misspelled words: separate, necessary, receive, believe",
-          "Write the correct spelling: (their / there / they're) — 'I left my bag over ___.'",
+          "Write the correct spelling: (their / there / they're), 'I left my bag over ___.'",
           "Add the correct suffix: happy + ness = ___, quick + ly = ___, swim + ing = ___",
           "Spell words with silent letters: kn-, wr-, -gh: knife, write, night (copy correctly)",
           "Write three words for each vowel pattern: ai, ee, oa",
@@ -874,12 +874,12 @@ window.CURRICULUM = {
           "Write a sentence using four words from your spelling list.",
         ],
         resources: [
-          { title: "Spelling — Khan Academy", url: "https://www.khanacademy.org/ela/cc-3rd-grade-language" },
+          { title: "Spelling, Khan Academy", url: "https://www.khanacademy.org/ela/cc-3rd-grade-language" },
           { title: "Spelling Rules and Patterns (YouTube)", url: "https://www.youtube.com/results?search_query=spelling+rules+patterns+grade+2+3+4" },
         ],
       },
       {
-        id: "writing_basic", label: "Paragraph Writing", grade: "3–4", prereqs: ["comprehension", "grammar_basic"], col: 0, row: 4,
+        id: "writing_basic", label: "Paragraph Writing", grade: "3-4", prereqs: ["comprehension", "grammar_basic"], col: 0, row: 4,
         desc: "Topic sentence, supporting sentences, concluding sentence.",
         tests: [
           "Write a topic sentence for a paragraph about dogs.",
@@ -896,12 +896,12 @@ window.CURRICULUM = {
           "Identify the topic sentence, two supporting sentences, and concluding sentence in a sample paragraph your teacher provides.",
         ],
         resources: [
-          { title: "Paragraph Writing — Khan Academy", url: "https://www.khanacademy.org/ela/cc-4th-grade-writing" },
+          { title: "Paragraph Writing, Khan Academy", url: "https://www.khanacademy.org/ela/cc-4th-grade-writing" },
           { title: "How to Write a Paragraph (YouTube)", url: "https://www.youtube.com/results?search_query=how+to+write+a+paragraph+grade+3+4" },
         ],
       },
       {
-        id: "grammar_adv", label: "Parts of Speech", grade: "3–4", prereqs: ["grammar_basic", "spelling"], col: 1, row: 4,
+        id: "grammar_adv", label: "Parts of Speech", grade: "3-4", prereqs: ["grammar_basic", "spelling"], col: 1, row: 4,
         desc: "Pronouns, prepositions, conjunctions, adverbs, interjections.",
         tests: [
           "Replace the underlined noun with a pronoun: 'John went to the store. John bought milk.'",
@@ -918,12 +918,12 @@ window.CURRICULUM = {
           "Identify all eight parts of speech in this sentence: 'Oh! The tired old man walked slowly to the little store.'",
         ],
         resources: [
-          { title: "Parts of Speech — Khan Academy", url: "https://www.khanacademy.org/ela/cc-4th-grade-language" },
+          { title: "Parts of Speech, Khan Academy", url: "https://www.khanacademy.org/ela/cc-4th-grade-language" },
           { title: "Parts of Speech for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=8+parts+of+speech+grammar+grade+3+4" },
         ],
       },
       {
-        id: "vocab", label: "Vocabulary Building", grade: "3–5", prereqs: ["comprehension", "spelling"], col: 2, row: 4,
+        id: "vocab", label: "Vocabulary Building", grade: "3-5", prereqs: ["comprehension", "spelling"], col: 2, row: 4,
         desc: "Context clues, roots/prefixes/suffixes, dictionary skills.",
         tests: [
           "Use context clues: 'The ravenous wolf devoured the entire meal.' Ravenous means: ___",
@@ -943,12 +943,12 @@ window.CURRICULUM = {
           "Look up 'diligent' and write its etymology (word origin).",
         ],
         resources: [
-          { title: "Vocabulary — Khan Academy", url: "https://www.khanacademy.org/ela/cc-5th-grade-language" },
+          { title: "Vocabulary, Khan Academy", url: "https://www.khanacademy.org/ela/cc-5th-grade-language" },
           { title: "Vocabulary & Context Clues (YouTube)", url: "https://www.youtube.com/results?search_query=vocabulary+context+clues+prefixes+suffixes+grade+4+5" },
         ],
       },
       {
-        id: "writing_essay", label: "Essay Writing", grade: "4–5", prereqs: ["writing_basic", "grammar_adv"], col: 0, row: 5,
+        id: "writing_essay", label: "Essay Writing", grade: "4-5", prereqs: ["writing_basic", "grammar_adv"], col: 0, row: 5,
         desc: "5-paragraph essay, thesis statement, introduction/body/conclusion.",
         tests: [
           "Write a thesis statement for an essay arguing that reading is important.",
@@ -965,12 +965,12 @@ window.CURRICULUM = {
           "Evaluate this essay intro for hook, background, and thesis: (teacher provides sample)",
         ],
         resources: [
-          { title: "Essay Writing — Khan Academy", url: "https://www.khanacademy.org/ela/cc-5th-grade-writing" },
+          { title: "Essay Writing, Khan Academy", url: "https://www.khanacademy.org/ela/cc-5th-grade-writing" },
           { title: "How to Write a 5-Paragraph Essay (YouTube)", url: "https://www.youtube.com/results?search_query=5+paragraph+essay+writing+grade+4+5" },
         ],
       },
       {
-        id: "literature", label: "Literature Study", grade: "4–6", prereqs: ["comprehension", "vocab"], col: 1, row: 5,
+        id: "literature", label: "Literature Study", grade: "4-6", prereqs: ["comprehension", "vocab"], col: 1, row: 5,
         desc: "Analyze novels, poetry, short stories; literary devices; author's purpose.",
         tests: [
           "What is the theme of the story you most recently read? State it in one sentence.",
@@ -990,12 +990,12 @@ window.CURRICULUM = {
           "Write a one-paragraph response: What lesson does the main character learn? Do you agree with it?",
         ],
         resources: [
-          { title: "Literature & Literary Devices — Khan Academy", url: "https://www.khanacademy.org/ela/cc-6th-grade-reading-lit" },
+          { title: "Literature & Literary Devices, Khan Academy", url: "https://www.khanacademy.org/ela/cc-6th-grade-reading-lit" },
           { title: "Literary Devices Explained (YouTube)", url: "https://www.youtube.com/results?search_query=literary+devices+theme+plot+character+grade+5+6" },
         ],
       },
       {
-        id: "research_basic", label: "Research Skills", grade: "5–6", prereqs: ["writing_essay", "vocab"], col: 0, row: 6,
+        id: "research_basic", label: "Research Skills", grade: "5-6", prereqs: ["writing_essay", "vocab"], col: 0, row: 6,
         desc: "Use reference materials, take notes, cite sources, avoid plagiarism.",
         tests: [
           "What is plagiarism? Why is it wrong?",
@@ -1015,12 +1015,12 @@ window.CURRICULUM = {
           "What is an index, and how do you use it in a reference book?",
         ],
         resources: [
-          { title: "Research & Citation — Khan Academy", url: "https://www.khanacademy.org/ela/cc-6th-grade-writing" },
+          { title: "Research & Citation, Khan Academy", url: "https://www.khanacademy.org/ela/cc-6th-grade-writing" },
           { title: "Research Skills for Students (YouTube)", url: "https://www.youtube.com/results?search_query=research+skills+how+to+cite+sources+grade+5+6" },
         ],
       },
       {
-        id: "grammar_hs", label: "Advanced Grammar", grade: "6–7", prereqs: ["grammar_adv", "literature"], col: 1, row: 6,
+        id: "grammar_hs", label: "Advanced Grammar", grade: "6-7", prereqs: ["grammar_adv", "literature"], col: 1, row: 6,
         desc: "Sentence structure, clauses, phrases, common errors, style.",
         tests: [
           "Identify the independent and dependent clause: 'Although it was raining, we went outside.'",
@@ -1040,22 +1040,22 @@ window.CURRICULUM = {
           "What is the Oxford comma? Write a sentence using it correctly.",
         ],
         resources: [
-          { title: "Grammar — Khan Academy", url: "https://www.khanacademy.org/ela/cc-7th-grade-language" },
+          { title: "Grammar, Khan Academy", url: "https://www.khanacademy.org/ela/cc-7th-grade-language" },
           { title: "Advanced Grammar for Students (YouTube)", url: "https://www.youtube.com/results?search_query=clauses+phrases+sentence+structure+grade+6+7" },
         ],
       },
       {
-        id: "writing_creative", label: "Creative Writing", grade: "6–7", prereqs: ["writing_essay", "literature"], col: 2, row: 6,
+        id: "writing_creative", label: "Creative Writing", grade: "6-7", prereqs: ["writing_essay", "literature"], col: 2, row: 6,
         desc: "Short stories, poetry, voice, narrative techniques, revision.",
         tests: [
           "Write the opening paragraph of a short story. Hook the reader in the first sentence.",
-          "Describe a character using only showing, not telling (no 'He was nervous' — show it instead).",
+          "Describe a character using only showing, not telling (no 'He was nervous', show it instead).",
           "Write a poem of at least 8 lines on any subject. Use at least two literary devices.",
-          "What is 'voice' in writing? Describe your own voice in 2–3 sentences.",
+          "What is 'voice' in writing? Describe your own voice in 2-3 sentences.",
           "Revise this weak sentence to make it vivid: 'The old house was scary.'",
           "Write a scene using dialogue between two characters. Include dialogue tags and action beats.",
           "What is the difference between plot and story?",
-          "Write a short story (1–2 pages) with a clear beginning, middle, and end.",
+          "Write a short story (1-2 pages) with a clear beginning, middle, and end.",
           "What is a narrative hook? Write three different hooks for the same story idea.",
           "Write a scene from a villain's point of view without using the word 'evil.'",
           "What does 'show don't tell' mean? Revise: 'She was very excited about the trip.'",
@@ -1065,12 +1065,12 @@ window.CURRICULUM = {
           "Write the final scene of a story where the main character learns something important.",
         ],
         resources: [
-          { title: "Narrative Writing — Khan Academy", url: "https://www.khanacademy.org/ela/cc-7th-grade-writing" },
+          { title: "Narrative Writing, Khan Academy", url: "https://www.khanacademy.org/ela/cc-7th-grade-writing" },
           { title: "Creative Writing Tips (YouTube)", url: "https://www.youtube.com/results?search_query=creative+writing+tips+for+students+grade+6+7" },
         ],
       },
       {
-        id: "writing_research", label: "Research Paper", grade: "7–8", prereqs: ["research_basic", "grammar_hs"], col: 0, row: 7,
+        id: "writing_research", label: "Research Paper", grade: "7-8", prereqs: ["research_basic", "grammar_hs"], col: 0, row: 7,
         desc: "Multi-source research paper, MLA/APA citation, argument structure.",
         tests: [
           "Write a thesis statement for a research paper on the causes of World War I.",
@@ -1090,12 +1090,12 @@ window.CURRICULUM = {
           "Complete a full research paper (minimum 4 pages) on an assigned or approved topic. Turn it in with a Works Cited page.",
         ],
         resources: [
-          { title: "Research Writing — Khan Academy", url: "https://www.khanacademy.org/ela/cc-8th-grade-writing" },
+          { title: "Research Writing, Khan Academy", url: "https://www.khanacademy.org/ela/cc-8th-grade-writing" },
           { title: "How to Write a Research Paper (YouTube)", url: "https://www.youtube.com/results?search_query=how+to+write+a+research+paper+MLA+grade+7+8" },
         ],
       },
       {
-        id: "lit_analysis", label: "Literary Analysis", grade: "7–9", prereqs: ["literature", "grammar_hs"], col: 1, row: 7,
+        id: "lit_analysis", label: "Literary Analysis", grade: "7-9", prereqs: ["literature", "grammar_hs"], col: 1, row: 7,
         desc: "Theme, symbolism, characterization, narrative structure in depth.",
         tests: [
           "State the central theme of a book you've read and support it with two pieces of evidence.",
@@ -1118,12 +1118,12 @@ window.CURRICULUM = {
           "How does the narrator's point of view affect the story? What would change if it were told differently?",
         ],
         resources: [
-          { title: "Literary Analysis — Khan Academy", url: "https://www.khanacademy.org/ela/cc-9th-10th-grade-reading-lit" },
+          { title: "Literary Analysis, Khan Academy", url: "https://www.khanacademy.org/ela/cc-9th-10th-grade-reading-lit" },
           { title: "Literary Analysis Essays (YouTube)", url: "https://www.youtube.com/results?search_query=literary+analysis+theme+symbolism+characterization+grade+8+9" },
         ],
       },
       {
-        id: "speech", label: "Public Speaking", grade: "7–9", prereqs: ["writing_essay", "writing_creative"], col: 2, row: 7,
+        id: "speech", label: "Public Speaking", grade: "7-9", prereqs: ["writing_essay", "writing_creative"], col: 2, row: 7,
         desc: "Oral presentations, debate, persuasive speaking, audience awareness.",
         tests: [
           "Deliver a 2-minute speech on any topic to your teacher/parent. Were you nervous? What helped?",
@@ -1135,7 +1135,7 @@ window.CURRICULUM = {
           "Deliver your persuasive speech. Have your teacher evaluate your pace, volume, and clarity.",
           "What does 'ethos, pathos, logos' mean? Give one example of each in a speech.",
           "What is a rebuttal? In a debate, how do you respond to the opposing side's argument?",
-          "Write and deliver a 1-minute speech using only logos (facts/logic) — no emotional appeal.",
+          "Write and deliver a 1-minute speech using only logos (facts/logic), no emotional appeal.",
           "Describe two ways body language affects how a speaker is received.",
           "Watch a speech (your teacher will assign one). Identify one strength and one weakness.",
           "What is the purpose of a conclusion in a speech? Write a strong closing line.",
@@ -1144,15 +1144,15 @@ window.CURRICULUM = {
         ],
         resources: [
           { title: "Public Speaking Tips (YouTube)", url: "https://www.youtube.com/results?search_query=public+speaking+tips+for+students+debate+grade+7+8" },
-          { title: "Rhetoric & Persuasion — Khan Academy", url: "https://www.khanacademy.org/ela/cc-9th-10th-grade-writing" },
+          { title: "Rhetoric & Persuasion, Khan Academy", url: "https://www.khanacademy.org/ela/cc-9th-10th-grade-writing" },
         ],
       },
       {
-        id: "writing_adv", label: "Advanced Composition", grade: "9–10", prereqs: ["writing_research", "lit_analysis"], col: 0, row: 8,
+        id: "writing_adv", label: "Advanced Composition", grade: "9-10", prereqs: ["writing_research", "lit_analysis"], col: 0, row: 8,
         desc: "Argumentative, analytical, and expository essays at a college-prep level.",
         tests: [
           "What is the difference between an argumentative and a persuasive essay?",
-          "Write a college-prep thesis statement that is specific, debatable, and supported: topic — social media and teenagers.",
+          "Write a college-prep thesis statement that is specific, debatable, and supported: topic, social media and teenagers.",
           "What is a 'concession and refutation'? Write one in response to your thesis.",
           "Write a body paragraph with a Toulmin argument structure (claim, grounds, warrant, backing, qualifier, rebuttal).",
           "What makes a source authoritative? Evaluate this source: a blog post by an anonymous author.",
@@ -1171,12 +1171,12 @@ window.CURRICULUM = {
           "Revise an essay draft based on feedback. Explain two specific improvements you made.",
         ],
         resources: [
-          { title: "Argumentative Writing — Khan Academy", url: "https://www.khanacademy.org/ela/cc-9th-10th-grade-writing" },
+          { title: "Argumentative Writing, Khan Academy", url: "https://www.khanacademy.org/ela/cc-9th-10th-grade-writing" },
           { title: "College Prep Writing (YouTube)", url: "https://www.youtube.com/results?search_query=argumentative+essay+writing+college+prep+high+school" },
         ],
       },
       {
-        id: "lit_survey", label: "World Literature", grade: "9–11", prereqs: ["lit_analysis", "speech"], col: 1, row: 8,
+        id: "lit_survey", label: "World Literature", grade: "9-11", prereqs: ["lit_analysis", "speech"], col: 1, row: 8,
         desc: "Survey of world literature across cultures and time periods, evaluated through a biblical lens.",
         tests: [
           "Name one major work from each: Ancient Greek, Medieval, Renaissance, Enlightenment literature.",
@@ -1200,15 +1200,15 @@ window.CURRICULUM = {
         ],
         resources: [
           { title: "World Literature Overview (YouTube)", url: "https://www.youtube.com/results?search_query=world+literature+survey+high+school" },
-          { title: "Literature — Khan Academy", url: "https://www.khanacademy.org/ela/cc-11th-12th-grade-reading-lit" },
+          { title: "Literature, Khan Academy", url: "https://www.khanacademy.org/ela/cc-11th-12th-grade-reading-lit" },
         ],
       },
       {
-        id: "rhetoric", label: "Rhetoric & Logic", grade: "10–11", prereqs: ["writing_adv", "lit_survey"], col: 0, row: 9,
+        id: "rhetoric", label: "Rhetoric & Logic", grade: "10-11", prereqs: ["writing_adv", "lit_survey"], col: 0, row: 9,
         desc: "Logical fallacies, persuasive techniques, classical rhetoric; discern truth from error.",
         tests: [
           "What are the three modes of persuasion according to Aristotle? Define each.",
-          "Identify this fallacy: 'You can't trust his opinion on climate — he drives a truck.'",
+          "Identify this fallacy: 'You can't trust his opinion on climate, he drives a truck.'",
           "What is a straw man argument? Give an example.",
           "What is ad hominem? Why is it a weak form of argument?",
           "Identify the fallacy: 'If we allow students to use calculators, they'll never learn to think.'",
@@ -1228,11 +1228,11 @@ window.CURRICULUM = {
         ],
         resources: [
           { title: "Logical Fallacies (YouTube)", url: "https://www.youtube.com/results?search_query=logical+fallacies+explained+rhetoric+critical+thinking" },
-          { title: "Rhetoric & Argumentation — Khan Academy", url: "https://www.khanacademy.org/ela/cc-11th-12th-grade-writing" },
+          { title: "Rhetoric & Argumentation, Khan Academy", url: "https://www.khanacademy.org/ela/cc-11th-12th-grade-writing" },
         ],
       },
       {
-        id: "ap_english", label: "AP English", grade: "11–12", prereqs: ["rhetoric", "lit_survey"], col: 0, row: 10,
+        id: "ap_english", label: "AP English", grade: "11-12", prereqs: ["rhetoric", "lit_survey"], col: 0, row: 10,
         desc: "College-level literary analysis and composition.",
         tests: [
           "Analyze the rhetorical strategies in a provided speech excerpt. Identify three techniques and explain their effect.",
@@ -1246,7 +1246,7 @@ window.CURRICULUM = {
           "What distinguishes AP English Language from AP English Literature?",
           "Complete a timed prose analysis of a passage from a novel (40 minutes, AP format).",
           "Write an argument essay defending or challenging this claim: 'Literature is the most truthful record of human experience.'",
-          "What is close reading? Demonstrate it on a short passage of 150–200 words.",
+          "What is close reading? Demonstrate it on a short passage of 150-200 words.",
           "Analyze how an author's style contributes to meaning in a work you've studied.",
           "What is the difference between theme and thesis in literary analysis?",
           "Complete a full AP-style practice exam section (multiple choice + FRQ) from an AP prep resource.",
@@ -1255,7 +1255,7 @@ window.CURRICULUM = {
           "Write a personal statement (500 words) for a college application. Have your teacher evaluate it for voice, clarity, and purpose.",
         ],
         resources: [
-          { title: "AP English Language & Composition — Khan Academy", url: "https://www.khanacademy.org/ela/ap-english-language-and-composition" },
+          { title: "AP English Language & Composition, Khan Academy", url: "https://www.khanacademy.org/ela/ap-english-language-and-composition" },
           { title: "AP English Prep (YouTube)", url: "https://www.youtube.com/results?search_query=AP+English+language+composition+exam+prep" },
         ],
       },
@@ -1266,7 +1266,7 @@ window.CURRICULUM = {
     id: "history", label: "History", icon: "⊕", color: "#D97706", accent: "#FBBF24",
     nodes: [
       {
-        id: "family_community", label: "Family & Community", grade: "K–1", prereqs: [], col: 0, row: 0,
+        id: "family_community", label: "Family & Community", grade: "K-1", prereqs: [], col: 0, row: 0,
         desc: "God places us in families and communities. Understand roles, responsibilities, and how authority structures reflect His order.",
         tests: [
           "Who is in your family? List each person and their role.",
@@ -1281,12 +1281,12 @@ window.CURRICULUM = {
           "Who takes care of you? List three people and what they do for you.",
         ],
         resources: [
-          { title: "Communities & Families — Khan Academy", url: "https://www.khanacademy.org/humanities/ap-us-history" },
+          { title: "Communities & Families, Khan Academy", url: "https://www.khanacademy.org/humanities/ap-us-history" },
           { title: "What is a Community? (YouTube)", url: "https://www.youtube.com/results?search_query=community+and+family+social+studies+kindergarten" },
         ],
       },
       {
-        id: "us_symbols", label: "American Symbols", grade: "1–2", prereqs: ["family_community"], col: 0, row: 1,
+        id: "us_symbols", label: "American Symbols", grade: "1-2", prereqs: ["family_community"], col: 0, row: 1,
         desc: "Flag, Pledge, founding documents, and national holidays. Nations are raised up and brought low by God's providence.",
         tests: [
           "How many stars are on the American flag? What do they represent?",
@@ -1302,11 +1302,11 @@ window.CURRICULUM = {
         ],
         resources: [
           { title: "American Symbols (YouTube)", url: "https://www.youtube.com/results?search_query=american+symbols+flag+pledge+grade+1+2" },
-          { title: "U.S. History & Civics — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history" },
+          { title: "U.S. History & Civics, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history" },
         ],
       },
       {
-        id: "world_cultures", label: "World Cultures & Geography", grade: "1–2", prereqs: ["family_community"], col: 1, row: 1,
+        id: "world_cultures", label: "World Cultures & Geography", grade: "1-2", prereqs: ["family_community"], col: 1, row: 1,
         desc: "Explore how God scattered the nations, shaped geography, and placed every people in their time and boundaries.",
         tests: [
           "Name the seven continents.",
@@ -1322,11 +1322,11 @@ window.CURRICULUM = {
         ],
         resources: [
           { title: "World Geography & Cultures (YouTube)", url: "https://www.youtube.com/results?search_query=world+cultures+geography+continents+grade+1+2" },
-          { title: "Geography — Khan Academy", url: "https://www.khanacademy.org/humanities/ap-human-geography" },
+          { title: "Geography, Khan Academy", url: "https://www.khanacademy.org/humanities/ap-human-geography" },
         ],
       },
       {
-        id: "early_america", label: "Early American History", grade: "2–3", prereqs: ["us_symbols"], col: 0, row: 2,
+        id: "early_america", label: "Early American History", grade: "2-3", prereqs: ["us_symbols"], col: 0, row: 2,
         desc: "Native peoples, exploration, colonial settlement. Examine the Puritan vision, covenant theology in early colonies.",
         tests: [
           "Name three Native American tribes and one fact about each.",
@@ -1343,13 +1343,13 @@ window.CURRICULUM = {
           "What year did the Pilgrims land at Plymouth? ___",
         ],
         resources: [
-          { title: "Early American History — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/precontact-and-early-colonial-era" },
+          { title: "Early American History, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/precontact-and-early-colonial-era" },
           { title: "Colonial America for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=colonial+america+pilgrims+early+settlers+grade+2+3" },
         ],
       },
       {
-        id: "ancient_history", label: "Ancient Civilizations", grade: "3–4", prereqs: ["world_cultures"], col: 1, row: 2,
-        desc: "Egypt, Mesopotamia, Greece, Rome — each a sovereign work of God's providence. All history moves toward Christ.",
+        id: "ancient_history", label: "Ancient Civilizations", grade: "3-4", prereqs: ["world_cultures"], col: 1, row: 2,
+        desc: "Egypt, Mesopotamia, Greece, Rome, each a sovereign work of God's providence. All history moves toward Christ.",
         tests: [
           "What is Mesopotamia, and why is it called the 'Cradle of Civilization'?",
           "Name three achievements of ancient Egypt.",
@@ -1365,12 +1365,12 @@ window.CURRICULUM = {
           "Compare ancient Egyptian and Hebrew views of God. How were they different?",
         ],
         resources: [
-          { title: "Ancient Civilizations — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/world-history-beginnings" },
+          { title: "Ancient Civilizations, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/world-history-beginnings" },
           { title: "Ancient History for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=ancient+civilizations+egypt+greece+rome+grade+3+4" },
         ],
       },
       {
-        id: "revolution", label: "American Revolution", grade: "4–5", prereqs: ["early_america"], col: 0, row: 3,
+        id: "revolution", label: "American Revolution", grade: "4-5", prereqs: ["early_america"], col: 0, row: 3,
         desc: "Causes, key events, and the Constitution. Examine the Founders' moral complexity and the biblical roots of natural law.",
         tests: [
           "What does 'taxation without representation' mean?",
@@ -1387,12 +1387,12 @@ window.CURRICULUM = {
           "What are three branches of the U.S. government? What does each do?",
         ],
         resources: [
-          { title: "American Revolution — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/road-to-revolution" },
+          { title: "American Revolution, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/road-to-revolution" },
           { title: "American Revolution for Students (YouTube)", url: "https://www.youtube.com/results?search_query=american+revolution+causes+events+grade+4+5" },
         ],
       },
       {
-        id: "medieval", label: "Middle Ages", grade: "4–5", prereqs: ["ancient_history"], col: 1, row: 3,
+        id: "medieval", label: "Middle Ages", grade: "4-5", prereqs: ["ancient_history"], col: 1, row: 3,
         desc: "Feudalism, the visible church's power and corruption, the Crusades, plague, and the early stirrings of reform.",
         tests: [
           "What is feudalism? Draw and label the feudal pyramid.",
@@ -1409,7 +1409,7 @@ window.CURRICULUM = {
           "How did God preserve the true church through the dark medieval centuries?",
         ],
         resources: [
-          { title: "Middle Ages — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/medieval-times" },
+          { title: "Middle Ages, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/medieval-times" },
           { title: "The Middle Ages for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=middle+ages+feudalism+crusades+grade+4+5" },
         ],
       },
@@ -1431,12 +1431,12 @@ window.CURRICULUM = {
           "Write two sentences: one from a settler's perspective and one from a Native American's perspective on expansion.",
         ],
         resources: [
-          { title: "Westward Expansion — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/the-gilded-age" },
+          { title: "Westward Expansion, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/the-gilded-age" },
           { title: "Westward Expansion for Students (YouTube)", url: "https://www.youtube.com/results?search_query=westward+expansion+manifest+destiny+trail+of+tears+grade+5" },
         ],
       },
       {
-        id: "reformation", label: "Reformation & its Legacy", grade: "5–6", prereqs: ["medieval"], col: 1, row: 4,
+        id: "reformation", label: "Reformation & its Legacy", grade: "5-6", prereqs: ["medieval"], col: 1, row: 4,
         desc: "Luther, Calvin, Zwingli, and the recovery of sola fide, sola scriptura. Its direct influence on Western law, education, and liberty.",
         tests: [
           "Who was Martin Luther? What did he nail to the church door in 1517?",
@@ -1456,12 +1456,12 @@ window.CURRICULUM = {
           "Why do we as Reformed Baptists trace our theological roots to the Reformation?",
         ],
         resources: [
-          { title: "The Reformation — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/renaissance-and-reformation" },
+          { title: "The Reformation, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/renaissance-and-reformation" },
           { title: "Protestant Reformation (YouTube)", url: "https://www.youtube.com/results?search_query=protestant+reformation+Luther+Calvin+solas+explained" },
         ],
       },
       {
-        id: "civil_war", label: "Civil War & Reconstruction", grade: "5–6", prereqs: ["westward"], col: 0, row: 5,
+        id: "civil_war", label: "Civil War & Reconstruction", grade: "5-6", prereqs: ["westward"], col: 0, row: 5,
         desc: "Slavery, secession, the war, emancipation, and Reconstruction's collapse. All men bear the image of God.",
         tests: [
           "What were the three main causes of the Civil War?",
@@ -1481,12 +1481,12 @@ window.CURRICULUM = {
           "Name two Confederate and two Union generals.",
         ],
         resources: [
-          { title: "Civil War — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/civil-war-era" },
+          { title: "Civil War, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/civil-war-era" },
           { title: "Civil War for Students (YouTube)", url: "https://www.youtube.com/results?search_query=civil+war+slavery+reconstruction+grade+5+6" },
         ],
       },
       {
-        id: "enlightenment", label: "Enlightenment & Revolutions", grade: "6–7", prereqs: ["reformation"], col: 1, row: 5,
+        id: "enlightenment", label: "Enlightenment & Revolutions", grade: "6-7", prereqs: ["reformation"], col: 1, row: 5,
         desc: "The Enlightenment's humanist turn away from Scripture, the French Revolution's bloodshed, and the contrast with the Reformation's fruit.",
         tests: [
           "What was the Enlightenment? Name two key Enlightenment thinkers.",
@@ -1506,12 +1506,12 @@ window.CURRICULUM = {
           "How should Christians engage with Enlightenment ideas today?",
         ],
         resources: [
-          { title: "The Enlightenment — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/1600s-1800s" },
+          { title: "The Enlightenment, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/1600s-1800s" },
           { title: "Enlightenment & French Revolution (YouTube)", url: "https://www.youtube.com/results?search_query=enlightenment+french+revolution+deism+humanism+explained" },
         ],
       },
       {
-        id: "gilded_age", label: "Gilded Age & Progressivism", grade: "6–7", prereqs: ["civil_war"], col: 0, row: 6,
+        id: "gilded_age", label: "Gilded Age & Progressivism", grade: "6-7", prereqs: ["civil_war"], col: 0, row: 6,
         desc: "Industrialization, immigration, labor abuses, and Progressive-era reforms.",
         tests: [
           "What was the 'Gilded Age'? What did the name imply about the era?",
@@ -1531,12 +1531,12 @@ window.CURRICULUM = {
           "What was muckraking journalism? Name one famous muckraker.",
         ],
         resources: [
-          { title: "Gilded Age — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/the-gilded-age" },
+          { title: "Gilded Age, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/the-gilded-age" },
           { title: "Gilded Age & Progressivism (YouTube)", url: "https://www.youtube.com/results?search_query=gilded+age+progressivism+industrialization+grade+6+7" },
         ],
       },
       {
-        id: "ww1", label: "World War I", grade: "7–8", prereqs: ["enlightenment", "gilded_age"], col: 0, row: 7,
+        id: "ww1", label: "World War I", grade: "7-8", prereqs: ["enlightenment", "gilded_age"], col: 0, row: 7,
         desc: "Causes rooted in nationalism, imperialism, and the collapse of Christendom. The war that ended Europe's moral confidence.",
         tests: [
           "What were the four main causes of WWI? (MAIN acronym)",
@@ -1559,7 +1559,7 @@ window.CURRICULUM = {
           "Write a paragraph: Why was WWI called 'the war to end all wars,' and why did that hope fail?",
         ],
         resources: [
-          { title: "World War I — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/euro-hist/world-war-i-tutorial" },
+          { title: "World War I, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/euro-hist/world-war-i-tutorial" },
           { title: "WWI Explained (YouTube)", url: "https://www.youtube.com/results?search_query=world+war+1+causes+events+explained+grade+7+8" },
         ],
       },
@@ -1587,12 +1587,12 @@ window.CURRICULUM = {
           "Write a paragraph: How did abandoning Christian foundations contribute to the rise of totalitarianism?",
         ],
         resources: [
-          { title: "Interwar Period — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/euro-hist/great-depression-tutorial" },
+          { title: "Interwar Period, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/euro-hist/great-depression-tutorial" },
           { title: "Rise of Hitler and Great Depression (YouTube)", url: "https://www.youtube.com/results?search_query=interwar+period+great+depression+rise+of+fascism+grade+8" },
         ],
       },
       {
-        id: "ww2", label: "World War II", grade: "8–9", prereqs: ["interwar"], col: 0, row: 9,
+        id: "ww2", label: "World War II", grade: "8-9", prereqs: ["interwar"], col: 0, row: 9,
         desc: "The Holocaust, theater campaigns, and the atomic bomb. Every victim bore God's image.",
         tests: [
           "What event brought the U.S. into WWII? When did it occur?",
@@ -1615,12 +1615,12 @@ window.CURRICULUM = {
           "Write a paragraph: What does WWII teach us about the consequences of rejecting God's law?",
         ],
         resources: [
-          { title: "World War II — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/euro-hist/world-war-ii" },
+          { title: "World War II, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/euro-hist/world-war-ii" },
           { title: "WWII Explained (YouTube)", url: "https://www.youtube.com/results?search_query=world+war+2+Holocaust+D-Day+explained+grade+8+9" },
         ],
       },
       {
-        id: "cold_war", label: "Cold War", grade: "9–10", prereqs: ["ww2"], col: 0, row: 10,
+        id: "cold_war", label: "Cold War", grade: "9-10", prereqs: ["ww2"], col: 0, row: 10,
         desc: "The ideological conflict between atheistic communism and the West. Marxism as a false gospel examined biblically.",
         tests: [
           "What was the Cold War? Between which two nations was it primarily fought?",
@@ -1643,12 +1643,12 @@ window.CURRICULUM = {
           "Write a paragraph: Why did communism fail, and what does that reveal about human nature?",
         ],
         resources: [
-          { title: "Cold War — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/us-history-1940s-1960s" },
+          { title: "Cold War, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/us-history-1940s-1960s" },
           { title: "Cold War Explained (YouTube)", url: "https://www.youtube.com/results?search_query=cold+war+explained+communism+USSR+USA+grade+9+10" },
         ],
       },
       {
-        id: "civil_rights", label: "Civil Rights Movement", grade: "9–10", prereqs: ["ww2"], col: 1, row: 10,
+        id: "civil_rights", label: "Civil Rights Movement", grade: "9-10", prereqs: ["ww2"], col: 1, row: 10,
         desc: "The documented injustice of Jim Crow and the campaign to end it. The cause of equal protection under law is consistent with biblical justice.",
         tests: [
           "What was Jim Crow? Give three examples of Jim Crow laws.",
@@ -1671,12 +1671,12 @@ window.CURRICULUM = {
           "Write a paragraph: How can Christians engage justice issues while keeping the gospel central?",
         ],
         resources: [
-          { title: "Civil Rights Movement — Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/us-history-1960s-2000s" },
+          { title: "Civil Rights Movement, Khan Academy", url: "https://www.khanacademy.org/humanities/us-history/us-history-1960s-2000s" },
           { title: "Civil Rights Movement Explained (YouTube)", url: "https://www.youtube.com/results?search_query=civil+rights+movement+Jim+Crow+MLK+explained+grade+9+10" },
         ],
       },
       {
-        id: "modern_world", label: "Modern World History", grade: "10–11", prereqs: ["cold_war", "civil_rights"], col: 0, row: 11,
+        id: "modern_world", label: "Modern World History", grade: "10-11", prereqs: ["cold_war", "civil_rights"], col: 0, row: 11,
         desc: "Post-Cold War globalization, the Middle East, 9/11, and the rise of secularism and postmodernism.",
         tests: [
           "What was the Gulf War (1991)? What triggered it?",
@@ -1699,12 +1699,12 @@ window.CURRICULUM = {
           "Name one current event and analyze it using a biblical worldview framework.",
         ],
         resources: [
-          { title: "Modern World History — Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/1900s-through-21st-century" },
+          { title: "Modern World History, Khan Academy", url: "https://www.khanacademy.org/humanities/world-history/1900s-through-21st-century" },
           { title: "Modern History & Current Events (YouTube)", url: "https://www.youtube.com/results?search_query=modern+world+history+9+11+globalization+postmodernism+explained" },
         ],
       },
       {
-        id: "govt_civics", label: "Government & Civics", grade: "11–12", prereqs: ["modern_world"], col: 0, row: 12,
+        id: "govt_civics", label: "Government & Civics", grade: "11-12", prereqs: ["modern_world"], col: 0, row: 12,
         desc: "U.S. Constitution, branches of government, elections, and civic responsibility. Christians are citizens of a higher kingdom first.",
         tests: [
           "Name the three branches of the federal government and the primary role of each.",
@@ -1713,7 +1713,7 @@ window.CURRICULUM = {
           "What are the first ten amendments? Name at least five of them.",
           "What is the Electoral College? How does it work?",
           "What is the difference between a democracy and a constitutional republic?",
-          "What does Romans 13:1–7 teach about government?",
+          "What does Romans 13:1-7 teach about government?",
           "When, if ever, is civil disobedience justified? Use Scripture and historical examples.",
           "What is the role of the Supreme Court? What is judicial review?",
           "What are the qualifications to vote in the U.S.? What is your duty as a voter?",
@@ -1727,12 +1727,12 @@ window.CURRICULUM = {
           "Write a 1-page essay: What does it mean to be a faithful Christian citizen?",
         ],
         resources: [
-          { title: "U.S. Government — Khan Academy", url: "https://www.khanacademy.org/humanities/us-government-and-civics" },
+          { title: "U.S. Government, Khan Academy", url: "https://www.khanacademy.org/humanities/us-government-and-civics" },
           { title: "How the U.S. Government Works (YouTube)", url: "https://www.youtube.com/results?search_query=US+government+civics+constitution+branches+grade+11+12" },
         ],
       },
       {
-        id: "economics", label: "Economics", grade: "11–12", prereqs: ["modern_world"], col: 1, row: 12,
+        id: "economics", label: "Economics", grade: "11-12", prereqs: ["modern_world"], col: 1, row: 12,
         desc: "Micro/macroeconomics, supply and demand, fiscal and monetary policy, personal finance. Stewardship is a biblical category.",
         tests: [
           "What is supply and demand? Draw and label a simple supply/demand graph.",
@@ -1755,7 +1755,7 @@ window.CURRICULUM = {
           "Write a paragraph: How does a biblical view of human nature explain why free markets generally outperform planned economies?",
         ],
         resources: [
-          { title: "Economics — Khan Academy", url: "https://www.khanacademy.org/economics-finance-domain/macroeconomics" },
+          { title: "Economics, Khan Academy", url: "https://www.khanacademy.org/economics-finance-domain/macroeconomics" },
           { title: "Economics Explained (YouTube)", url: "https://www.youtube.com/results?search_query=economics+supply+demand+GDP+inflation+grade+11+12" },
         ],
       },
@@ -1766,7 +1766,7 @@ window.CURRICULUM = {
     id: "science", label: "Science", icon: "◈", color: "#059669", accent: "#34D399",
     nodes: [
       {
-        id: "living_nonliving", label: "Living vs. Non-Living", grade: "K–1", prereqs: [], col: 0, row: 0,
+        id: "living_nonliving", label: "Living vs. Non-Living", grade: "K-1", prereqs: [], col: 0, row: 0,
         desc: "Distinguish living things from non-living things; basic needs of living things.",
         tests: [
           "Circle the living things: dog, rock, tree, pencil, flower, water",
@@ -1781,12 +1781,12 @@ window.CURRICULUM = {
           "How do you know something is alive? List two clues.",
         ],
         resources: [
-          { title: "Living vs. Non-Living — Khan Academy", url: "https://www.khanacademy.org/science/biology/intro-to-biology" },
+          { title: "Living vs. Non-Living, Khan Academy", url: "https://www.khanacademy.org/science/biology/intro-to-biology" },
           { title: "Living and Non-Living Things (YouTube)", url: "https://www.youtube.com/results?search_query=living+vs+non-living+things+for+kids+kindergarten" },
         ],
       },
       {
-        id: "five_senses", label: "Five Senses", grade: "K–1", prereqs: [], col: 1, row: 0,
+        id: "five_senses", label: "Five Senses", grade: "K-1", prereqs: [], col: 1, row: 0,
         desc: "Sight, hearing, smell, taste, touch; using senses to observe God's creation.",
         tests: [
           "Name the five senses.",
@@ -1802,11 +1802,11 @@ window.CURRICULUM = {
         ],
         resources: [
           { title: "Five Senses (YouTube)", url: "https://www.youtube.com/results?search_query=five+senses+for+kids+kindergarten+science" },
-          { title: "Senses — Khan Academy Kids", url: "https://www.khanacademy.org/science/biology/human-biology" },
+          { title: "Senses, Khan Academy Kids", url: "https://www.khanacademy.org/science/biology/human-biology" },
         ],
       },
       {
-        id: "plants", label: "Plants", grade: "1–2", prereqs: ["living_nonliving"], col: 0, row: 1,
+        id: "plants", label: "Plants", grade: "1-2", prereqs: ["living_nonliving"], col: 0, row: 1,
         desc: "Parts of a plant, life cycle, photosynthesis basics, plant needs.",
         tests: [
           "Name the four main parts of a plant and what each does.",
@@ -1818,16 +1818,16 @@ window.CURRICULUM = {
           "Name two ways seeds travel from one place to another.",
           "What gas do plants take in? What gas do they give off?",
           "Name two plants that humans eat and which part of the plant we eat.",
-          "What does Genesis 1:11–12 say God created on the third day?",
+          "What does Genesis 1:11-12 say God created on the third day?",
         ],
         resources: [
-          { title: "Plants — Khan Academy", url: "https://www.khanacademy.org/science/biology/photosynthesis-in-plants" },
+          { title: "Plants, Khan Academy", url: "https://www.khanacademy.org/science/biology/photosynthesis-in-plants" },
           { title: "Parts of a Plant for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=parts+of+a+plant+life+cycle+grade+1+2" },
         ],
       },
       {
-        id: "animals", label: "Animals", grade: "1–2", prereqs: ["living_nonliving", "five_senses"], col: 1, row: 1,
-        desc: "Animal groups, habitats, life cycles, and adaptations — each kind made by God.",
+        id: "animals", label: "Animals", grade: "1-2", prereqs: ["living_nonliving", "five_senses"], col: 1, row: 1,
+        desc: "Animal groups, habitats, life cycles, and adaptations, each kind made by God.",
         tests: [
           "Name the six main groups of animals (vertebrates): ___, ___, ___, ___, ___, ___",
           "What is a mammal? Name three characteristics of mammals.",
@@ -1838,15 +1838,15 @@ window.CURRICULUM = {
           "Name three animals that are endangered and one reason why.",
           "How do animals in cold climates survive winter? Name two strategies.",
           "What does 'migration' mean? Name one animal that migrates.",
-          "What does Genesis 1:24–25 say about animals? Write it in your own words.",
+          "What does Genesis 1:24-25 say about animals? Write it in your own words.",
         ],
         resources: [
-          { title: "Animals & Habitats — Khan Academy", url: "https://www.khanacademy.org/science/biology/ecology" },
+          { title: "Animals & Habitats, Khan Academy", url: "https://www.khanacademy.org/science/biology/ecology" },
           { title: "Animal Groups for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=animal+groups+habitats+adaptations+grade+1+2" },
         ],
       },
       {
-        id: "weather", label: "Weather & Seasons", grade: "1–2", prereqs: ["five_senses"], col: 2, row: 1,
+        id: "weather", label: "Weather & Seasons", grade: "1-2", prereqs: ["five_senses"], col: 2, row: 1,
         desc: "Weather patterns, seasons, water cycle basics. God governs the weather (Job 38).",
         tests: [
           "Name the four seasons.",
@@ -1858,15 +1858,15 @@ window.CURRICULUM = {
           "What is the difference between rain, sleet, and snow?",
           "What is temperature, and how do we measure it?",
           "Name a severe weather event and one safety rule for it.",
-          "What does Job 38:22–23 tell us about who controls the weather?",
+          "What does Job 38:22-23 tell us about who controls the weather?",
         ],
         resources: [
-          { title: "Weather & Atmosphere — Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science/weather-and-atmosphere" },
+          { title: "Weather & Atmosphere, Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science/weather-and-atmosphere" },
           { title: "Water Cycle and Seasons (YouTube)", url: "https://www.youtube.com/results?search_query=water+cycle+seasons+weather+grade+1+2" },
         ],
       },
       {
-        id: "human_body_basic", label: "Human Body", grade: "2–3", prereqs: ["plants", "animals"], col: 0, row: 2,
+        id: "human_body_basic", label: "Human Body", grade: "2-3", prereqs: ["plants", "animals"], col: 0, row: 2,
         desc: "Major body systems, bones, muscles, nutrition. We are fearfully and wonderfully made (Ps. 139:14).",
         tests: [
           "Name five major body systems.",
@@ -1883,12 +1883,12 @@ window.CURRICULUM = {
           "What is the immune system? How does it protect you?",
         ],
         resources: [
-          { title: "Human Body Systems — Khan Academy", url: "https://www.khanacademy.org/science/biology/human-biology" },
+          { title: "Human Body Systems, Khan Academy", url: "https://www.khanacademy.org/science/biology/human-biology" },
           { title: "Human Body for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=human+body+systems+for+kids+grade+2+3" },
         ],
       },
       {
-        id: "matter", label: "States of Matter", grade: "2–3", prereqs: ["weather", "animals"], col: 1, row: 2,
+        id: "matter", label: "States of Matter", grade: "2-3", prereqs: ["weather", "animals"], col: 1, row: 2,
         desc: "Solids, liquids, gases; properties of matter; basic physical changes.",
         tests: [
           "What are the three states of matter?",
@@ -1905,12 +1905,12 @@ window.CURRICULUM = {
           "List three properties you could use to describe a rock.",
         ],
         resources: [
-          { title: "States of Matter — Khan Academy", url: "https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces" },
+          { title: "States of Matter, Khan Academy", url: "https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces" },
           { title: "Solids, Liquids, Gases (YouTube)", url: "https://www.youtube.com/results?search_query=states+of+matter+solid+liquid+gas+grade+2+3" },
         ],
       },
       {
-        id: "earth_basic", label: "Earth & Space Basics", grade: "2–3", prereqs: ["weather"], col: 2, row: 2,
+        id: "earth_basic", label: "Earth & Space Basics", grade: "2-3", prereqs: ["weather"], col: 2, row: 2,
         desc: "Earth's layers, landforms, moon phases, solar system overview. The heavens declare God's glory (Ps. 19:1).",
         tests: [
           "Name the four layers of the Earth from outside to center.",
@@ -1927,12 +1927,12 @@ window.CURRICULUM = {
           "What is the difference between a planet and a moon?",
         ],
         resources: [
-          { title: "Earth & Solar System — Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science" },
+          { title: "Earth & Solar System, Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science" },
           { title: "Solar System for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=earth+layers+solar+system+moon+phases+grade+2+3" },
         ],
       },
       {
-        id: "ecosystems", label: "Ecosystems", grade: "3–4", prereqs: ["human_body_basic", "matter"], col: 0, row: 3,
+        id: "ecosystems", label: "Ecosystems", grade: "3-4", prereqs: ["human_body_basic", "matter"], col: 0, row: 3,
         desc: "Food chains, food webs, biomes, producers/consumers/decomposers.",
         tests: [
           "What is an ecosystem?",
@@ -1949,12 +1949,12 @@ window.CURRICULUM = {
           "How does energy move through a food chain (which direction, and does any energy get lost)?",
         ],
         resources: [
-          { title: "Ecosystems — Khan Academy", url: "https://www.khanacademy.org/science/biology/ecology" },
+          { title: "Ecosystems, Khan Academy", url: "https://www.khanacademy.org/science/biology/ecology" },
           { title: "Food Chains and Ecosystems (YouTube)", url: "https://www.youtube.com/results?search_query=ecosystems+food+chains+food+webs+biomes+grade+3+4" },
         ],
       },
       {
-        id: "energy_basic", label: "Energy & Forces", grade: "3–4", prereqs: ["matter"], col: 1, row: 3,
+        id: "energy_basic", label: "Energy & Forces", grade: "3-4", prereqs: ["matter"], col: 1, row: 3,
         desc: "Types of energy, simple machines, gravity, friction, magnetism.",
         tests: [
           "Name four types of energy.",
@@ -1971,12 +1971,12 @@ window.CURRICULUM = {
           "Name one way humans use energy from the sun (solar energy).",
         ],
         resources: [
-          { title: "Forces & Energy — Khan Academy", url: "https://www.khanacademy.org/science/physics/forces-newtons-laws" },
+          { title: "Forces & Energy, Khan Academy", url: "https://www.khanacademy.org/science/physics/forces-newtons-laws" },
           { title: "Simple Machines and Forces (YouTube)", url: "https://www.youtube.com/results?search_query=energy+forces+simple+machines+grade+3+4" },
         ],
       },
       {
-        id: "earth_science", label: "Earth Science", grade: "3–5", prereqs: ["earth_basic", "matter"], col: 2, row: 3,
+        id: "earth_science", label: "Earth Science", grade: "3-5", prereqs: ["earth_basic", "matter"], col: 2, row: 3,
         desc: "Rock cycle, soil, erosion, plate tectonics, volcanoes, earthquakes.",
         tests: [
           "Name the three types of rocks and how each is formed.",
@@ -1993,12 +1993,12 @@ window.CURRICULUM = {
           "What is the difference between the mantle, crust, and core?",
         ],
         resources: [
-          { title: "Earth Science — Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science/earth-materials-and-processes" },
+          { title: "Earth Science, Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science/earth-materials-and-processes" },
           { title: "Plate Tectonics & Rock Cycle (YouTube)", url: "https://www.youtube.com/results?search_query=rock+cycle+plate+tectonics+volcanoes+grade+3+5" },
         ],
       },
       {
-        id: "life_science", label: "Life Science", grade: "4–5", prereqs: ["ecosystems"], col: 0, row: 4,
+        id: "life_science", label: "Life Science", grade: "4-5", prereqs: ["ecosystems"], col: 0, row: 4,
         desc: "Cell basics, classification of living things, heredity and adaptation. Examined with a Creator's design in view.",
         tests: [
           "What is a cell? What two major types of cells exist?",
@@ -2015,15 +2015,15 @@ window.CURRICULUM = {
           "How does the complexity of a single cell point to a Creator rather than chance?",
           "What is DNA? What does it carry?",
           "What is the difference between asexual and sexual reproduction?",
-          "How should Christians think about the diversity of life — as evidence of God's creativity?",
+          "How should Christians think about the diversity of life, as evidence of God's creativity?",
         ],
         resources: [
-          { title: "Life Science & Cells — Khan Academy", url: "https://www.khanacademy.org/science/biology/cell-biology" },
+          { title: "Life Science & Cells, Khan Academy", url: "https://www.khanacademy.org/science/biology/cell-biology" },
           { title: "Classification of Living Things (YouTube)", url: "https://www.youtube.com/results?search_query=classification+of+living+things+cells+heredity+grade+4+5" },
         ],
       },
       {
-        id: "physical_science", label: "Physical Science", grade: "4–5", prereqs: ["energy_basic"], col: 1, row: 4,
+        id: "physical_science", label: "Physical Science", grade: "4-5", prereqs: ["energy_basic"], col: 1, row: 4,
         desc: "Motion, force, work, sound and light waves, basic electricity.",
         tests: [
           "What is speed? Write the formula for speed.",
@@ -2040,12 +2040,12 @@ window.CURRICULUM = {
           "How does the pitch of a sound relate to its frequency?",
         ],
         resources: [
-          { title: "Physical Science — Khan Academy", url: "https://www.khanacademy.org/science/physics" },
+          { title: "Physical Science, Khan Academy", url: "https://www.khanacademy.org/science/physics" },
           { title: "Waves, Light, and Electricity (YouTube)", url: "https://www.youtube.com/results?search_query=sound+light+waves+electricity+grade+4+5+physical+science" },
         ],
       },
       {
-        id: "space", label: "Astronomy", grade: "4–6", prereqs: ["earth_science"], col: 2, row: 4,
+        id: "space", label: "Astronomy", grade: "4-6", prereqs: ["earth_science"], col: 2, row: 4,
         desc: "Planets, stars, galaxies, seasons, space exploration. The vastness of the cosmos magnifies the Creator.",
         tests: [
           "What is a galaxy? What galaxy do we live in?",
@@ -2065,12 +2065,12 @@ window.CURRICULUM = {
           "How does the fine-tuning of the universe (its constants) point to a Creator?",
         ],
         resources: [
-          { title: "Astronomy — Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science/universe-and-stellar-evolution" },
+          { title: "Astronomy, Khan Academy", url: "https://www.khanacademy.org/science/earth-and-space-science/universe-and-stellar-evolution" },
           { title: "Astronomy for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=astronomy+planets+stars+galaxies+grade+4+6" },
         ],
       },
       {
-        id: "biology", label: "Biology", grade: "7–8", prereqs: ["life_science", "physical_science"], col: 0, row: 5,
+        id: "biology", label: "Biology", grade: "7-8", prereqs: ["life_science", "physical_science"], col: 0, row: 5,
         desc: "Cell structure, genetics, body systems. Evolution examined critically alongside design-based models.",
         tests: [
           "What is the cell theory? State all three parts.",
@@ -2087,18 +2087,18 @@ window.CURRICULUM = {
           "What is photosynthesis? Write the chemical equation.",
           "What is cellular respiration? Write the chemical equation.",
           "What is an enzyme? Give one example of an enzyme in the human body.",
-          "How does the complexity of DNA — information stored in four chemical letters — point to an intelligent Designer?",
+          "How does the complexity of DNA, information stored in four chemical letters, point to an intelligent Designer?",
           "What is a mutation? Can mutations create new genetic information?",
           "What is the fossil record, and what do Christians need to know about its interpretation?",
           "Write a paragraph: How can a Christian study biology in a way that honors God?",
         ],
         resources: [
-          { title: "Biology — Khan Academy", url: "https://www.khanacademy.org/science/biology" },
+          { title: "Biology, Khan Academy", url: "https://www.khanacademy.org/science/biology" },
           { title: "Biology Full Course (YouTube)", url: "https://www.youtube.com/results?search_query=biology+cells+genetics+evolution+grade+7+8" },
         ],
       },
       {
-        id: "chemistry_basic", label: "Chemistry", grade: "8–9", prereqs: ["physical_science", "space"], col: 1, row: 5,
+        id: "chemistry_basic", label: "Chemistry", grade: "8-9", prereqs: ["physical_science", "space"], col: 1, row: 5,
         desc: "Periodic table, atoms and molecules, chemical reactions, acids and bases.",
         tests: [
           "What is an atom? Name its three subatomic particles.",
@@ -2118,12 +2118,12 @@ window.CURRICULUM = {
           "What are the properties of metals, nonmetals, and metalloids?",
         ],
         resources: [
-          { title: "Chemistry — Khan Academy", url: "https://www.khanacademy.org/science/chemistry" },
+          { title: "Chemistry, Khan Academy", url: "https://www.khanacademy.org/science/chemistry" },
           { title: "Chemistry Basics (YouTube)", url: "https://www.youtube.com/results?search_query=chemistry+atoms+periodic+table+acids+bases+grade+8+9" },
         ],
       },
       {
-        id: "physics", label: "Physics", grade: "9–10", prereqs: ["biology", "chemistry_basic"], col: 0, row: 6,
+        id: "physics", label: "Physics", grade: "9-10", prereqs: ["biology", "chemistry_basic"], col: 0, row: 6,
         desc: "Newton's laws, momentum, energy, waves, electricity and magnetism.",
         tests: [
           "State Newton's First Law of Motion in your own words.",
@@ -2146,12 +2146,12 @@ window.CURRICULUM = {
           "Write a paragraph: How do Newton's laws reflect the orderliness of God's creation?",
         ],
         resources: [
-          { title: "Physics — Khan Academy", url: "https://www.khanacademy.org/science/physics" },
+          { title: "Physics, Khan Academy", url: "https://www.khanacademy.org/science/physics" },
           { title: "Physics Full Course (YouTube)", url: "https://www.youtube.com/results?search_query=physics+newton+laws+energy+electricity+grade+9+10" },
         ],
       },
       {
-        id: "chemistry_adv", label: "Chemistry II", grade: "10–11", prereqs: ["chemistry_basic", "biology"], col: 1, row: 6,
+        id: "chemistry_adv", label: "Chemistry II", grade: "10-11", prereqs: ["chemistry_basic", "biology"], col: 1, row: 6,
         desc: "Stoichiometry, thermodynamics, kinetics, organic chemistry intro.",
         tests: [
           "What is stoichiometry?",
@@ -2174,12 +2174,12 @@ window.CURRICULUM = {
           "Write a paragraph: How does the Second Law of Thermodynamics relate to the creation/fall?",
         ],
         resources: [
-          { title: "Chemistry II — Khan Academy", url: "https://www.khanacademy.org/science/ap-chemistry-beta" },
+          { title: "Chemistry II, Khan Academy", url: "https://www.khanacademy.org/science/ap-chemistry-beta" },
           { title: "Advanced Chemistry (YouTube)", url: "https://www.youtube.com/results?search_query=stoichiometry+thermodynamics+organic+chemistry+grade+10+11" },
         ],
       },
       {
-        id: "anatomy", label: "Anatomy & Physiology", grade: "10–11", prereqs: ["biology"], col: 2, row: 6,
+        id: "anatomy", label: "Anatomy & Physiology", grade: "10-11", prereqs: ["biology"], col: 2, row: 6,
         desc: "Body systems in detail, homeostasis, disease, medical applications.",
         tests: [
           "What is homeostasis? Give two examples of the body maintaining it.",
@@ -2202,12 +2202,12 @@ window.CURRICULUM = {
           "Write a paragraph: How does the complexity of the human body reflect Psalm 139:14?",
         ],
         resources: [
-          { title: "Anatomy & Physiology — Khan Academy", url: "https://www.khanacademy.org/science/biology/human-biology" },
+          { title: "Anatomy & Physiology, Khan Academy", url: "https://www.khanacademy.org/science/biology/human-biology" },
           { title: "Anatomy & Physiology Full Course (YouTube)", url: "https://www.youtube.com/results?search_query=anatomy+physiology+body+systems+homeostasis+grade+10+11" },
         ],
       },
       {
-        id: "ap_science", label: "AP Science", grade: "11–12", prereqs: ["physics", "chemistry_adv"], col: 0, row: 7,
+        id: "ap_science", label: "AP Science", grade: "11-12", prereqs: ["physics", "chemistry_adv"], col: 0, row: 7,
         desc: "College-level biology, chemistry, or physics (student's choice).",
         tests: [
           "State the subject of your AP Science course: Biology / Chemistry / Physics (circle one).",
@@ -2230,12 +2230,12 @@ window.CURRICULUM = {
           "Write a one-page reflection: What is one thing your AP science course has taught you about the Creator?",
         ],
         resources: [
-          { title: "AP Biology — Khan Academy", url: "https://www.khanacademy.org/science/ap-biology" },
+          { title: "AP Biology, Khan Academy", url: "https://www.khanacademy.org/science/ap-biology" },
           { title: "AP Science Exam Prep (YouTube)", url: "https://www.youtube.com/results?search_query=AP+biology+chemistry+physics+exam+prep+review" },
         ],
       },
       {
-        id: "env_science", label: "Environmental Science", grade: "11–12", prereqs: ["anatomy", "chemistry_adv"], col: 1, row: 7,
+        id: "env_science", label: "Environmental Science", grade: "11-12", prereqs: ["anatomy", "chemistry_adv"], col: 1, row: 7,
         desc: "Ecology, sustainability, climate. Stewardship of creation is a biblical mandate (Gen. 2:15).",
         tests: [
           "What is ecology? What does an ecologist study?",
@@ -2258,7 +2258,7 @@ window.CURRICULUM = {
           "Write a one-page response: What does biblical stewardship of creation look like in practice today?",
         ],
         resources: [
-          { title: "Environmental Science — Khan Academy", url: "https://www.khanacademy.org/science/biology/ecology" },
+          { title: "Environmental Science, Khan Academy", url: "https://www.khanacademy.org/science/biology/ecology" },
           { title: "Environmental Science Explained (YouTube)", url: "https://www.youtube.com/results?search_query=environmental+science+ecology+sustainability+climate+grade+11+12" },
         ],
       },
@@ -2269,7 +2269,7 @@ window.CURRICULUM = {
     id: "bible", label: "Bible", icon: "✝", color: "#B45309", accent: "#FBBF24",
     nodes: [
       {
-        id: "creation", label: "Creation & Genesis", grade: "K–1", prereqs: [], col: 0, row: 0,
+        id: "creation", label: "Creation & Genesis", grade: "K-1", prereqs: [], col: 0, row: 0,
         desc: "God creates ex nihilo, the goodness of creation, Adam and Eve, the fall, Noah and the covenant.",
         tests: [
           "Who made the world? ___",
@@ -2284,12 +2284,12 @@ window.CURRICULUM = {
           "Why is it important that God made everything? What does it mean for how we live?",
         ],
         resources: [
-          { title: "Genesis — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Genesis+creation+overview" },
+          { title: "Genesis, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Genesis+creation+overview" },
           { title: "Creation for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=creation+genesis+story+for+kids+Bible" },
         ],
       },
       {
-        id: "old_test_stories", label: "OT Narratives", grade: "1–3", prereqs: ["creation"], col: 0, row: 1,
+        id: "old_test_stories", label: "OT Narratives", grade: "1-3", prereqs: ["creation"], col: 0, row: 1,
         desc: "Abraham, Moses, Joshua, Judges, David, Solomon. God's covenant faithfulness despite human failure.",
         tests: [
           "Who was Abraham? What did God promise him?",
@@ -2304,19 +2304,19 @@ window.CURRICULUM = {
           "Who was David? What did he do as a young man, and what did God promise him?",
         ],
         resources: [
-          { title: "OT Overview — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Old+Testament+overview+Abraham+Moses" },
+          { title: "OT Overview, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Old+Testament+overview+Abraham+Moses" },
           { title: "Old Testament Stories for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=Old+Testament+Bible+stories+for+kids+Abraham+Moses+David" },
         ],
       },
       {
-        id: "prayer", label: "Prayer & Worship", grade: "K–2", prereqs: ["creation"], col: 1, row: 1,
+        id: "prayer", label: "Prayer & Worship", grade: "K-2", prereqs: ["creation"], col: 1, row: 1,
         desc: "What prayer is, approaching God through Christ, the Psalms as the church's hymnbook.",
         tests: [
           "What is prayer?",
           "Who can we talk to in prayer?",
           "Who is the only way to God, according to John 14:6? ___",
           "Write the Lord's Prayer from memory.",
-          "What are the four parts of prayer? (Adoration, Confession, Thanksgiving, Supplication — ACTS)",
+          "What are the four parts of prayer? (Adoration, Confession, Thanksgiving, Supplication, ACTS)",
           "What is a Psalm? Who wrote most of the Psalms?",
           "Write out Psalm 23 from memory (or as much as you can).",
           "What does it mean to worship God? Is it only singing?",
@@ -2324,12 +2324,12 @@ window.CURRICULUM = {
           "Write your own short prayer using the ACTS pattern.",
         ],
         resources: [
-          { title: "Psalms — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Psalms+overview" },
+          { title: "Psalms, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Psalms+overview" },
           { title: "How to Pray for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=how+to+pray+Lord%27s+prayer+for+kids+Bible" },
         ],
       },
       {
-        id: "new_test_stories", label: "Life of Christ", grade: "2–4", prereqs: ["old_test_stories"], col: 0, row: 2,
+        id: "new_test_stories", label: "Life of Christ", grade: "2-4", prereqs: ["old_test_stories"], col: 0, row: 2,
         desc: "The Incarnation, Jesus' ministry, miracles, parables, the Passion, and the resurrection.",
         tests: [
           "What does 'Incarnation' mean?",
@@ -2340,22 +2340,22 @@ window.CURRICULUM = {
           "Who were the twelve apostles? Name at least six.",
           "What happened on Palm Sunday?",
           "What happened at the Last Supper?",
-          "What is the gospel? Explain in 2–3 sentences.",
+          "What is the gospel? Explain in 2-3 sentences.",
           "What is the resurrection? Why does it matter?",
           "What did Jesus promise to send after He ascended? ___",
           "How does Jesus fulfill the promises God made in the Old Testament?",
         ],
         resources: [
-          { title: "Gospels Overview — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Gospels+Jesus+overview+Matthew+Mark+Luke+John" },
+          { title: "Gospels Overview, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Gospels+Jesus+overview+Matthew+Mark+Luke+John" },
           { title: "Life of Jesus for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=life+of+Jesus+miracles+parables+for+kids+Bible" },
         ],
       },
       {
-        id: "fruits_spirit", label: "Fruits of the Spirit", grade: "2–4", prereqs: ["prayer"], col: 1, row: 2,
-        desc: "Gal. 5:22–23 — love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control.",
+        id: "fruits_spirit", label: "Fruits of the Spirit", grade: "2-4", prereqs: ["prayer"], col: 1, row: 2,
+        desc: "Gal. 5:22-23, love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control.",
         tests: [
-          "List all nine fruits of the Spirit from Galatians 5:22–23.",
-          "Who produces the fruit of the Spirit — us by trying harder, or the Holy Spirit in us?",
+          "List all nine fruits of the Spirit from Galatians 5:22-23.",
+          "Who produces the fruit of the Spirit, us by trying harder, or the Holy Spirit in us?",
           "Write a sentence showing what love looks like in real life.",
           "What is the difference between happiness and joy?",
           "What does 'self-control' mean? Give one example of practicing it.",
@@ -2363,17 +2363,17 @@ window.CURRICULUM = {
           "What is the difference between being kind and being a people-pleaser?",
           "What does 'faithfulness' mean in a friendship? In following God?",
           "What is gentleness? Is it the same as weakness? Explain.",
-          "Memorize Galatians 5:22–23 and write it out from memory.",
+          "Memorize Galatians 5:22-23 and write it out from memory.",
           "Which fruit of the Spirit do you find hardest? Why?",
           "Write a short prayer asking the Holy Spirit to grow one specific fruit in your life.",
         ],
         resources: [
-          { title: "Fruits of the Spirit — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+fruit+of+the+Spirit+Galatians+5" },
+          { title: "Fruits of the Spirit, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+fruit+of+the+Spirit+Galatians+5" },
           { title: "Fruit of the Spirit for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=fruit+of+the+spirit+for+kids+Galatians+5+22+23" },
         ],
       },
       {
-        id: "acts_church", label: "Acts & the Early Church", grade: "4–5", prereqs: ["new_test_stories"], col: 0, row: 3,
+        id: "acts_church", label: "Acts & the Early Church", grade: "4-5", prereqs: ["new_test_stories"], col: 0, row: 3,
         desc: "Pentecost, Peter and Paul, the spread of the gospel, persecution, and church planting.",
         tests: [
           "What happened on the Day of Pentecost?",
@@ -2384,18 +2384,18 @@ window.CURRICULUM = {
           "Why was the early church persecuted?",
           "What did Stephen do, and how did he die?",
           "Name three cities where Paul planted churches.",
-          "What is the Great Commission (Matthew 28:19–20)? Write it out.",
+          "What is the Great Commission (Matthew 28:19-20)? Write it out.",
           "What is a local church? Why is it important for Christians to belong to one?",
           "How did persecution spread the gospel rather than stop it?",
           "What was the council at Jerusalem (Acts 15)? What question did it answer?",
         ],
         resources: [
-          { title: "Acts Overview — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Acts+overview+Paul+early+church" },
+          { title: "Acts Overview, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Acts+overview+Paul+early+church" },
           { title: "Acts of the Apostles for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=Acts+of+the+Apostles+Pentecost+Paul+early+church+for+kids" },
         ],
       },
       {
-        id: "character", label: "Christian Character", grade: "3–5", prereqs: ["fruits_spirit"], col: 1, row: 3,
+        id: "character", label: "Christian Character", grade: "3-5", prereqs: ["fruits_spirit"], col: 1, row: 3,
         desc: "Integrity, humility, servant-leadership, forgiveness, stewardship. Character flows from a regenerate heart.",
         tests: [
           "What is integrity? Describe a person of integrity.",
@@ -2412,13 +2412,13 @@ window.CURRICULUM = {
           "What does Micah 6:8 say we are to do? Write it out.",
         ],
         resources: [
-          { title: "Christian Character — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+character+virtues+Bible" },
+          { title: "Christian Character, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+character+virtues+Bible" },
           { title: "Humility and Service for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=Christian+character+humility+service+integrity+for+kids" },
         ],
       },
       {
-        id: "epistles", label: "The Epistles", grade: "5–6", prereqs: ["acts_church"], col: 0, row: 4,
-        desc: "Paul, Peter, James, John, Jude — doctrine applied to the life of the church.",
+        id: "epistles", label: "The Epistles", grade: "5-6", prereqs: ["acts_church"], col: 0, row: 4,
+        desc: "Paul, Peter, James, John, Jude, doctrine applied to the life of the church.",
         tests: [
           "What is an epistle?",
           "Name five of Paul's epistles.",
@@ -2431,18 +2431,18 @@ window.CURRICULUM = {
           "What is the famous 'love chapter'? Summarize it in two sentences.",
           "What does James 2:17 say about faith and works?",
           "What is the main theme of the book of Galatians?",
-          "What does Ephesians 2:8–9 say about salvation?",
-          "Write a paragraph: What is the gospel according to 1 Corinthians 15:1–4?",
+          "What does Ephesians 2:8-9 say about salvation?",
+          "Write a paragraph: What is the gospel according to 1 Corinthians 15:1-4?",
           "Who wrote 1 Peter? To whom was it written, and about what?",
           "What is the book of Revelation about? Is it already fulfilled, future, or ongoing?",
         ],
         resources: [
-          { title: "NT Letters Overview — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+New+Testament+epistles+Romans+Galatians" },
+          { title: "NT Letters Overview, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+New+Testament+epistles+Romans+Galatians" },
           { title: "Paul's Letters Explained (YouTube)", url: "https://www.youtube.com/results?search_query=Paul%27s+epistles+Romans+Galatians+Ephesians+explained" },
         ],
       },
       {
-        id: "apologetics_basic", label: "Basic Apologetics", grade: "5–7", prereqs: ["character", "acts_church"], col: 1, row: 4,
+        id: "apologetics_basic", label: "Basic Apologetics", grade: "5-7", prereqs: ["character", "acts_church"], col: 1, row: 4,
         desc: "Why we believe: the reliability of Scripture, evidence for the resurrection, and the consistency of the Christian worldview.",
         tests: [
           "What is apologetics? Give the verse that commands it (1 Peter 3:15).",
@@ -2459,13 +2459,13 @@ window.CURRICULUM = {
           "What is the difference between blind faith and reasoned faith?",
         ],
         resources: [
-          { title: "Apologetics Intro — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+scripture+reliability+biblical+worldview" },
+          { title: "Apologetics Intro, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+scripture+reliability+biblical+worldview" },
           { title: "Basic Christian Apologetics (YouTube)", url: "https://www.youtube.com/results?search_query=basic+Christian+apologetics+resurrection+evidence+for+students" },
         ],
       },
       {
-        id: "ot_survey", label: "OT Survey", grade: "6–8", prereqs: ["epistles"], col: 0, row: 5,
-        desc: "Survey every book of the OT — genres, themes, authorship, Messianic prophecy, and the covenant of grace.",
+        id: "ot_survey", label: "OT Survey", grade: "6-8", prereqs: ["epistles"], col: 0, row: 5,
+        desc: "Survey every book of the OT, genres, themes, authorship, Messianic prophecy, and the covenant of grace.",
         tests: [
           "What are the five divisions of the Old Testament? Name them.",
           "Name the five books of Moses (the Pentateuch).",
@@ -2480,17 +2480,17 @@ window.CURRICULUM = {
           "What happened to Israel and Judah historically (the exile)? Why?",
           "What is the book of Job about? What does it teach about suffering?",
           "What is the theme of the book of Isaiah, often called the 'fifth Gospel'?",
-          "What is Jeremiah's 'new covenant' (Jer. 31:31–34)? How is it fulfilled in Christ?",
+          "What is Jeremiah's 'new covenant' (Jer. 31:31-34)? How is it fulfilled in Christ?",
           "What is the last book of the OT, and what does it predict?",
         ],
         resources: [
-          { title: "Old Testament Overview — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Old+Testament+books+survey+overview" },
+          { title: "Old Testament Overview, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+Old+Testament+books+survey+overview" },
           { title: "Survey of the OT (YouTube)", url: "https://www.youtube.com/results?search_query=Old+Testament+survey+books+themes+prophecy+overview" },
         ],
       },
       {
-        id: "nt_survey", label: "NT Survey", grade: "6–8", prereqs: ["epistles"], col: 1, row: 5,
-        desc: "Survey every NT book — the four Gospels, Acts, epistles, Revelation. Authorship, context, and themes.",
+        id: "nt_survey", label: "NT Survey", grade: "6-8", prereqs: ["epistles"], col: 1, row: 5,
+        desc: "Survey every NT book, the four Gospels, Acts, epistles, Revelation. Authorship, context, and themes.",
         tests: [
           "Name the four Gospels and the audience each was primarily written for.",
           "What makes John's Gospel different from the Synoptic Gospels?",
@@ -2509,13 +2509,13 @@ window.CURRICULUM = {
           "Write a paragraph: How does the NT complete and fulfill the OT?",
         ],
         resources: [
-          { title: "New Testament Overview — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+New+Testament+books+survey+overview" },
+          { title: "New Testament Overview, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+New+Testament+books+survey+overview" },
           { title: "Survey of the NT (YouTube)", url: "https://www.youtube.com/results?search_query=New+Testament+survey+gospels+acts+epistles+overview" },
         ],
       },
       {
-        id: "worldview", label: "Biblical Worldview", grade: "8–9", prereqs: ["ot_survey", "nt_survey"], col: 0, row: 6,
-        desc: "Applying the whole counsel of God to every area of life — family, government, economics, media, science, and culture.",
+        id: "worldview", label: "Biblical Worldview", grade: "8-9", prereqs: ["ot_survey", "nt_survey"], col: 0, row: 6,
+        desc: "Applying the whole counsel of God to every area of life, family, government, economics, media, science, and culture.",
         tests: [
           "What is a worldview? What four questions does every worldview answer?",
           "What are the four major worldview categories? (Creation, Fall, Redemption, Restoration)",
@@ -2534,12 +2534,12 @@ window.CURRICULUM = {
           "Write a paragraph: How does your faith affect the way you think about one subject you are studying?",
         ],
         resources: [
-          { title: "Biblical Worldview — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+biblical+worldview+creation+fall+redemption" },
+          { title: "Biblical Worldview, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+biblical+worldview+creation+fall+redemption" },
           { title: "Worldview Explained (YouTube)", url: "https://www.youtube.com/results?search_query=biblical+worldview+vs+secular+humanism+explained+for+teens" },
         ],
       },
       {
-        id: "theology", label: "Systematic Theology", grade: "9–11", prereqs: ["worldview", "apologetics_basic"], col: 0, row: 7,
+        id: "theology", label: "Systematic Theology", grade: "9-11", prereqs: ["worldview", "apologetics_basic"], col: 0, row: 7,
         desc: "Theology proper, anthropology, hamartiology, soteriology (TULIP), ecclesiology, eschatology. Reformed Baptist distinctives.",
         tests: [
           "What is theology? What is systematic theology?",
@@ -2562,12 +2562,12 @@ window.CURRICULUM = {
           "Write a paragraph explaining the gospel using the doctrines of TULIP.",
         ],
         resources: [
-          { title: "Systematic Theology — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+systematic+theology+God+salvation+church" },
+          { title: "Systematic Theology, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+systematic+theology+God+salvation+church" },
           { title: "Reformed Theology Explained (YouTube)", url: "https://www.youtube.com/results?search_query=TULIP+Calvinism+Reformed+theology+explained+for+students" },
         ],
       },
       {
-        id: "apologetics_adv", label: "Advanced Apologetics", grade: "10–12", prereqs: ["theology"], col: 1, row: 7,
+        id: "apologetics_adv", label: "Advanced Apologetics", grade: "10-12", prereqs: ["theology"], col: 1, row: 7,
         desc: "Presuppositional and evidential apologetics, comparative religion, responding to atheism, Islam, Roman Catholicism, and theological liberalism.",
         tests: [
           "What is presuppositional apologetics? Who is associated with it?",
@@ -2590,7 +2590,7 @@ window.CURRICULUM = {
           "Write a 1-page essay: Make the case for the exclusivity of Christ in a pluralistic world.",
         ],
         resources: [
-          { title: "Apologetics — BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+apologetics+biblical+worldview+advanced" },
+          { title: "Apologetics, BibleProject", url: "https://www.youtube.com/results?search_query=BibleProject+apologetics+biblical+worldview+advanced" },
           { title: "Advanced Apologetics (YouTube)", url: "https://www.youtube.com/results?search_query=presuppositional+apologetics+Islam+Catholicism+atheism+response" },
         ],
       },
@@ -2601,8 +2601,8 @@ window.CURRICULUM = {
     id: "life_skills", label: "Life Skills", icon: "⌂", color: "#78350F", accent: "#FB923C",
     nodes: [
       {
-        id: "daily_routines", label: "Daily Routines & Order", grade: "K–1", prereqs: [], col: 0, row: 0,
-        desc: "Morning and evening routines, making your bed, picking up after yourself. Order is a gift from God — chaos is a result of neglect.",
+        id: "daily_routines", label: "Daily Routines & Order", grade: "K-1", prereqs: [], col: 0, row: 0,
+        desc: "Morning and evening routines, making your bed, picking up after yourself. Order is a gift from God, chaos is a result of neglect.",
         tests: [
           "List the steps of your morning routine in order.",
           "What does your bed look like when it is properly made? Describe it.",
@@ -2612,16 +2612,16 @@ window.CURRICULUM = {
           "Make your bed right now. Have a parent inspect it and sign here: ___",
           "Name two things you can do each night to make your morning easier.",
           "Why is it important to put things back where you found them?",
-          "What does Proverbs 6:6–8 say about the ant? What can we learn from it?",
+          "What does Proverbs 6:6-8 say about the ant? What can we learn from it?",
           "Write out your ideal daily routine with times for each activity.",
         ],
         resources: [
           { title: "Building Good Habits (YouTube)", url: "https://www.youtube.com/results?search_query=building+daily+routines+habits+for+kids+Christian" },
-          { title: "Why Order Matters — Proverbs Study", url: "https://www.youtube.com/results?search_query=Proverbs+diligence+work+habits+Bible+study" },
+          { title: "Why Order Matters, Proverbs Study", url: "https://www.youtube.com/results?search_query=Proverbs+diligence+work+habits+Bible+study" },
         ],
       },
       {
-        id: "self_discipline", label: "Self-Discipline & Diligence", grade: "K–2", prereqs: ["daily_routines"], col: 1, row: 0,
+        id: "self_discipline", label: "Self-Discipline & Diligence", grade: "K-2", prereqs: ["daily_routines"], col: 1, row: 0,
         desc: "Building habits of diligence, finishing what you start, doing hard things well. The Bible calls laziness a sin and diligence a virtue.",
         tests: [
           "What is self-discipline? Write your own definition.",
@@ -2637,11 +2637,11 @@ window.CURRICULUM = {
         ],
         resources: [
           { title: "Self-Discipline for Kids (YouTube)", url: "https://www.youtube.com/results?search_query=self-discipline+diligence+habits+for+children+Christian" },
-          { title: "Proverbs on Diligence — Bible Study", url: "https://www.youtube.com/results?search_query=Proverbs+diligence+laziness+Bible+lesson+for+students" },
+          { title: "Proverbs on Diligence, Bible Study", url: "https://www.youtube.com/results?search_query=Proverbs+diligence+laziness+Bible+lesson+for+students" },
         ],
       },
       {
-        id: "basic_cleaning", label: "Cleaning & Tidying", grade: "1–3", prereqs: ["daily_routines"], col: 0, row: 1,
+        id: "basic_cleaning", label: "Cleaning & Tidying", grade: "1-3", prereqs: ["daily_routines"], col: 0, row: 1,
         desc: "Sweeping, mopping, vacuuming, wiping surfaces, cleaning bathrooms. A clean home honors God and serves the family.",
         tests: [
           "List the steps for properly sweeping a floor.",
@@ -2661,7 +2661,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "laundry", label: "Laundry", grade: "2–4", prereqs: ["basic_cleaning"], col: 1, row: 1,
+        id: "laundry", label: "Laundry", grade: "2-4", prereqs: ["basic_cleaning"], col: 1, row: 1,
         desc: "Sorting, washing, drying, folding, and putting away laundry. Learning to care for what God has provided.",
         tests: [
           "What are the three ways you can sort laundry before washing?",
@@ -2683,13 +2683,13 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "kitchen_safety", label: "Kitchen Safety & Tools", grade: "2–4", prereqs: ["self_discipline", "basic_cleaning"], col: 0, row: 2,
+        id: "kitchen_safety", label: "Kitchen Safety & Tools", grade: "2-4", prereqs: ["self_discipline", "basic_cleaning"], col: 0, row: 2,
         desc: "Knife safety, fire safety, kitchen tools and their uses. Preparation and care prevent accidents.",
         tests: [
           "Name five safety rules for working in the kitchen.",
           "How do you properly hold a knife when cutting? Describe the 'claw grip.'",
           "What do you do if a grease fire starts on the stove? (NOT water)",
-          "What is the danger zone for food temperature? (40°F–140°F)",
+          "What is the danger zone for food temperature? (40°F-140°F)",
           "Name five common kitchen tools and what each is used for.",
           "Why should you wash your hands before and after handling raw meat?",
           "What does it mean for a knife to be sharp? Is a dull knife more or less dangerous?",
@@ -2705,7 +2705,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "gardening_basic", label: "Gardening Basics", grade: "3–5", prereqs: ["self_discipline"], col: 1, row: 2,
+        id: "gardening_basic", label: "Gardening Basics", grade: "3-5", prereqs: ["self_discipline"], col: 1, row: 2,
         desc: "Planting, watering, weeding, soil preparation, and harvesting. Gardening connects us to creation and the creation mandate.",
         tests: [
           "What does a seed need to germinate? Name three things.",
@@ -2727,7 +2727,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "basic_cooking", label: "Basic Cooking", grade: "3–5", prereqs: ["kitchen_safety"], col: 0, row: 3,
+        id: "basic_cooking", label: "Basic Cooking", grade: "3-5", prereqs: ["kitchen_safety"], col: 0, row: 3,
         desc: "Following recipes, measuring ingredients, cooking eggs and simple meals. The ability to feed yourself and others is a foundational skill.",
         tests: [
           "What does it mean to 'preheat' an oven?",
@@ -2749,7 +2749,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "sewing_basic", label: "Basic Sewing & Mending", grade: "4–6", prereqs: ["basic_cleaning"], col: 2, row: 2,
+        id: "sewing_basic", label: "Basic Sewing & Mending", grade: "4-6", prereqs: ["basic_cleaning"], col: 2, row: 2,
         desc: "Threading a needle, hand stitching, sewing on buttons, and basic mending. Caring for what you have.",
         tests: [
           "Thread a needle and tie a knot. Parent sign-off: ___",
@@ -2771,7 +2771,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "animal_care", label: "Animal Care", grade: "4–7", prereqs: ["gardening_basic"], col: 1, row: 3,
+        id: "animal_care", label: "Animal Care", grade: "4-7", prereqs: ["gardening_basic"], col: 1, row: 3,
         desc: "Feeding, watering, housing, and caring for animals. Responsibility for living creatures reflects the dominion mandate.",
         tests: [
           "What are the four basic needs of any animal under your care?",
@@ -2793,7 +2793,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "meal_planning", label: "Meal Planning & Prep", grade: "5–7", prereqs: ["basic_cooking"], col: 0, row: 4,
+        id: "meal_planning", label: "Meal Planning & Prep", grade: "5-7", prereqs: ["basic_cooking"], col: 0, row: 4,
         desc: "Planning a week of meals, writing a grocery list, budgeting, and prep cooking. Feeding a family well takes planning.",
         tests: [
           "Plan a week of dinners for your family (7 meals). Write out the menu.",
@@ -2818,7 +2818,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "home_maintenance", label: "Home Maintenance", grade: "6–9", prereqs: ["laundry", "kitchen_safety"], col: 1, row: 4,
+        id: "home_maintenance", label: "Home Maintenance", grade: "6-9", prereqs: ["laundry", "kitchen_safety"], col: 1, row: 4,
         desc: "Basic repairs, tool identification, painting, caulking, changing filters and light bulbs. A man who can't maintain his home is dependent on others for what he should provide himself.",
         tests: [
           "Name ten common hand tools and what each is used for.",
@@ -2843,7 +2843,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "advanced_cooking", label: "Bread, Hospitality & Preservation", grade: "6–9", prereqs: ["meal_planning", "basic_cooking"], col: 0, row: 5,
+        id: "advanced_cooking", label: "Bread, Hospitality & Preservation", grade: "6-9", prereqs: ["meal_planning", "basic_cooking"], col: 0, row: 5,
         desc: "Baking bread from scratch, cooking for guests, making broths and sauces. Hospitality is a biblical command, and skill in the kitchen enables it.",
         tests: [
           "Bake a loaf of yeast bread from scratch. Parent sign-off: ___",
@@ -2860,7 +2860,7 @@ window.CURRICULUM = {
           "What is a Dutch oven? What can you cook in one?",
           "Make a casserole or one-pot meal that feeds 8 people. Parent sign-off: ___",
           "What does Proverbs 31 say about the woman who works with her hands to feed her household?",
-          "Cook without a recipe — use only what is in the pantry and refrigerator to make a meal. Parent sign-off: ___",
+          "Cook without a recipe, use only what is in the pantry and refrigerator to make a meal. Parent sign-off: ___",
         ],
         resources: [
           { title: "Baking Bread from Scratch (YouTube)", url: "https://www.youtube.com/results?search_query=how+to+bake+bread+from+scratch+yeast+beginner" },
@@ -2868,7 +2868,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "woodworking_basic", label: "Woodworking Basics", grade: "7–10", prereqs: ["home_maintenance"], col: 1, row: 5,
+        id: "woodworking_basic", label: "Woodworking Basics", grade: "7-10", prereqs: ["home_maintenance"], col: 1, row: 5,
         desc: "Hand tools, measuring, basic joinery, and completing a simple project. Working with your hands is honorable and God-given.",
         tests: [
           "Name ten woodworking hand tools and what each is used for.",
@@ -2893,7 +2893,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "farming", label: "Farming & Homesteading", grade: "8–12", prereqs: ["gardening_basic", "animal_care"], col: 0, row: 6,
+        id: "farming", label: "Farming & Homesteading", grade: "8-12", prereqs: ["gardening_basic", "animal_care"], col: 0, row: 6,
         desc: "Crop planning, soil health, crop rotation, raising animals for food. Homesteading is self-reliance rooted in dependence on God.",
         tests: [
           "What is crop rotation? Why is it important for soil health?",
@@ -2921,7 +2921,7 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "food_preservation", label: "Food Preservation", grade: "9–12", prereqs: ["advanced_cooking", "farming"], col: 1, row: 6,
+        id: "food_preservation", label: "Food Preservation", grade: "9-12", prereqs: ["advanced_cooking", "farming"], col: 1, row: 6,
         desc: "Water bath canning, pressure canning, fermenting, dehydrating, and freezing. Preserving the harvest is wise stewardship.",
         tests: [
           "What is the difference between water bath canning and pressure canning? When do you use each?",
@@ -2949,8 +2949,8 @@ window.CURRICULUM = {
         ],
       },
       {
-        id: "woodworking_adv", label: "Advanced Woodworking", grade: "10–12", prereqs: ["woodworking_basic"], col: 2, row: 6,
-        desc: "Power tools, furniture making, finishing, and complex joinery. Craftsmanship is a calling — Bezalel was filled by the Spirit for skilled work.",
+        id: "woodworking_adv", label: "Advanced Woodworking", grade: "10-12", prereqs: ["woodworking_basic"], col: 2, row: 6,
+        desc: "Power tools, furniture making, finishing, and complex joinery. Craftsmanship is a calling, Bezalel was filled by the Spirit for skilled work.",
         tests: [
           "What safety rules apply when using a table saw?",
           "What is the difference between a table saw, a miter saw, and a band saw?",

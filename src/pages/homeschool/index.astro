@@ -8,7 +8,7 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Homeschool Path — Refuge &amp; Sword</title>
+<title>Homeschool Path, Refuge &amp; Sword</title>
 <meta name="robots" content="noindex, nofollow" />
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -75,7 +75,7 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
   }
 
   function attemptLogin() {
-    if (!window.HS_DB) { showError("Still loading — please wait a moment and try again."); return; }
+    if (!window.HS_DB) { showError("Still loading, please wait a moment and try again."); return; }
     var email = document.getElementById("email-input").value.trim();
     var password = document.getElementById("pw-input").value;
     if (!email || !password) { showError("Please enter your email and password."); return; }
@@ -95,7 +95,7 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
   document.getElementById("email-input").addEventListener("keydown", function(e) { if (e.key === "Enter") document.getElementById("pw-input").focus(); });
 
   if (!window._SB_URL) {
-    showError("SUPABASE_URL is not configured — check Vercel env vars.");
+    showError("SUPABASE_URL is not configured, check Vercel env vars.");
   } else {
     var sbScript = document.createElement("script");
     sbScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
@@ -105,7 +105,7 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
           auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
         });
         // onAuthStateChange fires immediately with the restored session (if any),
-        // then again on login/logout/token-refresh — covers all cases in one handler
+        // then again on login/logout/token-refresh, covers all cases in one handler
         window.HS_DB.auth.onAuthStateChange(function(event, session) {
           if (session && event !== 'SIGNED_OUT') {
             var gate = document.getElementById('gate');
@@ -114,7 +114,7 @@ const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? "";
         });
       } catch(e) { showError("Init error: " + e.message); }
     };
-    sbScript.onerror = function() { showError("Could not load Supabase library — check your internet connection."); };
+    sbScript.onerror = function() { showError("Could not load Supabase library, check your internet connection."); };
     document.head.appendChild(sbScript);
   }
 </script>
@@ -132,33 +132,33 @@ const RAW_SUBJECTS = {
   math: {
     id: "math", label: "Mathematics", icon: "✦", color: "#4A6FA5", accent: "#7BA3D4",
     nodes: [
-      { id: "counting",       label: "Counting & Numbers",    grade: "K",    prereqs: [],                              col: 1, row: 0,  desc: "Count to 100, recognize numerals 0–20, understand one-to-one correspondence." },
-      { id: "add_basic",      label: "Basic Addition",        grade: "K–1",  prereqs: ["counting"],                    col: 0, row: 1,  desc: "Add single-digit numbers, understand the concept of combining groups." },
-      { id: "sub_basic",      label: "Basic Subtraction",     grade: "K–1",  prereqs: ["counting"],                   col: 2, row: 1,  desc: "Subtract single-digit numbers, understand taking away from a group." },
-      { id: "add_adv",        label: "2-Digit Addition",      grade: "1–2",  prereqs: ["add_basic"],                   col: 0, row: 2,  desc: "Add two-digit numbers with and without regrouping." },
-      { id: "place_value",    label: "Place Value",           grade: "1–2",  prereqs: ["add_basic","sub_basic"],       col: 1, row: 2,  desc: "Understand ones, tens, hundreds, and thousands place." },
-      { id: "sub_adv",        label: "2-Digit Subtraction",   grade: "1–2",  prereqs: ["sub_basic"],                   col: 2, row: 2,  desc: "Subtract two-digit numbers with borrowing." },
-      { id: "mult_basic",     label: "Multiplication",        grade: "2–3",  prereqs: ["add_adv","place_value"],       col: 0, row: 3,  desc: "Multiplication tables 1–12, understand as repeated addition." },
-      { id: "time_money",     label: "Time & Money",          grade: "2–3",  prereqs: ["place_value"],                 col: 1, row: 3,  desc: "Tell time to the minute, count coins and bills, make change." },
+      { id: "counting",       label: "Counting & Numbers",    grade: "K",    prereqs: [],                              col: 1, row: 0,  desc: "Count to 100, recognize numerals 0-20, understand one-to-one correspondence." },
+      { id: "add_basic",      label: "Basic Addition",        grade: "K-1",  prereqs: ["counting"],                    col: 0, row: 1,  desc: "Add single-digit numbers, understand the concept of combining groups." },
+      { id: "sub_basic",      label: "Basic Subtraction",     grade: "K-1",  prereqs: ["counting"],                   col: 2, row: 1,  desc: "Subtract single-digit numbers, understand taking away from a group." },
+      { id: "add_adv",        label: "2-Digit Addition",      grade: "1-2",  prereqs: ["add_basic"],                   col: 0, row: 2,  desc: "Add two-digit numbers with and without regrouping." },
+      { id: "place_value",    label: "Place Value",           grade: "1-2",  prereqs: ["add_basic","sub_basic"],       col: 1, row: 2,  desc: "Understand ones, tens, hundreds, and thousands place." },
+      { id: "sub_adv",        label: "2-Digit Subtraction",   grade: "1-2",  prereqs: ["sub_basic"],                   col: 2, row: 2,  desc: "Subtract two-digit numbers with borrowing." },
+      { id: "mult_basic",     label: "Multiplication",        grade: "2-3",  prereqs: ["add_adv","place_value"],       col: 0, row: 3,  desc: "Multiplication tables 1-12, understand as repeated addition." },
+      { id: "time_money",     label: "Time & Money",          grade: "2-3",  prereqs: ["place_value"],                 col: 1, row: 3,  desc: "Tell time to the minute, count coins and bills, make change." },
       { id: "div_basic",      label: "Division",              grade: "3",    prereqs: ["mult_basic","sub_adv"],        col: 2, row: 3,  desc: "Basic division facts, relationship to multiplication." },
-      { id: "fractions",      label: "Fractions",             grade: "3–4",  prereqs: ["div_basic"],                   col: 0, row: 4,  desc: "Understand fractions as parts of a whole, equivalent fractions, compare fractions." },
+      { id: "fractions",      label: "Fractions",             grade: "3-4",  prereqs: ["div_basic"],                   col: 0, row: 4,  desc: "Understand fractions as parts of a whole, equivalent fractions, compare fractions." },
       { id: "mult_adv",       label: "Multi-Digit Mult.",     grade: "4",    prereqs: ["mult_basic","place_value"],    col: 1, row: 4,  desc: "Multiply multi-digit numbers, long multiplication algorithm." },
-      { id: "measurement",    label: "Measurement",           grade: "3–4",  prereqs: ["time_money","div_basic"],      col: 2, row: 4,  desc: "Length, weight, volume; customary and metric units; area and perimeter." },
-      { id: "decimals",       label: "Decimals",              grade: "4–5",  prereqs: ["fractions","mult_adv"],        col: 0, row: 5,  desc: "Understand place value with decimals, add/subtract/multiply decimals." },
-      { id: "long_div",       label: "Long Division",         grade: "4–5",  prereqs: ["mult_adv","div_basic"],        col: 1, row: 5,  desc: "Divide multi-digit numbers, understand remainders." },
-      { id: "geometry_basic", label: "Basic Geometry",        grade: "4–5",  prereqs: ["measurement"],                 col: 2, row: 5,  desc: "2D and 3D shapes, angles, symmetry, coordinate plane basics." },
+      { id: "measurement",    label: "Measurement",           grade: "3-4",  prereqs: ["time_money","div_basic"],      col: 2, row: 4,  desc: "Length, weight, volume; customary and metric units; area and perimeter." },
+      { id: "decimals",       label: "Decimals",              grade: "4-5",  prereqs: ["fractions","mult_adv"],        col: 0, row: 5,  desc: "Understand place value with decimals, add/subtract/multiply decimals." },
+      { id: "long_div",       label: "Long Division",         grade: "4-5",  prereqs: ["mult_adv","div_basic"],        col: 1, row: 5,  desc: "Divide multi-digit numbers, understand remainders." },
+      { id: "geometry_basic", label: "Basic Geometry",        grade: "4-5",  prereqs: ["measurement"],                 col: 2, row: 5,  desc: "2D and 3D shapes, angles, symmetry, coordinate plane basics." },
       { id: "ratios",         label: "Ratios & Proportions",  grade: "6",    prereqs: ["decimals","long_div"],         col: 0, row: 6,  desc: "Understand ratios, unit rates, proportional relationships." },
-      { id: "fractions_adv",  label: "Fraction Operations",   grade: "5–6",  prereqs: ["decimals","fractions"],        col: 1, row: 6,  desc: "Add, subtract, multiply, and divide fractions and mixed numbers." },
+      { id: "fractions_adv",  label: "Fraction Operations",   grade: "5-6",  prereqs: ["decimals","fractions"],        col: 1, row: 6,  desc: "Add, subtract, multiply, and divide fractions and mixed numbers." },
       { id: "statistics_basic",label:"Statistics & Data",     grade: "6",    prereqs: ["decimals","geometry_basic"],   col: 2, row: 6,  desc: "Mean, median, mode, range; read and create graphs and charts." },
-      { id: "prealgebra",     label: "Pre-Algebra",           grade: "6–7",  prereqs: ["ratios","fractions_adv"],      col: 0, row: 7,  desc: "Variables, expressions, equations, inequalities, integers." },
-      { id: "percent",        label: "Percents",              grade: "6–7",  prereqs: ["ratios","fractions_adv"],      col: 1, row: 7,  desc: "Convert between fractions/decimals/percents, solve percent problems." },
-      { id: "geometry_adv",   label: "Geometry",              grade: "7–8",  prereqs: ["statistics_basic","fractions_adv"], col: 2, row: 7, desc: "Area, surface area, volume; similar figures; Pythagorean theorem." },
-      { id: "algebra1",       label: "Algebra I",             grade: "8–9",  prereqs: ["prealgebra","percent"],        col: 0, row: 8,  desc: "Linear equations and inequalities, systems of equations, functions, polynomials." },
-      { id: "statistics_adv", label: "Probability & Stats",   grade: "8–9",  prereqs: ["percent","geometry_adv"],      col: 1, row: 8,  desc: "Probability, permutations, combinations, statistical analysis." },
-      { id: "geometry_hs",    label: "HS Geometry",           grade: "9–10", prereqs: ["algebra1"],                    col: 0, row: 9,  desc: "Formal proofs, congruence, similarity, circles, trigonometry intro." },
+      { id: "prealgebra",     label: "Pre-Algebra",           grade: "6-7",  prereqs: ["ratios","fractions_adv"],      col: 0, row: 7,  desc: "Variables, expressions, equations, inequalities, integers." },
+      { id: "percent",        label: "Percents",              grade: "6-7",  prereqs: ["ratios","fractions_adv"],      col: 1, row: 7,  desc: "Convert between fractions/decimals/percents, solve percent problems." },
+      { id: "geometry_adv",   label: "Geometry",              grade: "7-8",  prereqs: ["statistics_basic","fractions_adv"], col: 2, row: 7, desc: "Area, surface area, volume; similar figures; Pythagorean theorem." },
+      { id: "algebra1",       label: "Algebra I",             grade: "8-9",  prereqs: ["prealgebra","percent"],        col: 0, row: 8,  desc: "Linear equations and inequalities, systems of equations, functions, polynomials." },
+      { id: "statistics_adv", label: "Probability & Stats",   grade: "8-9",  prereqs: ["percent","geometry_adv"],      col: 1, row: 8,  desc: "Probability, permutations, combinations, statistical analysis." },
+      { id: "geometry_hs",    label: "HS Geometry",           grade: "9-10", prereqs: ["algebra1"],                    col: 0, row: 9,  desc: "Formal proofs, congruence, similarity, circles, trigonometry intro." },
       { id: "algebra2",       label: "Algebra II",            grade: "10",   prereqs: ["algebra1","statistics_adv"],   col: 1, row: 9,  desc: "Quadratics, polynomials, rational functions, exponentials, logarithms." },
       { id: "precalc",        label: "Pre-Calculus",          grade: "11",   prereqs: ["geometry_hs","algebra2"],      col: 0, row: 10, desc: "Trigonometry, polar coordinates, vectors, sequences and series, limits intro." },
-      { id: "stats_hs",       label: "AP Statistics",         grade: "11–12",prereqs: ["algebra2","statistics_adv"],   col: 1, row: 10, desc: "Experimental design, probability distributions, inference, regression." },
+      { id: "stats_hs",       label: "AP Statistics",         grade: "11-12",prereqs: ["algebra2","statistics_adv"],   col: 1, row: 10, desc: "Experimental design, probability distributions, inference, regression." },
       { id: "calculus",       label: "Calculus",              grade: "12",   prereqs: ["precalc"],                     col: 0, row: 11, desc: "Limits, derivatives, integrals, fundamental theorem of calculus." },
     ],
   },
@@ -166,99 +166,99 @@ const RAW_SUBJECTS = {
     id: "ela", label: "Language Arts", icon: "✒", color: "#6B5B95", accent: "#9B84CC",
     nodes: [
       { id: "phonics",         label: "Phonics & Letters",        grade: "K",    prereqs: [],                                col: 0, row: 0,  desc: "Letter recognition, letter sounds, phonemic awareness." },
-      { id: "sight_words",     label: "Sight Words",              grade: "K–1",  prereqs: ["phonics"],                       col: 1, row: 0,  desc: "Recognize common high-frequency words by sight (Dolch/Fry lists)." },
-      { id: "reading_basic",   label: "Early Reading",            grade: "K–1",  prereqs: ["phonics","sight_words"],         col: 0, row: 1,  desc: "Decode simple words, read simple sentences and short books." },
-      { id: "handwriting",     label: "Handwriting",              grade: "K–2",  prereqs: ["phonics"],                       col: 1, row: 1,  desc: "Proper letter formation, pencil grip, print handwriting." },
-      { id: "reading_fluency", label: "Reading Fluency",          grade: "1–2",  prereqs: ["reading_basic"],                 col: 0, row: 2,  desc: "Read aloud with accuracy and appropriate pace, expression." },
-      { id: "cursive",         label: "Cursive Writing",          grade: "2–3",  prereqs: ["handwriting"],                   col: 1, row: 2,  desc: "Cursive letter formation, connect letters, write in cursive." },
-      { id: "comprehension",   label: "Reading Comprehension",    grade: "2–3",  prereqs: ["reading_fluency"],               col: 0, row: 3,  desc: "Main idea, supporting details, making inferences, story elements." },
-      { id: "grammar_basic",   label: "Grammar Foundations",      grade: "2–3",  prereqs: ["reading_basic","handwriting"],   col: 1, row: 3,  desc: "Nouns, verbs, adjectives, sentence structure, punctuation basics." },
-      { id: "spelling",        label: "Spelling Patterns",        grade: "2–4",  prereqs: ["reading_fluency","handwriting"], col: 2, row: 3,  desc: "Word families, spelling rules, commonly misspelled words." },
-      { id: "writing_basic",   label: "Paragraph Writing",        grade: "3–4",  prereqs: ["comprehension","grammar_basic"], col: 0, row: 4,  desc: "Topic sentence, supporting sentences, concluding sentence." },
-      { id: "grammar_adv",     label: "Parts of Speech",          grade: "3–4",  prereqs: ["grammar_basic","spelling"],      col: 1, row: 4,  desc: "Pronouns, prepositions, conjunctions, adverbs, interjections." },
-      { id: "vocab",           label: "Vocabulary Building",      grade: "3–5",  prereqs: ["comprehension","spelling"],      col: 2, row: 4,  desc: "Context clues, roots/prefixes/suffixes, dictionary skills." },
-      { id: "writing_essay",   label: "Essay Writing",            grade: "4–5",  prereqs: ["writing_basic","grammar_adv"],   col: 0, row: 5,  desc: "5-paragraph essay, thesis statement, introduction/body/conclusion." },
-      { id: "literature",      label: "Literature Study",         grade: "4–6",  prereqs: ["comprehension","vocab"],         col: 1, row: 5,  desc: "Analyze novels, poetry, short stories; literary devices; author's purpose." },
-      { id: "research_basic",  label: "Research Skills",          grade: "5–6",  prereqs: ["writing_essay","vocab"],         col: 0, row: 6,  desc: "Use reference materials, take notes, cite sources, avoid plagiarism." },
-      { id: "grammar_hs",      label: "Advanced Grammar",         grade: "6–7",  prereqs: ["grammar_adv","literature"],      col: 1, row: 6,  desc: "Sentence structure, clauses, phrases, common errors, style." },
-      { id: "writing_creative",label: "Creative Writing",         grade: "6–7",  prereqs: ["writing_essay","literature"],    col: 2, row: 6,  desc: "Short stories, poetry, voice, narrative techniques, revision." },
-      { id: "writing_research",label: "Research Paper",           grade: "7–8",  prereqs: ["research_basic","grammar_hs"],   col: 0, row: 7,  desc: "Multi-source research paper, MLA/APA citation, argument structure." },
-      { id: "lit_analysis",    label: "Literary Analysis",        grade: "7–9",  prereqs: ["literature","grammar_hs"],       col: 1, row: 7,  desc: "Theme, symbolism, characterization, narrative structure in depth." },
-      { id: "speech",          label: "Public Speaking",          grade: "7–9",  prereqs: ["writing_essay","writing_creative"],col:2, row: 7,  desc: "Oral presentations, debate, persuasive speaking, audience awareness." },
-      { id: "writing_adv",     label: "Advanced Composition",     grade: "9–10", prereqs: ["writing_research","lit_analysis"],col: 0, row: 8,  desc: "Argumentative, analytical, and expository essays at a college-prep level." },
-      { id: "lit_survey",      label: "World Literature",         grade: "9–11", prereqs: ["lit_analysis","speech"],         col: 1, row: 8,  desc: "Survey of world literature across cultures and time periods, evaluated through a biblical lens." },
-      { id: "rhetoric",        label: "Rhetoric & Logic",         grade: "10–11",prereqs: ["writing_adv","lit_survey"],      col: 0, row: 9,  desc: "Logical fallacies, persuasive techniques, classical rhetoric; discern truth from error." },
-      { id: "ap_english",      label: "AP English",               grade: "11–12",prereqs: ["rhetoric","lit_survey"],         col: 0, row: 10, desc: "College-level literary analysis and composition." },
+      { id: "sight_words",     label: "Sight Words",              grade: "K-1",  prereqs: ["phonics"],                       col: 1, row: 0,  desc: "Recognize common high-frequency words by sight (Dolch/Fry lists)." },
+      { id: "reading_basic",   label: "Early Reading",            grade: "K-1",  prereqs: ["phonics","sight_words"],         col: 0, row: 1,  desc: "Decode simple words, read simple sentences and short books." },
+      { id: "handwriting",     label: "Handwriting",              grade: "K-2",  prereqs: ["phonics"],                       col: 1, row: 1,  desc: "Proper letter formation, pencil grip, print handwriting." },
+      { id: "reading_fluency", label: "Reading Fluency",          grade: "1-2",  prereqs: ["reading_basic"],                 col: 0, row: 2,  desc: "Read aloud with accuracy and appropriate pace, expression." },
+      { id: "cursive",         label: "Cursive Writing",          grade: "2-3",  prereqs: ["handwriting"],                   col: 1, row: 2,  desc: "Cursive letter formation, connect letters, write in cursive." },
+      { id: "comprehension",   label: "Reading Comprehension",    grade: "2-3",  prereqs: ["reading_fluency"],               col: 0, row: 3,  desc: "Main idea, supporting details, making inferences, story elements." },
+      { id: "grammar_basic",   label: "Grammar Foundations",      grade: "2-3",  prereqs: ["reading_basic","handwriting"],   col: 1, row: 3,  desc: "Nouns, verbs, adjectives, sentence structure, punctuation basics." },
+      { id: "spelling",        label: "Spelling Patterns",        grade: "2-4",  prereqs: ["reading_fluency","handwriting"], col: 2, row: 3,  desc: "Word families, spelling rules, commonly misspelled words." },
+      { id: "writing_basic",   label: "Paragraph Writing",        grade: "3-4",  prereqs: ["comprehension","grammar_basic"], col: 0, row: 4,  desc: "Topic sentence, supporting sentences, concluding sentence." },
+      { id: "grammar_adv",     label: "Parts of Speech",          grade: "3-4",  prereqs: ["grammar_basic","spelling"],      col: 1, row: 4,  desc: "Pronouns, prepositions, conjunctions, adverbs, interjections." },
+      { id: "vocab",           label: "Vocabulary Building",      grade: "3-5",  prereqs: ["comprehension","spelling"],      col: 2, row: 4,  desc: "Context clues, roots/prefixes/suffixes, dictionary skills." },
+      { id: "writing_essay",   label: "Essay Writing",            grade: "4-5",  prereqs: ["writing_basic","grammar_adv"],   col: 0, row: 5,  desc: "5-paragraph essay, thesis statement, introduction/body/conclusion." },
+      { id: "literature",      label: "Literature Study",         grade: "4-6",  prereqs: ["comprehension","vocab"],         col: 1, row: 5,  desc: "Analyze novels, poetry, short stories; literary devices; author's purpose." },
+      { id: "research_basic",  label: "Research Skills",          grade: "5-6",  prereqs: ["writing_essay","vocab"],         col: 0, row: 6,  desc: "Use reference materials, take notes, cite sources, avoid plagiarism." },
+      { id: "grammar_hs",      label: "Advanced Grammar",         grade: "6-7",  prereqs: ["grammar_adv","literature"],      col: 1, row: 6,  desc: "Sentence structure, clauses, phrases, common errors, style." },
+      { id: "writing_creative",label: "Creative Writing",         grade: "6-7",  prereqs: ["writing_essay","literature"],    col: 2, row: 6,  desc: "Short stories, poetry, voice, narrative techniques, revision." },
+      { id: "writing_research",label: "Research Paper",           grade: "7-8",  prereqs: ["research_basic","grammar_hs"],   col: 0, row: 7,  desc: "Multi-source research paper, MLA/APA citation, argument structure." },
+      { id: "lit_analysis",    label: "Literary Analysis",        grade: "7-9",  prereqs: ["literature","grammar_hs"],       col: 1, row: 7,  desc: "Theme, symbolism, characterization, narrative structure in depth." },
+      { id: "speech",          label: "Public Speaking",          grade: "7-9",  prereqs: ["writing_essay","writing_creative"],col:2, row: 7,  desc: "Oral presentations, debate, persuasive speaking, audience awareness." },
+      { id: "writing_adv",     label: "Advanced Composition",     grade: "9-10", prereqs: ["writing_research","lit_analysis"],col: 0, row: 8,  desc: "Argumentative, analytical, and expository essays at a college-prep level." },
+      { id: "lit_survey",      label: "World Literature",         grade: "9-11", prereqs: ["lit_analysis","speech"],         col: 1, row: 8,  desc: "Survey of world literature across cultures and time periods, evaluated through a biblical lens." },
+      { id: "rhetoric",        label: "Rhetoric & Logic",         grade: "10-11",prereqs: ["writing_adv","lit_survey"],      col: 0, row: 9,  desc: "Logical fallacies, persuasive techniques, classical rhetoric; discern truth from error." },
+      { id: "ap_english",      label: "AP English",               grade: "11-12",prereqs: ["rhetoric","lit_survey"],         col: 0, row: 10, desc: "College-level literary analysis and composition." },
     ],
   },
   history: {
     id: "history", label: "History", icon: "⊕", color: "#8B5E3C", accent: "#C4956A",
     nodes: [
-      { id: "family_community", label: "Family & Community",        grade: "K–1",  prereqs: [],                              col: 0, row: 0,  desc: "God places us in families and communities. Understand roles, responsibilities, and how authority structures reflect His order (Rom. 13)." },
-      { id: "us_symbols",       label: "American Symbols",          grade: "1–2",  prereqs: ["family_community"],            col: 0, row: 1,  desc: "Flag, Pledge, founding documents, and national holidays. Nations are raised up and brought low by God's providence (Dan. 2:21)." },
-      { id: "world_cultures",   label: "World Cultures & Geography",grade: "1–2",  prereqs: ["family_community"],            col: 1, row: 1,  desc: "Explore how God scattered the nations (Gen. 11), shaped geography, and placed every people in their time and boundaries (Acts 17:26)." },
-      { id: "early_america",    label: "Early American History",    grade: "2–3",  prereqs: ["us_symbols"],                  col: 0, row: 2,  desc: "Native peoples, exploration, colonial settlement. Examine the Puritan vision, covenant theology in early colonies, and the mixed record of European settlers." },
-      { id: "ancient_history",  label: "Ancient Civilizations",     grade: "3–4",  prereqs: ["world_cultures"],              col: 1, row: 2,  desc: "Egypt, Mesopotamia, Greece, Rome — each a sovereign work of God's providence. All history moves toward Christ (Gal. 4:4)." },
-      { id: "revolution",       label: "American Revolution",       grade: "4–5",  prereqs: ["early_america"],               col: 0, row: 3,  desc: "Causes, key events, and the Constitution. The Founders were men of their age — some godly, some deist, all sinners." },
-      { id: "medieval",         label: "Middle Ages",               grade: "4–5",  prereqs: ["ancient_history"],             col: 1, row: 3,  desc: "Feudalism, the visible church's power and corruption, the Crusades, plague, and the early stirrings of reform." },
+      { id: "family_community", label: "Family & Community",        grade: "K-1",  prereqs: [],                              col: 0, row: 0,  desc: "God places us in families and communities. Understand roles, responsibilities, and how authority structures reflect His order (Rom. 13)." },
+      { id: "us_symbols",       label: "American Symbols",          grade: "1-2",  prereqs: ["family_community"],            col: 0, row: 1,  desc: "Flag, Pledge, founding documents, and national holidays. Nations are raised up and brought low by God's providence (Dan. 2:21)." },
+      { id: "world_cultures",   label: "World Cultures & Geography",grade: "1-2",  prereqs: ["family_community"],            col: 1, row: 1,  desc: "Explore how God scattered the nations (Gen. 11), shaped geography, and placed every people in their time and boundaries (Acts 17:26)." },
+      { id: "early_america",    label: "Early American History",    grade: "2-3",  prereqs: ["us_symbols"],                  col: 0, row: 2,  desc: "Native peoples, exploration, colonial settlement. Examine the Puritan vision, covenant theology in early colonies, and the mixed record of European settlers." },
+      { id: "ancient_history",  label: "Ancient Civilizations",     grade: "3-4",  prereqs: ["world_cultures"],              col: 1, row: 2,  desc: "Egypt, Mesopotamia, Greece, Rome, each a sovereign work of God's providence. All history moves toward Christ (Gal. 4:4)." },
+      { id: "revolution",       label: "American Revolution",       grade: "4-5",  prereqs: ["early_america"],               col: 0, row: 3,  desc: "Causes, key events, and the Constitution. The Founders were men of their age, some godly, some deist, all sinners." },
+      { id: "medieval",         label: "Middle Ages",               grade: "4-5",  prereqs: ["ancient_history"],             col: 1, row: 3,  desc: "Feudalism, the visible church's power and corruption, the Crusades, plague, and the early stirrings of reform." },
       { id: "westward",         label: "Westward Expansion",        grade: "5",    prereqs: ["revolution"],                  col: 0, row: 4,  desc: "Manifest Destiny, Louisiana Purchase, and the displacement of Native peoples. National ambition is not the same as God's blessing." },
-      { id: "reformation",      label: "Reformation & its Legacy",  grade: "5–6",  prereqs: ["medieval"],                    col: 1, row: 4,  desc: "Luther, Calvin, Zwingli, and the recovery of sola fide, sola scriptura. Its direct influence on Western law, education, and liberty." },
-      { id: "civil_war",        label: "Civil War & Reconstruction", grade: "5–6", prereqs: ["westward"],                    col: 0, row: 5,  desc: "Slavery, secession, the war, emancipation, and Reconstruction's collapse. All men bear the image of God (Gen. 1:27)." },
-      { id: "enlightenment",    label: "Enlightenment & Revolutions",grade: "6–7", prereqs: ["reformation"],                 col: 1, row: 5,  desc: "The Enlightenment's humanist turn away from Scripture, the French Revolution's bloodshed, and the contrast with the Reformation's fruit." },
-      { id: "gilded_age",       label: "Gilded Age & Progressivism",grade: "6–7",  prereqs: ["civil_war"],                   col: 0, row: 6,  desc: "Industrialization, immigration, labor abuses, and Progressive-era reforms." },
-      { id: "ww1",              label: "World War I",               grade: "7–8",  prereqs: ["enlightenment","gilded_age"],  col: 0, row: 7,  desc: "Causes rooted in nationalism, imperialism, and the collapse of Christendom." },
+      { id: "reformation",      label: "Reformation & its Legacy",  grade: "5-6",  prereqs: ["medieval"],                    col: 1, row: 4,  desc: "Luther, Calvin, Zwingli, and the recovery of sola fide, sola scriptura. Its direct influence on Western law, education, and liberty." },
+      { id: "civil_war",        label: "Civil War & Reconstruction", grade: "5-6", prereqs: ["westward"],                    col: 0, row: 5,  desc: "Slavery, secession, the war, emancipation, and Reconstruction's collapse. All men bear the image of God (Gen. 1:27)." },
+      { id: "enlightenment",    label: "Enlightenment & Revolutions",grade: "6-7", prereqs: ["reformation"],                 col: 1, row: 5,  desc: "The Enlightenment's humanist turn away from Scripture, the French Revolution's bloodshed, and the contrast with the Reformation's fruit." },
+      { id: "gilded_age",       label: "Gilded Age & Progressivism",grade: "6-7",  prereqs: ["civil_war"],                   col: 0, row: 6,  desc: "Industrialization, immigration, labor abuses, and Progressive-era reforms." },
+      { id: "ww1",              label: "World War I",               grade: "7-8",  prereqs: ["enlightenment","gilded_age"],  col: 0, row: 7,  desc: "Causes rooted in nationalism, imperialism, and the collapse of Christendom." },
       { id: "interwar",         label: "Interwar Period",           grade: "8",    prereqs: ["ww1"],                         col: 0, row: 8,  desc: "The Roaring Twenties, Great Depression, and the rise of fascism and communism." },
-      { id: "ww2",              label: "World War II",              grade: "8–9",  prereqs: ["interwar"],                    col: 0, row: 9,  desc: "The Holocaust, theater campaigns, and the atomic bomb. Every victim bore God's image." },
-      { id: "cold_war",         label: "Cold War",                  grade: "9–10", prereqs: ["ww2"],                         col: 0, row: 10, desc: "The ideological conflict between atheistic communism and the West. Marxism as a false gospel examined biblically." },
-      { id: "civil_rights",     label: "Civil Rights Movement",     grade: "9–10", prereqs: ["ww2"],                         col: 1, row: 10, desc: "The documented injustice of Jim Crow and the campaign to end it. The cause of equal protection under law is consistent with biblical justice (Mic. 6:8)." },
-      { id: "modern_world",     label: "Modern World History",      grade: "10–11",prereqs: ["cold_war","civil_rights"],      col: 0, row: 11, desc: "Post-Cold War globalization, the Middle East, 9/11, and the rise of secularism and postmodernism." },
-      { id: "govt_civics",      label: "Government & Civics",       grade: "11–12",prereqs: ["modern_world"],                col: 0, row: 12, desc: "U.S. Constitution, branches of government, elections, and civic responsibility. Christians are citizens of a higher kingdom first (Phil. 3:20)." },
-      { id: "economics",        label: "Economics",                 grade: "11–12",prereqs: ["modern_world"],                col: 1, row: 12, desc: "Micro/macroeconomics, supply and demand, fiscal and monetary policy, personal finance. Stewardship is a biblical category." },
+      { id: "ww2",              label: "World War II",              grade: "8-9",  prereqs: ["interwar"],                    col: 0, row: 9,  desc: "The Holocaust, theater campaigns, and the atomic bomb. Every victim bore God's image." },
+      { id: "cold_war",         label: "Cold War",                  grade: "9-10", prereqs: ["ww2"],                         col: 0, row: 10, desc: "The ideological conflict between atheistic communism and the West. Marxism as a false gospel examined biblically." },
+      { id: "civil_rights",     label: "Civil Rights Movement",     grade: "9-10", prereqs: ["ww2"],                         col: 1, row: 10, desc: "The documented injustice of Jim Crow and the campaign to end it. The cause of equal protection under law is consistent with biblical justice (Mic. 6:8)." },
+      { id: "modern_world",     label: "Modern World History",      grade: "10-11",prereqs: ["cold_war","civil_rights"],      col: 0, row: 11, desc: "Post-Cold War globalization, the Middle East, 9/11, and the rise of secularism and postmodernism." },
+      { id: "govt_civics",      label: "Government & Civics",       grade: "11-12",prereqs: ["modern_world"],                col: 0, row: 12, desc: "U.S. Constitution, branches of government, elections, and civic responsibility. Christians are citizens of a higher kingdom first (Phil. 3:20)." },
+      { id: "economics",        label: "Economics",                 grade: "11-12",prereqs: ["modern_world"],                col: 1, row: 12, desc: "Micro/macroeconomics, supply and demand, fiscal and monetary policy, personal finance. Stewardship is a biblical category." },
     ],
   },
   science: {
     id: "science", label: "Science", icon: "◈", color: "#2E7D5A", accent: "#4CAF80",
     nodes: [
-      { id: "living_nonliving",  label: "Living vs. Non-Living",   grade: "K–1",  prereqs: [],                              col: 0, row: 0,  desc: "Distinguish living things from non-living things; basic needs of living things. God made all living things and called them good (Gen. 1)." },
-      { id: "five_senses",       label: "Five Senses",             grade: "K–1",  prereqs: [],                              col: 1, row: 0,  desc: "Sight, hearing, smell, taste, touch; using senses to observe God's creation." },
-      { id: "plants",            label: "Plants",                  grade: "1–2",  prereqs: ["living_nonliving"],            col: 0, row: 1,  desc: "Parts of a plant, life cycle, photosynthesis basics, plant needs." },
-      { id: "animals",           label: "Animals",                 grade: "1–2",  prereqs: ["living_nonliving","five_senses"],col:1, row: 1,  desc: "Animal groups, habitats, life cycles, and adaptations — each kind made by God." },
-      { id: "weather",           label: "Weather & Seasons",       grade: "1–2",  prereqs: ["five_senses"],                 col: 2, row: 1,  desc: "Weather patterns, seasons, water cycle basics. God governs the weather (Job 38)." },
-      { id: "human_body_basic",  label: "Human Body",              grade: "2–3",  prereqs: ["plants","animals"],            col: 0, row: 2,  desc: "Major body systems, bones, muscles, nutrition. We are fearfully and wonderfully made (Ps. 139:14)." },
-      { id: "matter",            label: "States of Matter",        grade: "2–3",  prereqs: ["weather","animals"],           col: 1, row: 2,  desc: "Solids, liquids, gases; properties of matter; basic physical changes." },
-      { id: "earth_basic",       label: "Earth & Space Basics",    grade: "2–3",  prereqs: ["weather"],                    col: 2, row: 2,  desc: "Earth's layers, landforms, moon phases, solar system overview. The heavens declare God's glory (Ps. 19:1)." },
-      { id: "ecosystems",        label: "Ecosystems",              grade: "3–4",  prereqs: ["human_body_basic","matter"],   col: 0, row: 3,  desc: "Food chains, food webs, biomes, producers/consumers/decomposers." },
-      { id: "energy_basic",      label: "Energy & Forces",         grade: "3–4",  prereqs: ["matter"],                     col: 1, row: 3,  desc: "Types of energy, simple machines, gravity, friction, magnetism." },
-      { id: "earth_science",     label: "Earth Science",           grade: "3–5",  prereqs: ["earth_basic","matter"],       col: 2, row: 3,  desc: "Rock cycle, soil, erosion, plate tectonics, volcanoes, earthquakes." },
-      { id: "life_science",      label: "Life Science",            grade: "4–5",  prereqs: ["ecosystems"],                 col: 0, row: 4,  desc: "Cell basics, classification of living things, heredity and adaptation. Examined with a Creator's design in view." },
-      { id: "physical_science",  label: "Physical Science",        grade: "4–5",  prereqs: ["energy_basic"],               col: 1, row: 4,  desc: "Motion, force, work, sound and light waves, basic electricity." },
-      { id: "space",             label: "Astronomy",               grade: "4–6",  prereqs: ["earth_science"],              col: 2, row: 4,  desc: "Planets, stars, galaxies, seasons, space exploration. The vastness of the cosmos magnifies the Creator." },
-      { id: "biology",           label: "Biology",                 grade: "7–8",  prereqs: ["life_science","physical_science"],col:0,row: 5, desc: "Cell structure, genetics, body systems. Evolution examined critically alongside design-based models." },
-      { id: "chemistry_basic",   label: "Chemistry",               grade: "8–9",  prereqs: ["physical_science","space"],   col: 1, row: 5,  desc: "Periodic table, atoms and molecules, chemical reactions, acids and bases." },
-      { id: "physics",           label: "Physics",                 grade: "9–10", prereqs: ["biology","chemistry_basic"],  col: 0, row: 6,  desc: "Newton's laws, momentum, energy, waves, electricity and magnetism." },
-      { id: "chemistry_adv",     label: "Chemistry II",            grade: "10–11",prereqs: ["chemistry_basic","biology"],  col: 1, row: 6,  desc: "Stoichiometry, thermodynamics, kinetics, organic chemistry intro." },
-      { id: "anatomy",           label: "Anatomy & Physiology",    grade: "10–11",prereqs: ["biology"],                    col: 2, row: 6,  desc: "Body systems in detail, homeostasis, disease, medical applications." },
-      { id: "ap_science",        label: "AP Science",              grade: "11–12",prereqs: ["physics","chemistry_adv"],    col: 0, row: 7,  desc: "College-level biology, chemistry, or physics (student's choice)." },
-      { id: "env_science",       label: "Environmental Science",   grade: "11–12",prereqs: ["anatomy","chemistry_adv"],    col: 1, row: 7,  desc: "Ecology, sustainability, climate. Stewardship of creation is a biblical mandate (Gen. 2:15)." },
+      { id: "living_nonliving",  label: "Living vs. Non-Living",   grade: "K-1",  prereqs: [],                              col: 0, row: 0,  desc: "Distinguish living things from non-living things; basic needs of living things. God made all living things and called them good (Gen. 1)." },
+      { id: "five_senses",       label: "Five Senses",             grade: "K-1",  prereqs: [],                              col: 1, row: 0,  desc: "Sight, hearing, smell, taste, touch; using senses to observe God's creation." },
+      { id: "plants",            label: "Plants",                  grade: "1-2",  prereqs: ["living_nonliving"],            col: 0, row: 1,  desc: "Parts of a plant, life cycle, photosynthesis basics, plant needs." },
+      { id: "animals",           label: "Animals",                 grade: "1-2",  prereqs: ["living_nonliving","five_senses"],col:1, row: 1,  desc: "Animal groups, habitats, life cycles, and adaptations, each kind made by God." },
+      { id: "weather",           label: "Weather & Seasons",       grade: "1-2",  prereqs: ["five_senses"],                 col: 2, row: 1,  desc: "Weather patterns, seasons, water cycle basics. God governs the weather (Job 38)." },
+      { id: "human_body_basic",  label: "Human Body",              grade: "2-3",  prereqs: ["plants","animals"],            col: 0, row: 2,  desc: "Major body systems, bones, muscles, nutrition. We are fearfully and wonderfully made (Ps. 139:14)." },
+      { id: "matter",            label: "States of Matter",        grade: "2-3",  prereqs: ["weather","animals"],           col: 1, row: 2,  desc: "Solids, liquids, gases; properties of matter; basic physical changes." },
+      { id: "earth_basic",       label: "Earth & Space Basics",    grade: "2-3",  prereqs: ["weather"],                    col: 2, row: 2,  desc: "Earth's layers, landforms, moon phases, solar system overview. The heavens declare God's glory (Ps. 19:1)." },
+      { id: "ecosystems",        label: "Ecosystems",              grade: "3-4",  prereqs: ["human_body_basic","matter"],   col: 0, row: 3,  desc: "Food chains, food webs, biomes, producers/consumers/decomposers." },
+      { id: "energy_basic",      label: "Energy & Forces",         grade: "3-4",  prereqs: ["matter"],                     col: 1, row: 3,  desc: "Types of energy, simple machines, gravity, friction, magnetism." },
+      { id: "earth_science",     label: "Earth Science",           grade: "3-5",  prereqs: ["earth_basic","matter"],       col: 2, row: 3,  desc: "Rock cycle, soil, erosion, plate tectonics, volcanoes, earthquakes." },
+      { id: "life_science",      label: "Life Science",            grade: "4-5",  prereqs: ["ecosystems"],                 col: 0, row: 4,  desc: "Cell basics, classification of living things, heredity and adaptation. Examined with a Creator's design in view." },
+      { id: "physical_science",  label: "Physical Science",        grade: "4-5",  prereqs: ["energy_basic"],               col: 1, row: 4,  desc: "Motion, force, work, sound and light waves, basic electricity." },
+      { id: "space",             label: "Astronomy",               grade: "4-6",  prereqs: ["earth_science"],              col: 2, row: 4,  desc: "Planets, stars, galaxies, seasons, space exploration. The vastness of the cosmos magnifies the Creator." },
+      { id: "biology",           label: "Biology",                 grade: "7-8",  prereqs: ["life_science","physical_science"],col:0,row: 5, desc: "Cell structure, genetics, body systems. Evolution examined critically alongside design-based models." },
+      { id: "chemistry_basic",   label: "Chemistry",               grade: "8-9",  prereqs: ["physical_science","space"],   col: 1, row: 5,  desc: "Periodic table, atoms and molecules, chemical reactions, acids and bases." },
+      { id: "physics",           label: "Physics",                 grade: "9-10", prereqs: ["biology","chemistry_basic"],  col: 0, row: 6,  desc: "Newton's laws, momentum, energy, waves, electricity and magnetism." },
+      { id: "chemistry_adv",     label: "Chemistry II",            grade: "10-11",prereqs: ["chemistry_basic","biology"],  col: 1, row: 6,  desc: "Stoichiometry, thermodynamics, kinetics, organic chemistry intro." },
+      { id: "anatomy",           label: "Anatomy & Physiology",    grade: "10-11",prereqs: ["biology"],                    col: 2, row: 6,  desc: "Body systems in detail, homeostasis, disease, medical applications." },
+      { id: "ap_science",        label: "AP Science",              grade: "11-12",prereqs: ["physics","chemistry_adv"],    col: 0, row: 7,  desc: "College-level biology, chemistry, or physics (student's choice)." },
+      { id: "env_science",       label: "Environmental Science",   grade: "11-12",prereqs: ["anatomy","chemistry_adv"],    col: 1, row: 7,  desc: "Ecology, sustainability, climate. Stewardship of creation is a biblical mandate (Gen. 2:15)." },
     ],
   },
   bible: {
     id: "bible", label: "Bible", icon: "✝", color: "#7B4F2E", accent: "#C4956A",
     nodes: [
-      { id: "creation",           label: "Creation & Genesis",       grade: "K–1",  prereqs: [],                              col: 0, row: 0,  desc: "God creates ex nihilo, the goodness of creation, Adam and Eve, the fall and its consequences, Noah and the covenant." },
-      { id: "old_test_stories",   label: "OT Narratives",            grade: "1–3",  prereqs: ["creation"],                    col: 0, row: 1,  desc: "Abraham's faith and testing, Moses and the Exodus, Joshua, the Judges cycle, David, Solomon. God's covenant faithfulness despite man's constant failure." },
-      { id: "prayer",             label: "Prayer & Worship",         grade: "K–2",  prereqs: ["creation"],                    col: 1, row: 1,  desc: "What prayer is, approaching God through Christ, the Psalms as the church's hymnbook, corporate and private worship." },
-      { id: "new_test_stories",   label: "Life of Christ",           grade: "2–4",  prereqs: ["old_test_stories"],            col: 0, row: 2,  desc: "The Incarnation, Jesus' ministry, miracles, parables, the Passion, and the bodily resurrection. The fulfillment of all OT promises." },
-      { id: "fruits_spirit",      label: "Fruits of the Spirit",     grade: "2–4",  prereqs: ["prayer"],                      col: 1, row: 2,  desc: "Gal. 5:22–23 — love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control." },
-      { id: "acts_church",        label: "Acts & the Early Church",  grade: "4–5",  prereqs: ["new_test_stories"],            col: 0, row: 3,  desc: "Pentecost and the Spirit's work, Peter and Paul, the spread of the gospel to the Gentiles, persecution, and church planting." },
-      { id: "character",          label: "Christian Character",      grade: "3–5",  prereqs: ["fruits_spirit"],               col: 1, row: 3,  desc: "Integrity, humility, servant-leadership, forgiveness, stewardship. Character flows from a regenerate heart, not moralism." },
-      { id: "epistles",           label: "The Epistles",             grade: "5–6",  prereqs: ["acts_church"],                 col: 0, row: 4,  desc: "Paul, Peter, James, John, Jude — doctrine applied to the life of the church." },
-      { id: "apologetics_basic",  label: "Basic Apologetics",        grade: "5–7",  prereqs: ["character","acts_church"],     col: 1, row: 4,  desc: "Why we believe: the reliability of Scripture, evidence for the resurrection, and the internal consistency of the Christian worldview." },
-      { id: "ot_survey",          label: "OT Survey",                grade: "6–8",  prereqs: ["epistles"],                    col: 0, row: 5,  desc: "Survey every book of the OT — genres, themes, authorship, Messianic prophecy, and the unfolding of the covenant of grace." },
-      { id: "nt_survey",          label: "NT Survey",                grade: "6–8",  prereqs: ["epistles"],                    col: 1, row: 5,  desc: "Survey every NT book — the four Gospels, Acts, epistles, Revelation." },
-      { id: "worldview",          label: "Biblical Worldview",       grade: "8–9",  prereqs: ["ot_survey","nt_survey"],       col: 0, row: 6,  desc: "Applying the whole counsel of God to every area of life — family, government, economics, media, science, and culture." },
-      { id: "theology",           label: "Systematic Theology",      grade: "9–11", prereqs: ["worldview","apologetics_basic"],col:0, row: 7,  desc: "Theology proper, anthropology, hamartiology, soteriology (TULIP), ecclesiology, eschatology. Reformed Baptist distinctives examined from Scripture." },
-      { id: "apologetics_adv",    label: "Advanced Apologetics",     grade: "10–12",prereqs: ["theology"],                    col: 1, row: 7,  desc: "Presuppositional and evidential apologetics, comparative religion, responding to atheism, Islam, Roman Catholicism, and theological liberalism." },
+      { id: "creation",           label: "Creation & Genesis",       grade: "K-1",  prereqs: [],                              col: 0, row: 0,  desc: "God creates ex nihilo, the goodness of creation, Adam and Eve, the fall and its consequences, Noah and the covenant." },
+      { id: "old_test_stories",   label: "OT Narratives",            grade: "1-3",  prereqs: ["creation"],                    col: 0, row: 1,  desc: "Abraham's faith and testing, Moses and the Exodus, Joshua, the Judges cycle, David, Solomon. God's covenant faithfulness despite man's constant failure." },
+      { id: "prayer",             label: "Prayer & Worship",         grade: "K-2",  prereqs: ["creation"],                    col: 1, row: 1,  desc: "What prayer is, approaching God through Christ, the Psalms as the church's hymnbook, corporate and private worship." },
+      { id: "new_test_stories",   label: "Life of Christ",           grade: "2-4",  prereqs: ["old_test_stories"],            col: 0, row: 2,  desc: "The Incarnation, Jesus' ministry, miracles, parables, the Passion, and the bodily resurrection. The fulfillment of all OT promises." },
+      { id: "fruits_spirit",      label: "Fruits of the Spirit",     grade: "2-4",  prereqs: ["prayer"],                      col: 1, row: 2,  desc: "Gal. 5:22-23, love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control." },
+      { id: "acts_church",        label: "Acts & the Early Church",  grade: "4-5",  prereqs: ["new_test_stories"],            col: 0, row: 3,  desc: "Pentecost and the Spirit's work, Peter and Paul, the spread of the gospel to the Gentiles, persecution, and church planting." },
+      { id: "character",          label: "Christian Character",      grade: "3-5",  prereqs: ["fruits_spirit"],               col: 1, row: 3,  desc: "Integrity, humility, servant-leadership, forgiveness, stewardship. Character flows from a regenerate heart, not moralism." },
+      { id: "epistles",           label: "The Epistles",             grade: "5-6",  prereqs: ["acts_church"],                 col: 0, row: 4,  desc: "Paul, Peter, James, John, Jude, doctrine applied to the life of the church." },
+      { id: "apologetics_basic",  label: "Basic Apologetics",        grade: "5-7",  prereqs: ["character","acts_church"],     col: 1, row: 4,  desc: "Why we believe: the reliability of Scripture, evidence for the resurrection, and the internal consistency of the Christian worldview." },
+      { id: "ot_survey",          label: "OT Survey",                grade: "6-8",  prereqs: ["epistles"],                    col: 0, row: 5,  desc: "Survey every book of the OT, genres, themes, authorship, Messianic prophecy, and the unfolding of the covenant of grace." },
+      { id: "nt_survey",          label: "NT Survey",                grade: "6-8",  prereqs: ["epistles"],                    col: 1, row: 5,  desc: "Survey every NT book, the four Gospels, Acts, epistles, Revelation." },
+      { id: "worldview",          label: "Biblical Worldview",       grade: "8-9",  prereqs: ["ot_survey","nt_survey"],       col: 0, row: 6,  desc: "Applying the whole counsel of God to every area of life, family, government, economics, media, science, and culture." },
+      { id: "theology",           label: "Systematic Theology",      grade: "9-11", prereqs: ["worldview","apologetics_basic"],col:0, row: 7,  desc: "Theology proper, anthropology, hamartiology, soteriology (TULIP), ecclesiology, eschatology. Reformed Baptist distinctives examined from Scripture." },
+      { id: "apologetics_adv",    label: "Advanced Apologetics",     grade: "10-12",prereqs: ["theology"],                    col: 1, row: 7,  desc: "Presuppositional and evidential apologetics, comparative religion, responding to atheism, Islam, Roman Catholicism, and theological liberalism." },
     ],
   },
 };
@@ -447,7 +447,7 @@ function printWorksheet(childName, subjectLabel, node, questions) {
       <p class="qtext">${q.text}</p>
       <div class="answer-space"><div class="line"></div><div class="line"></div></div>
     </div>`).join('');
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Mastery Test — ${node.label}</title>
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Mastery Test, ${node.label}</title>
 <style>
   body{font-family:Georgia,serif;max-width:680px;margin:40px auto;color:#111;font-size:14px;line-height:1.6}
   .header{padding-bottom:16px;margin-bottom:32px;border-bottom:2px solid #111}
@@ -466,7 +466,7 @@ function printWorksheet(childName, subjectLabel, node, questions) {
   @media print{@page{margin:1in}}
 </style></head><body>
 <div class="header">
-  <h1>Mastery Test — ${node.label}</h1>
+  <h1>Mastery Test, ${node.label}</h1>
   <div class="sub">${subjectLabel} &nbsp;·&nbsp; Grade ${node.grade}</div>
   <div class="meta">
     <div class="field">Student: <span class="field-line">&nbsp;</span></div>
@@ -516,7 +516,7 @@ function App() {
     loadFromSupabase()
       .then(remote => {
         if (remote) {
-          // Cloud wins — update local
+          // Cloud wins, update local
           setData(remote);
           saveToCache(remote);
           setSyncStatus("idle");
@@ -525,7 +525,7 @@ function App() {
           setSyncStatus("saving");
           return saveToSupabase(localData).then(() => setSyncStatus("saved"));
         } else {
-          // Cloud is empty and local has no real data — new device, just idle
+          // Cloud is empty and local has no real data, new device, just idle
           setSyncStatus("idle");
         }
       })
@@ -551,7 +551,7 @@ function App() {
     }, 1500);
   };
 
-  // Fixed: single object, one persist call — no more stale closure race
+  // Fixed: single object, one persist call, no more stale closure race
   const setProgress = (updates) => {
     persist({
       ...data,
@@ -639,9 +639,9 @@ function App() {
         syncStatus==="error"
           ? React.createElement("button", {
               onClick: () => forceSyncNow(data),
-              title: "Sync error — tap to retry\n" + syncError,
+              title: "Sync error, tap to retry\n" + syncError,
               style:{ padding:"4px 6px", borderRadius:8, border:"1px solid rgba(255,100,100,0.4)", background:"rgba(255,80,80,0.12)", color:"rgba(255,120,120,0.9)", fontSize: IS_MOBILE?10:11, cursor:"pointer", fontWeight:700 }
-            }, IS_MOBILE ? "⚠" : "⚠ Sync Error — Retry")
+            }, IS_MOBILE ? "⚠" : "⚠ Sync Error, Retry")
           : !IS_MOBILE && React.createElement("div", { title: syncError, style:{ fontSize:10, color: syncStatus==="saved"?"#4CAF80":syncStatus==="saving"?"rgba(255,255,255,0.3)":syncStatus==="loading"?"rgba(255,255,255,0.3)":"transparent", minWidth:32, textAlign:"center" } },
               syncStatus==="saving" ? "⟳" : syncStatus==="saved" ? "✓" : syncStatus==="loading" ? "⟳" : ""
             ),
@@ -776,7 +776,7 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
     React.createElement("div", { style:{ width: IS_MOBILE?"calc(100vw - 20px)":"min(580px,92vw)", marginBottom:12, padding: IS_MOBILE?"12px 14px":"16px 20px", borderRadius:14, background:`linear-gradient(135deg, ${subject.color}22, ${subject.accent}10)`, border:`1px solid ${subject.color}35`, boxShadow:`0 4px 24px ${subject.color}18` } },
       React.createElement("div", { style:{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 } },
         React.createElement("div", null,
-          React.createElement("div", { style:{ fontSize:13, fontWeight:700, color:"#fff" } }, `${child?.name} — ${subject.label}`),
+          React.createElement("div", { style:{ fontSize:13, fontWeight:700, color:"#fff" } }, `${child?.name}, ${subject.label}`),
           React.createElement("div", { style:{ fontSize:11, color:subject.accent, marginTop:2 } }, `${masteredCount} of ${nodes.length} topics mastered`),
         ),
         React.createElement("div", { style:{ fontSize:28, fontWeight:800, color:subject.accent, lineHeight:1 } }, `${pct}%`),
@@ -787,7 +787,7 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
     ),
 
     editMode && React.createElement("div", { style:{ marginBottom:12, padding:"8px 16px", borderRadius:8, background:"rgba(255,200,80,0.08)", border:"1px solid rgba(255,200,80,0.25)", fontSize:12, color:"rgba(255,200,80,0.85)", fontWeight:600 } },
-      "✎ Edit mode — tap any node to edit it"
+      "✎ Edit mode, tap any node to edit it"
     ),
 
     // Legend
@@ -876,7 +876,7 @@ function TreeView({ subject, nodes, statuses, selectedNode, setSelectedNode, set
       addingNode
         ? React.createElement("div", { style:{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap", justifyContent:"center" } },
             React.createElement("input", { value:newNodeLabel, onChange:e=>setNewNodeLabel(e.target.value), placeholder:"Node name", autoFocus:true, style:{ padding:"7px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:13, width:160 } }),
-            React.createElement("input", { value:newNodeGrade, onChange:e=>setNewNodeGrade(e.target.value), placeholder:"Grade (e.g. 3–4)", style:{ padding:"7px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:13, width:130 } }),
+            React.createElement("input", { value:newNodeGrade, onChange:e=>setNewNodeGrade(e.target.value), placeholder:"Grade (e.g. 3-4)", style:{ padding:"7px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.08)", color:"#fff", fontSize:13, width:130 } }),
             React.createElement("button", { onClick:submitNewNode, style:{ padding:"7px 16px", borderRadius:10, border:"none", background:"#4A6FA5", color:"#fff", fontSize:13, cursor:"pointer" } }, "Add"),
             React.createElement("button", { onClick:()=>setAddingNode(false), style:{ padding:"7px 12px", borderRadius:10, border:"none", background:"rgba(255,255,255,0.08)", color:"rgba(255,255,255,0.5)", fontSize:13, cursor:"pointer" } }, "Cancel"),
           )
@@ -1094,7 +1094,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
         lastScore && React.createElement("div", { style:{ marginBottom:16, padding:"10px 14px", borderRadius:10, background:lastScore.passed?"rgba(74,175,80,0.12)":"rgba(255,80,80,0.1)", border:`1px solid ${lastScore.passed?"rgba(74,175,80,0.3)":"rgba(255,80,80,0.2)"}`, fontSize:13 } },
           React.createElement("div", { style:{ fontWeight:700, color:lastScore.passed?"#4CAF80":"rgba(255,120,120,0.9)", marginBottom:2 } }, lastScore.passed ? "Last attempt: Passed" : "Last attempt: Failed"),
           React.createElement("div", { style:{ color:"rgba(255,255,255,0.5)", fontSize:12 } },
-            `${lastScore.correct}/${lastScore.total} correct — ${lastScore.pct}% — ${lastScore.date}`,
+            `${lastScore.correct}/${lastScore.total} correct, ${lastScore.pct}%, ${lastScore.date}`,
             (lastScore.photoPaths || lastScore.photoPath) && React.createElement("button", { onClick:handleViewLastPhotos, style:{ marginLeft:8, fontSize:11, padding:"2px 9px", borderRadius:6, border:"none", background:"rgba(74,175,80,0.18)", color:"#4CAF80", cursor:"pointer", fontWeight:600 } }, "📎 View Photos")
           )
         ),
@@ -1217,7 +1217,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
       ),
     ),
 
-    // Camera overlay — full screen, above everything
+    // Camera overlay, full screen, above everything
     cameraOpen && React.createElement(MultiShotCamera, {
       initialShots: reviewShots,
       onDone: (shots) => { setReviewShots(shots); setCameraOpen(false); },
@@ -1365,7 +1365,7 @@ function NodeEditSheet({ node, subject, data, isCustom, allNodes, onSaveFields, 
       React.createElement("label", { style:{ display:"block", fontSize:11, color:"rgba(255,255,255,0.4)", marginBottom:4, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Label"),
       React.createElement("input", { value:label, onChange:e=>setLabel(e.target.value), style:{ width:"100%", padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:14, marginBottom:14 } }),
       React.createElement("label", { style:{ display:"block", fontSize:11, color:"rgba(255,255,255,0.4)", marginBottom:4, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Grade"),
-      React.createElement("input", { value:grade, onChange:e=>setGrade(e.target.value), placeholder:"e.g. 2–3", style:{ width:"100%", padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:14, marginBottom:14 } }),
+      React.createElement("input", { value:grade, onChange:e=>setGrade(e.target.value), placeholder:"e.g. 2-3", style:{ width:"100%", padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:14, marginBottom:14 } }),
       React.createElement("label", { style:{ display:"block", fontSize:11, color:"rgba(255,255,255,0.4)", marginBottom:4, textTransform:"uppercase", letterSpacing:"0.08em" } }, "Description"),
       React.createElement("textarea", { value:desc, onChange:e=>setDesc(e.target.value), rows:4, style:{ width:"100%", padding:"9px 12px", borderRadius:10, border:"1px solid rgba(255,255,255,0.15)", background:"rgba(255,255,255,0.07)", color:"#fff", fontSize:13, lineHeight:1.6, resize:"vertical", marginBottom:18 } }),
       React.createElement("div", { style:{ display:"flex", gap:10, flexWrap:"wrap" } },
@@ -1533,7 +1533,7 @@ function ProgressView({ data, activeChild, child }) {
       const pct = Math.round((mastered/total)*100);
       const gradeGroups = {};
       for (const node of sn) {
-        const g = node.grade.split("–")[0].trim();
+        const g = node.grade.split("-")[0].trim();
         if (!gradeGroups[g]) gradeGroups[g] = { total:0, mastered:0 };
         gradeGroups[g].total++;
         if (ss[node.id]===STATUS.MASTERED) gradeGroups[g].mastered++;

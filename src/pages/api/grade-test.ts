@@ -78,7 +78,7 @@ export const POST: APIRoute = async ({ request }) => {
 
 function buildPrompt(questionCount: number, pageCount: number, questionList: string): string {
   const pageNote = pageCount > 1
-    ? `The test is spread across ${pageCount} pages — scan ALL images for the student's answers.`
+    ? `The test is spread across ${pageCount} pages, scan ALL images for the student's answers.`
     : 'Look carefully at the student\'s handwritten answers in the image.';
   return `You are grading a student's handwritten test. ${pageNote} The test has ${questionCount} questions listed below.
 
@@ -88,10 +88,10 @@ ${questionList}
 Grading instructions:
 - Accept answers that demonstrate understanding, even if not perfectly worded
 - For short-answer questions, look for the key concept
-- Be fair but accurate — partial credit is not given, each is correct or incorrect
+- Be fair but accurate, partial credit is not given, each is correct or incorrect
 - If you cannot read the handwriting for a question, mark it incorrect
 
-Respond with ONLY a valid JSON array — no explanation, no markdown, just the array:
+Respond with ONLY a valid JSON array, no explanation, no markdown, just the array:
 [{"question": 1, "correct": true, "studentAnswer": "what they wrote", "note": ""}, ...]
 
 Include one object per question. The "note" field is empty if correct, or a brief reason if incorrect.`;

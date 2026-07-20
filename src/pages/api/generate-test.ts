@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ request }) => {
   const isHandsOn = ['life skills', 'life_skills'].some(s => subject.toLowerCase().includes(s));
 
   const mathNote = isMath
-    ? '\n- CRITICAL for math: every question must have a DIFFERENT numerical answer. Vary the numbers widely so answers are spread across a broad range — never repeat the same result twice.'
+    ? '\n- CRITICAL for math: every question must have a DIFFERENT numerical answer. Vary the numbers widely so answers are spread across a broad range, never repeat the same result twice.'
     : '';
 
   const handsOnNote = isHandsOn
@@ -42,7 +42,7 @@ Rules:
 - Use language and complexity appropriate for grade ${grade}
 - Mix question types: recall, application, and short-answer explanation
 - Keep each question to one clear sentence${mathNote}${handsOnNote}
-- These are open-ended written or spoken answer questions — no multiple choice
+- These are open-ended written or spoken answer questions, no multiple choice
 
 Respond with ONLY a valid JSON array, no explanation, no markdown:
 [{"text": "question text here"}, ...]
