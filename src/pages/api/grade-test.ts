@@ -11,13 +11,13 @@ export const POST: APIRoute = async ({ request }) => {
 
   // ── Multi-image JSON path (from MultiShotCamera) ──────────────────────────
   if (contentType.includes('application/json')) {
-    let body: { images?: string[]; questions?: { id: string; text: string }[] };
+    let body: { images?: string[]; questions?: { id: string; text: string; answer?: string }[] };
     try { body = await request.json(); } catch { return json({ error: 'Invalid request.' }, 400); }
 
     const { images, questions } = body;
     if (!images?.length || !questions?.length) return json({ error: 'images and questions are required.' }, 400);
 
-    const questionList = questions.map((q, i) => `${i + 1}. ${q.text}`).join('\n');
+    const questionList = formatQuestions(questions);
     const prompt = buildPrompt(questions.length, images.length, questionList);
 
     const imageBlocks = images.map(b64 => ({
@@ -47,14 +47,14 @@ export const POST: APIRoute = async ({ request }) => {
   const questionsRaw = formData.get('questions') as string | null;
   if (!imageFile || !questionsRaw) return json({ error: 'Image and questions are required.' }, 400);
 
-  let questions: { id: string; text: string }[];
+  let questions: { id: string; text: string; answer?: string }[];
   try { questions = JSON.parse(questionsRaw); } catch { return json({ error: 'Invalid questions format.' }, 400); }
   if (!questions.length) return json({ error: 'No questions provided.' }, 400);
 
   const arrayBuffer = await imageFile.arrayBuffer();
   const base64 = Buffer.from(arrayBuffer).toString('base64');
   const mediaType = (imageFile.type || 'image/jpeg') as 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif';
-  const questionList = questions.map((q, i) => `${i + 1}. ${q.text}`).join('\n');
+  const questionList = formatQuestions(questions);
 
   try {
     const client = new Anthropic({ apiKey });
@@ -88,6 +88,8 @@ ${questionList}
 Grading instructions:
 - Accept answers that demonstrate understanding, even if not perfectly worded
 - For short-answer questions, look for the key concept
+- For any problem shown with a [correct answer: ...], mark the student correct only if their written answer matches it. Accept equivalent forms (for example 1/2 and 0.5, or "3 R2" and "3 remainder 2").
+- For math problems shown without a provided answer, work out the correct answer yourself before grading.
 - Be fair but accurate, partial credit is not given, each is correct or incorrect
 - If you cannot read the handwriting for a question, mark it incorrect
 
@@ -95,6 +97,12 @@ Respond with ONLY a valid JSON array, no explanation, no markdown, just the arra
 [{"question": 1, "correct": true, "studentAnswer": "what they wrote", "note": ""}, ...]
 
 Include one object per question. The "note" field is empty if correct, or a brief reason if incorrect.`;
+}
+
+function formatQuestions(questions: { text: string; answer?: string }[]): string {
+  return questions
+    .map((q, i) => `${i + 1}. ${q.text}${q.answer ? `  [correct answer: ${q.answer}]` : ''}`)
+    .join('\n');
 }
 
 function parseAndReturn(message: Anthropic.Message, total: number): Response {
