@@ -29,7 +29,7 @@ export const POST: APIRoute = async ({ request }) => {
       const client = new Anthropic({ apiKey });
       const message = await client.messages.create({
         model: 'claude-opus-4-8',
-        max_tokens: 1024,
+        max_tokens: 2048,
         messages: [{ role: 'user', content: [...imageBlocks, { type: 'text', text: prompt }] }],
       });
       return parseAndReturn(message, questions.length);
@@ -60,7 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
     const client = new Anthropic({ apiKey });
     const message = await client.messages.create({
       model: 'claude-opus-4-8',
-      max_tokens: 1024,
+      max_tokens: 2048,
       messages: [{
         role: 'user',
         content: [

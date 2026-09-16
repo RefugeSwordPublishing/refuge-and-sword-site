@@ -439,40 +439,78 @@ async function signOut() {
 }
 
 // ─── PRINT WORKSHEET ─────────────────────────────────────────────────────────
+// Parse a simple two-operand arithmetic fact like "9 - 7 =" into its parts.
+// Returns null for anything that is not a whole-number +, -, x, or / fact
+// (fractions, word problems, etc.), which fall back to the standard layout.
+function parseFact(text) {
+  const m = String(text).trim().match(/^(\d+)\s*([-+x*×\/÷])\s*(\d+)\s*=?\s*$/i);
+  if (!m) return null;
+  const raw = m[2].toLowerCase();
+  const op = raw === "+" ? "+"
+    : raw === "-" ? "&minus;"
+    : (raw === "x" || raw === "*" || raw === "×") ? "&times;"
+    : "&divide;";
+  return { top: m[1], op, bottom: m[3] };
+}
+
 function printWorksheet(childName, subjectLabel, node, questions) {
-  const lines = questions.map((q, i) => `
-    <div class="question">
-      <p class="qnum">Question ${i + 1}</p>
-      <p class="qtext">${q.text}</p>
-      <div class="answer-space"><div class="line"></div><div class="line"></div></div>
-    </div>`).join('');
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Mastery Test, ${node.label}</title>
-<style>
-  body{font-family:Georgia,serif;max-width:680px;margin:40px auto;color:#111;font-size:14px;line-height:1.6}
-  .header{padding-bottom:16px;margin-bottom:32px;border-bottom:2px solid #111}
-  .header h1{font-size:18px;margin-bottom:4px}
-  .sub{color:#555;font-size:13px;margin-bottom:16px}
-  .meta{display:flex;gap:48px;font-size:13px}
-  .field{display:flex;gap:8px;align-items:baseline}
-  .field-line{flex:1;border-bottom:1px solid #111;min-width:140px;display:inline-block}
+  const facts = questions.map(q => parseFact(q.text));
+  const allFacts = questions.length > 0 && facts.every(Boolean);
+  const title = allFacts ? "Math Practice" : "Mastery Test";
+
+  let bodyHtml, styleExtra;
+  if (allFacts) {
+    // Vertical stacked drill grid: top number over (operator + bottom number),
+    // a rule to write the answer under. Six problems per row.
+    const cells = facts.map(f => `
+      <div class="fact">
+        <div class="frow"><span class="op">&nbsp;</span><span class="n">${f.top}</span></div>
+        <div class="frow"><span class="op">${f.op}</span><span class="n">${f.bottom}</span></div>
+        <div class="frule"></div>
+      </div>`).join('');
+    bodyHtml = `<div class="grid">${cells}</div>`;
+    styleExtra = `
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:26px 14px;margin-top:28px}
+  .fact{min-height:80px}
+  .frow{display:flex;justify-content:flex-end;align-items:baseline;font-family:'Courier New',monospace;font-size:21px;line-height:1.25}
+  .op{width:18px;text-align:left}
+  .n{min-width:48px;text-align:right}
+  .frule{border-bottom:2px solid #111;margin-top:3px}`;
+  } else {
+    const lines = questions.map((q, i) => `
+      <div class="question">
+        <p class="qnum">Question ${i + 1}</p>
+        <p class="qtext">${q.text}</p>
+        <div class="answer-space"><div class="line"></div><div class="line"></div></div>
+      </div>`).join('');
+    bodyHtml = lines;
+    styleExtra = `
   .question{margin-bottom:32px}
   .qnum{font-weight:bold;font-size:12px;color:#666;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
   .qtext{font-size:15px;margin-bottom:12px}
-  .line{border-bottom:1px solid #bbb;height:28px;margin-bottom:6px}
-  .score-box{margin-top:48px;padding-top:16px;border-top:2px solid #111;display:flex;gap:48px;font-size:13px}
+  .line{border-bottom:1px solid #bbb;height:28px;margin-bottom:6px}`;
+  }
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}, ${node.label}</title>
+<style>
+  body{font-family:Georgia,serif;max-width:720px;margin:0 auto;padding:40px;background:#fff;color:#111;font-size:14px;line-height:1.6}
+  .topbar{display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:22px}
+  .tf{flex:1;display:flex;gap:8px;align-items:baseline}
+  .ul{flex:1;border-bottom:1px solid #111;min-width:120px;display:inline-block}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#555;font-size:13px;padding-bottom:14px;border-bottom:2px solid #111}${styleExtra}
+  .score-box{margin-top:40px;padding-top:16px;border-top:2px solid #111;display:flex;gap:40px;font-size:13px}
   .score-field{display:flex;gap:8px;align-items:baseline}
   .score-line{border-bottom:1px solid #111;width:80px;display:inline-block}
-  @media print{@page{margin:1in}}
+  @media print{@page{margin:0.75in}}
 </style></head><body>
-<div class="header">
-  <h1>Mastery Test, ${node.label}</h1>
-  <div class="sub">${subjectLabel} &nbsp;·&nbsp; Grade ${node.grade}</div>
-  <div class="meta">
-    <div class="field">Student: <span class="field-line">&nbsp;</span></div>
-    <div class="field">Date: <span class="field-line">&nbsp;</span></div>
-  </div>
+<div class="topbar">
+  <div class="tf">Name <span class="ul">&nbsp;</span></div>
+  <div class="tf">Date <span class="ul">&nbsp;</span></div>
 </div>
-${lines}
+<h1>${title}: ${node.label}</h1>
+<div class="sub">${subjectLabel} &nbsp;&middot;&nbsp; Grade ${node.grade}</div>
+${bodyHtml}
 <div class="score-box">
   <div class="score-field">Score: <span class="score-line">&nbsp;</span> / ${questions.length}</div>
   <div class="score-field">Percentage: <span class="score-line">&nbsp;</span>%</div>
@@ -932,10 +970,11 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
     setGenLoading(true);
     setGenError("");
     try {
+      const count = subject.label.toLowerCase().includes("math") ? 24 : 10;
       const res = await fetch("/api/generate-test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ label: node.label, desc: node.desc, grade: node.grade, subject: subject.label, count: 10 }),
+        body: JSON.stringify({ label: node.label, desc: node.desc, grade: node.grade, subject: subject.label, count }),
       });
       const json = await res.json();
       if (!res.ok || json.error) throw new Error(json.error || "Generation failed");
@@ -1105,7 +1144,7 @@ function NodePanel({ node, status, subject, onSetProgress, onClose, childProgres
         // Generate button / loading / error
         !genQuestions && !genLoading && React.createElement("div", { style:{ textAlign:"center", padding:"24px 0 20px" } },
           React.createElement("div", { style:{ fontSize:13, color:"rgba(255,255,255,0.4)", marginBottom:16 } },
-            "Generate a fresh 10-question test for this topic. Questions are different every time."
+            "Generate a fresh practice set for this topic. Problems are different every time."
           ),
           genError && React.createElement("div", { style:{ marginBottom:12, padding:"8px 14px", borderRadius:9, background:"rgba(255,80,80,0.1)", border:"1px solid rgba(255,80,80,0.2)", fontSize:12, color:"rgba(255,150,150,0.9)" } }, genError),
           React.createElement(ActionBtn, { color:subject.accent, onClick:generateTest }, "✦ Generate Test")

@@ -43,7 +43,7 @@ Skill description: ${desc || label}
 Rules:
 - Each item is a MATH PROBLEM to SOLVE, written exactly as it should appear on a worksheet. This is a math practice sheet, not a set of written or word questions.
 - Match every problem to this specific skill: ${label} (${desc || label}). Do not drift to other math topics.
-- Vary the numbers widely so the answers are spread across a broad range. Never repeat the same answer twice.
+- Vary the problems so they are not all identical. With many problems some answers will naturally repeat, which is fine.
 - Provide the correct answer for every problem.${earlyMath
       ? '\n- This student is too young to read. Use ONLY numbers and math symbols, with no words and no instructions. Write each problem as an equation ending in "=", for example "7 + 4 =".'
       : '\n- Keep problems computation-focused: equations or expressions to solve. A few short word problems are acceptable, but most items should be symbolic math.'}
@@ -78,7 +78,7 @@ Generate exactly ${count} questions.`;
     const client = new Anthropic({ apiKey });
     const message = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1024,
+      max_tokens: 1500,
       messages: [{ role: 'user', content: prompt }],
     });
 
